@@ -3,7 +3,7 @@ export declare function setToken(t?: string): void;
 export interface HttpChannelUI {
     startWait(): void;
     endWait(): void;
-    showError(error: FetchError): void;
+    showError(error: FetchError): Promise<void>;
 }
 export declare class HttpChannel {
     private ui?;
@@ -16,7 +16,7 @@ export declare class HttpChannel {
     post(url: string, params: any): Promise<any>;
     put(url: string, params: any): Promise<any>;
     delete(url: string, params: any): Promise<any>;
-    fetch(url: string, options: any, resolve: (value?: any) => any, reject: (reason?: any) => void): Promise<any>;
+    fetch(url: string, options: any, resolve: (value?: any) => any, reject: (reason?: any) => void): Promise<void>;
     private innerFetch(url, options);
     private buildOptions();
 }

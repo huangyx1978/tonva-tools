@@ -9,7 +9,7 @@ class HttpChannelNavUI implements HttpChannelUI {
     endWait() {
         nav.endWait();
     }
-    showError(error:FetchError) {
+    async showError(error:FetchError):Promise<void> {
         nav.endWait();
         /*
         if (error.name === 'SyntaxError') {
@@ -18,64 +18,115 @@ class HttpChannelNavUI implements HttpChannelUI {
                 message: error.message,
             }
         }*/
-        nav.onError(error);
+        await nav.onError(error);
     }
 }
 
 // 应该用上面的NavUI
-const httpChannelNav = new HttpChannel(new HttpChannelNavUI());
+const centerChannelUI = new HttpChannel(new HttpChannelNavUI());
 
-export function refetchApi(url, options, resolve, reject) {
-    httpChannelNav.fetch(url, options, resolve, reject);
+export async function refetchApi(url, options, resolve, reject) {
+    await centerChannelUI.fetch(url, options, resolve, reject);
 }
+
+const channelUIs:{[name:string]: HttpChannel} = {};
+const channelNoUIs:{[name:string]: HttpChannel} = {};
 
 export abstract class ApiNav {
     private path:string;
 
-    constructor(path: string) {
+    constructor(path: string, apiName?: string) {
         this.path = path || '';
     }
 
     protected get(path:string, params:any): Promise<any> {
-        return httpChannelNav.get(this.path + path, params);
+        return centerChannelUI.get(this.path + path, params);
     }
 
     protected post(path:string, params:any): Promise<any> {
-        return httpChannelNav.post(this.path + path, params);
+        return centerChannelUI.post(this.path + path, params);
     }
 
     protected put(path:string, params:any): Promise<any> {
-        return httpChannelNav.put(this.path + path, params);
+        return centerChannelUI.put(this.path + path, params);
     }
 
     protected delete(path:string, params:any): Promise<any> {
-        return httpChannelNav.delete(this.path + path, params);
+        return centerChannelUI.delete(this.path + path, params);
     }
 }
 
 // 应该用上面的NavUI
-const httpChannel = new HttpChannel();
+const centerChannelNoUI = new HttpChannel();
 
-export abstract class Api {
-    private path:string;
+export abstract class ApiBase {
+    private path: string;
+    protected showWaiting: boolean;
 
-    constructor(path: string) {
+    constructor(path: string, showWaiting: boolean) {
         this.path = path || '';
+        this.showWaiting = showWaiting;
     }
 
-    protected get(path:string, params:any): Promise<any> {
-        return httpChannel.get(this.path + path, params);
+    protected abstract async getHttpChannel(): Promise<HttpChannel>;
+
+    protected async get(path:string, params:any): Promise<any> {
+        let channel = await this.getHttpChannel();
+        return await channel.get(this.path + path, params);
     }
 
-    protected post(path:string, params:any): Promise<any> {
-        return httpChannel.post(this.path + path, params);
+    protected async post(path:string, params:any): Promise<any> {
+        let channel = await this.getHttpChannel();
+        return await channel.post(this.path + path, params);
     }
 
-    protected put(path:string, params:any): Promise<any> {
-        return httpChannel.put(this.path + path, params);
+    protected async put(path:string, params:any): Promise<any> {
+        let channel = await this.getHttpChannel();
+        return await channel.put(this.path + path, params);
     }
 
-    protected delete(path:string, params:any): Promise<any> {
-        return httpChannel.delete(this.path + path, params);
+    protected async delete(path:string, params:any): Promise<any> {
+        let channel = await this.getHttpChannel();
+        return await channel.delete(this.path + path, params);
+    }
+}
+
+export abstract class Api extends ApiBase {
+    private apiName: string;
+
+    constructor(path: string, apiName: string, showWaiting?: boolean) {
+        super(path, showWaiting);
+        this.apiName = apiName? apiName : undefined;
+        this.showWaiting = showWaiting;
+    }
+
+    protected async getHttpChannel(): Promise<HttpChannel> {
+        let channels: {[name:string]: HttpChannel};
+        let centerChannel: HttpChannel;
+        if (this.showWaiting === true || this.showWaiting === undefined) {
+            channels = channelUIs;
+            centerChannel = centerChannelUI;
+        }
+        else {
+            channels = channelNoUIs;
+            centerChannel = centerChannelNoUI;
+        }
+        let channel = channels[this.apiName];
+        if (channel !== undefined) return channel;
+        
+        // await center Channel get api
+        return ;
+    }
+}
+
+export abstract class CenterApi extends ApiBase {
+    constructor(path: string, showWaiting?: boolean) {
+        super(path, showWaiting);
+    }
+
+    protected async getHttpChannel(): Promise<HttpChannel> {
+        return (this.showWaiting === true || this.showWaiting === undefined)?
+            centerChannelUI :
+            centerChannelNoUI;
     }
 }

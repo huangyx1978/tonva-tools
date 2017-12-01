@@ -1,8 +1,4 @@
 export * from './net';
 export * from './ui';
-
-export class a {
-    b() {
-        return 2;
-    }
-}
+export * from './user';
+//export * from './entry';

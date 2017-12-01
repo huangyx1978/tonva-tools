@@ -5,10 +5,6 @@ function __export(m) {
 Object.defineProperty(exports, "__esModule", { value: true });
 __export(require("./net"));
 __export(require("./ui"));
-class a {
-    b() {
-        return 2;
-    }
-}
-exports.a = a;
+__export(require("./user"));
+//export * from './entry';
 //# sourceMappingURL=index.js.map

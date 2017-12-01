@@ -144,7 +144,7 @@ export class Page extends React.Component<PageProps, PageState> {
                 right={right} 
             />;
 
-        return <article>
+        return <article className='page-container'>
             {titleBar}
             <section>
             {
@@ -177,7 +177,7 @@ export class Page extends React.Component<PageProps, PageState> {
                 right={right} 
             />;
         return (
-            <article>
+            <article className='page-container'>
                 {titleBar}
                 <section>
                     <ScrollView

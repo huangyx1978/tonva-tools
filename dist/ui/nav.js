@@ -5,11 +5,21 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const React = require("react");
 const mobx_1 = require("mobx");
+//import LoginView from '../entry/login';
 const net_1 = require("../net");
 const fetchErrorView_1 = require("./fetchErrorView");
+const app_1 = require("../net/app");
 require("font-awesome/css/font-awesome.min.css");
 require("../css/va.css");
 ;
@@ -27,41 +37,72 @@ class NavView extends React.Component {
         };
     }
     componentDidMount() {
-        exports.nav.set(this);
-        /*
-        let view:JSX.Element;
-        let v = this.props.view;
-
-        let path = window.location.pathname;
-        if (path === undefined) {
-            path = '';
-        }
-        else {
-            if (path.substr(0, 1) === '/')
-                path = path.substr(1).toLowerCase();
-        }
-        let token = window.location.hash;
-        if (token) {
-            token = token.substr(1);
-        }
-
-        if (typeof v === 'function') {
-            view = v(path);
-        }
-        else {
-            view = v;
-        }*/
-        /*
-        start(
-            this.props.dispatch,
-            this.props.serverUrl,
-            this.props.login,
-            view,
-            token);
-        */
+        return __awaiter(this, void 0, void 0, function* () {
+            exports.nav.set(this);
+            let user;
+            let hash = document.location.hash;
+            if (hash !== undefined && hash.length === 10 && hash.startsWith('tv')) {
+                //user = decodeToken(token);
+                app_1.setAppHash(hash);
+                this.showAppView(); //.show(this.appView);
+                return;
+            }
+            else {
+                // window.addEventListener('message', e => this.receiveMessage(e));
+                user = exports.nav.local.user.get();
+            }
+            if (user !== undefined) {
+                exports.nav.logined(user);
+            }
+            else {
+                // if (this.loginingView === undefined)
+                // nav.show(<div>no token</div>);
+                // else
+                // nav.show(this.loginingView); //<LoginView />);
+                yield exports.nav.showLogin();
+            }
+            /*
+            let view:JSX.Element;
+            let v = this.props.view;
+    
+            let path = window.location.pathname;
+            if (path === undefined) {
+                path = '';
+            }
+            else {
+                if (path.substr(0, 1) === '/')
+                    path = path.substr(1).toLowerCase();
+            }
+            let token = window.location.hash;
+            if (token) {
+                token = token.substr(1);
+            }
+    
+            if (typeof v === 'function') {
+                view = v(path);
+            }
+            else {
+                view = v;
+            }*/
+            /*
+            start(
+                this.props.dispatch,
+                this.props.serverUrl,
+                this.props.login,
+                view,
+                token);
+            */
+        });
     }
     get level() {
         return this.stack.length;
+    }
+    showAppView() {
+        let view = this.props.view;
+        if (typeof view === 'function')
+            this.show(view());
+        else
+            this.show(view);
     }
     startWait() {
         if (this.waitCount === 0) {
@@ -89,24 +130,26 @@ class NavView extends React.Component {
         }
     }
     onError(fetchError) {
-        let err = fetchError.error;
-        if (err !== undefined && err.unauthorized === true) {
-            /*
-            let loginView = this.props.login;
-            if (loginView === undefined) {
-                alert('Not authorized, server refused!');
+        return __awaiter(this, void 0, void 0, function* () {
+            let err = fetchError.error;
+            if (err !== undefined && err.unauthorized === true) {
+                /*
+                let loginView = this.props.login;
+                if (loginView === undefined) {
+                    alert('Not authorized, server refused!');
+                }
+                else {
+                    this.show(loginView);
+                }*/
+                //this.props.showLogin();
+                yield exports.nav.showLogin();
+                return;
             }
-            else {
-                this.show(loginView);
-            }*/
-            //this.props.showLogin();
-            exports.nav.showLogin();
-            return;
-        }
-        this.setState({
-            fetchError: fetchError,
+            this.setState({
+                fetchError: fetchError,
+            });
+            // setTimeout(() => this.setState({error: false}), 3000);
         });
-        // setTimeout(() => this.setState({error: false}), 3000);
     }
     show(view) {
         this.clear();
@@ -214,13 +257,15 @@ class NavView extends React.Component {
 exports.NavView = NavView;
 class Nav {
     constructor() {
+        //private appView: JSX.Element;
         this.local = new LocalData();
         this.user = {};
     }
-    setViews(loginView, appView) {
+    /*
+    setViews(loginView: JSX.Element, appView: JSX.Element) {
         this.loginView = loginView;
         this.appView = appView;
-    }
+    }*/
     set(nav) {
         this.nav = nav;
     }
@@ -228,14 +273,22 @@ class Nav {
         Object.assign(this.user, user);
         this.local.user.set(user);
         net_1.netToken.set(user.token);
-        this.nav.show(this.appView);
+        this.nav.showAppView(); //.show(this.appView);
     }
     showLogin() {
-        this.nav.show(this.loginView);
+        return __awaiter(this, void 0, void 0, function* () {
+            if (this.loginView === undefined) {
+                let lv = yield Promise.resolve().then(() => require('../entry/login'));
+                this.loginView = React.createElement(lv.default, null);
+            }
+            this.nav.show(this.loginView);
+        });
     }
     logout() {
-        this.local.logoutClear();
-        this.showLogin();
+        return __awaiter(this, void 0, void 0, function* () {
+            this.local.logoutClear();
+            yield this.showLogin();
+        });
     }
     get level() {
         return this.nav.level;
@@ -250,7 +303,9 @@ class Nav {
         this.nav.endWait();
     }
     onError(error) {
-        this.nav.onError(error);
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.nav.onError(error);
+        });
     }
     show(view) {
         this.nav.show(view);
@@ -276,33 +331,21 @@ class Nav {
     confirmBox(message) {
         return this.nav.confirmBox(message);
     }
-    navToApp(url) {
-        this.showApp(url);
-    }
-    showApp(url) {
-        //let index = this.find(hao, applet);
-        //if (index < 0) {
-        //    alert('在弹出app窗口时发生错误！');
-        //    return;
-        //}
-        //let appWin = this.appWins[index];
-        //let url = appUrl + '#' + token;
-        //if (!url.toLowerCase().startsWith('http://')) url = 'http://' + url;
+    navToApp(url, unitId, appId) {
+        // show in iframe
         exports.nav.push(React.createElement("article", { className: 'app-container' },
             React.createElement("span", { onClick: () => this.back() },
                 React.createElement("i", { className: "fa fa-arrow-left" })),
-            React.createElement("iframe", { src: url })));
-        /*
-        appWin.win.location.href = url;
-        let pos = url.indexOf('//');
-        if (pos < 0) pos = 0;
-        else pos += 2;
-        pos = url.indexOf('/', pos);
-        appWin.url = url.substring(0, pos<0? undefined : pos);
-        setTimeout(() => {
-            appWin.win.postMessage(undefined, appWin.url);
-        }, 1000);
-        */
+            React.createElement("iframe", { src: app_1.appUrl(url, unitId, appId) })));
+    }
+    getAppApi(apiName) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield app_1.appApi(apiName);
+        });
+    }
+    navToSite(url) {
+        // show in new window
+        window.open(url);
     }
 }
 __decorate([

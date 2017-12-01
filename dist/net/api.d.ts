@@ -1,4 +1,4 @@
-export declare function refetchApi(url: any, options: any, resolve: any, reject: any): void;
+export declare function refetchApi(url: any, options: any, resolve: any, reject: any): Promise<void>;
 export declare abstract class ApiNav {
     private path;
     constructor(path: string);

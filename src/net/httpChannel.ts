@@ -31,7 +31,7 @@ export interface HttpChannelError {
 export interface HttpChannelUI {
     startWait():void;
     endWait():void;
-    showError(error:FetchError):void;
+    showError(error:FetchError):Promise<void>;
 }
 
 export class HttpChannel {
@@ -52,8 +52,8 @@ export class HttpChannel {
         if (this.ui !== undefined) this.ui.endWait();
     }
 
-    private showError(error:FetchError) {
-        if (this.ui !== undefined) this.ui.showError(error);
+    private async showError(error:FetchError) {
+        if (this.ui !== undefined) await this.ui.showError(error);
     }
 
     used() {
@@ -98,7 +98,7 @@ export class HttpChannel {
         options.body = JSON.stringify(params);
         return this.innerFetch(url, options);
     }
-    fetch(url: string, options: any, resolve:(value?:any)=>any, reject:(reason?:any)=>void) {
+    async fetch(url: string, options: any, resolve:(value?:any)=>any, reject:(reason?:any)=>void):Promise<void> {
         let that = this;
         this.startWait();
         let path = url;
@@ -113,26 +113,26 @@ export class HttpChannel {
             }
         }
         return fetch(path, options)
-        .then(res => {
+        .then(async res => {
             that.endWait();
             if (res.ok === false) {
                 throw res.statusText;
             }
             let ct = res.headers.get('content-type');
             if (ct && ct.indexOf('json')>=0) {
-                return res.json().then(retJson => {
+                return res.json().then(async retJson => {
                     if (retJson.ok === true)
                         return resolve(retJson.res);
                     if (retJson.error === undefined) {
-                        that.showError(buildError('not valid tonva json'));
+                        await that.showError(buildError('not valid tonva json'));
                     }
                     else {
-                        that.showError(buildError(retJson.error));
+                        await that.showError(buildError(retJson.error));
                         reject(retJson.error);
                     }
                     //throw retJson.error;
-                }).catch(error => {
-                    that.showError(buildError(error.message));
+                }).catch(async error => {
+                    await that.showError(buildError(error.message));
                 });
             }
             else {
@@ -140,14 +140,14 @@ export class HttpChannel {
                 //.then(text => text);
             }
         })
-        .catch(error => {
-            this.showError(buildError(error.message));
+        .catch(async error => {
+            await this.showError(buildError(error.message));
         });
     }
 
     private innerFetch(url: string, options: any): Promise<any> {
-        return new Promise<any>((resolve, reject) => 
-            this.fetch(apiHost + url, options, resolve, reject)
+        return new Promise<any>(async (resolve, reject) => 
+            await this.fetch(apiHost + url, options, resolve, reject)
         );
     }
 

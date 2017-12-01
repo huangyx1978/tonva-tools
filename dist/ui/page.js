@@ -102,7 +102,7 @@ class Page extends React.Component {
         let titleBar;
         if (header !== false)
             titleBar = React.createElement(titleBar_1.TitleBar, { close: close, center: cur.header || cur.title, right: right });
-        return React.createElement("article", null,
+        return React.createElement("article", { className: 'page-container' },
             titleBar,
             React.createElement("section", null, this.state.tabs.map((tab, index) => {
                 if (tab.isSelected === true || tab.isMounted === true) {
@@ -118,7 +118,7 @@ class Page extends React.Component {
         let titleBar;
         if (header !== false)
             titleBar = React.createElement(titleBar_1.TitleBar, { close: close, center: header, right: right });
-        return (React.createElement("article", null,
+        return (React.createElement("article", { className: 'page-container' },
             titleBar,
             React.createElement("section", null,
                 React.createElement(ScrollView, { onScroll: onScroll, onScrollTop: onScrollTop, onScrollBottom: onScrollBottom }, children)),

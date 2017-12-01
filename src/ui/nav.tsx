@@ -1,10 +1,12 @@
 import * as React from 'react';
 import {observable} from 'mobx';
-import {User} from './user';
+import {User, decodeToken} from '../user';
 import {Page} from './page';
+//import LoginView from '../entry/login';
 import {netToken} from '../net';
 import FetchErrorView from './fetchErrorView';
 import {FetchError} from '../fetchError';
+import {appUrl, appApi, setAppHash} from '../net/app';
 import 'font-awesome/css/font-awesome.min.css';
 import '../css/va.css';
 
@@ -15,6 +17,7 @@ export interface Props //extends React.Props<Nav>
     //view: JSX.Element | ((path:string)=>JSX.Element);
     // token?: string;
     //dispatch?: Dispatch<{}>;
+    view: JSX.Element | (()=>JSX.Element);
 };
 export interface StackItem {
     view: JSX.Element;
@@ -46,9 +49,30 @@ export class NavView extends React.Component<Props, State> {
         };
     }
 
-    componentDidMount()
+    async componentDidMount()
     {
         nav.set(this);
+
+        let user: User;
+        let hash = document.location.hash;
+        if (hash !== undefined && hash.length === 10 && hash.startsWith('tv')) {
+            //user = decodeToken(token);
+            setAppHash(hash);
+            this.showAppView(); //.show(this.appView);
+            return;
+        } else {
+            // window.addEventListener('message', e => this.receiveMessage(e));
+            user = nav.local.user.get();
+        }
+        if (user !== undefined) {
+            nav.logined(user);
+        } else {
+            // if (this.loginingView === undefined)
+                // nav.show(<div>no token</div>);
+            // else
+            // nav.show(this.loginingView); //<LoginView />);
+            await nav.showLogin();
+        }
         /*
         let view:JSX.Element;
         let v = this.props.view;
@@ -86,6 +110,12 @@ export class NavView extends React.Component<Props, State> {
         return this.stack.length;
     }
 
+    showAppView() {
+        let view = this.props.view;
+        if (typeof view === 'function') this.show(view());
+        else this.show(view);
+    }
+
     startWait() {
         if (this.waitCount === 0) {
             this.waitTimeHandler = global.setTimeout(
@@ -115,7 +145,7 @@ export class NavView extends React.Component<Props, State> {
         }
     }
 
-    onError(fetchError: FetchError)
+    async onError(fetchError: FetchError)
     {
         let err = fetchError.error;
         if (err !== undefined && err.unauthorized === true) {
@@ -128,7 +158,7 @@ export class NavView extends React.Component<Props, State> {
                 this.show(loginView);
             }*/
             //this.props.showLogin();
-            nav.showLogin();
+            await nav.showLogin();
             return;
         }
         this.setState({
@@ -254,14 +284,15 @@ export class NavView extends React.Component<Props, State> {
 export class Nav {
     private nav:NavView;
     private loginView: JSX.Element;
-    private appView: JSX.Element;
+    //private appView: JSX.Element;
     local: LocalData = new LocalData();
     @observable user: User = {} as User;
     
+    /*
     setViews(loginView: JSX.Element, appView: JSX.Element) {
         this.loginView = loginView;
         this.appView = appView;
-    }
+    }*/
 
     set(nav:NavView) {
         this.nav = nav;
@@ -271,16 +302,20 @@ export class Nav {
         Object.assign(this.user, user);
         this.local.user.set(user);
         netToken.set(user.token);
-        this.nav.show(this.appView);
+        this.nav.showAppView(); //.show(this.appView);
     }
 
-    showLogin() {
+    async showLogin() {
+        if (this.loginView === undefined) {
+            let lv = await import('../entry/login');
+            this.loginView = <lv.default />;
+        }
         this.nav.show(this.loginView);
     }
 
-    logout() {
+    async logout() {
         this.local.logoutClear();
-        this.showLogin();
+        await this.showLogin();
     }
  
     get level() {
@@ -295,8 +330,8 @@ export class Nav {
     endWait() {
         this.nav.endWait();
     }
-    onError(error: FetchError) {
-        this.nav.onError(error);
+    async onError(error: FetchError) {
+        await this.nav.onError(error);
     }
     show (view: JSX.Element): void {
         this.nav.show(view);
@@ -322,36 +357,21 @@ export class Nav {
     confirmBox(message?:string): boolean {
         return this.nav.confirmBox(message);
     }
-    navToApp(url: string) {
-        this.showApp(url);
-    }
-
-    private showApp(url: string) {
-        //let index = this.find(hao, applet);
-        //if (index < 0) {
-        //    alert('在弹出app窗口时发生错误！');
-        //    return;
-        //}
-        //let appWin = this.appWins[index];
-        //let url = appUrl + '#' + token;
-        //if (!url.toLowerCase().startsWith('http://')) url = 'http://' + url;
+    navToApp(url: string, unitId: number, appId: number) {
+        // show in iframe
         nav.push(<article className='app-container'>
             <span onClick={()=>this.back()}>
                 <i className="fa fa-arrow-left" />
             </span>
-            <iframe src={url} />
+            <iframe src={appUrl(url, unitId, appId)} />
         </article>);
-        /*
-        appWin.win.location.href = url;
-        let pos = url.indexOf('//');
-        if (pos < 0) pos = 0;
-        else pos += 2;
-        pos = url.indexOf('/', pos);
-        appWin.url = url.substring(0, pos<0? undefined : pos);
-        setTimeout(() => {
-            appWin.win.postMessage(undefined, appWin.url);
-        }, 1000);
-        */
+    }
+    async getAppApi(apiName: string): Promise<{url:string, token:string}> {
+        return await appApi(apiName);
+    }
+    navToSite(url: string) {
+        // show in new window
+        window.open(url);
     }
 }
 
