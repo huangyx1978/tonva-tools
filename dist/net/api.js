@@ -8,72 +8,34 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const nav_1 = require("../ui/nav");
+const apiBase_1 = require("./apiBase");
 const httpChannel_1 = require("./httpChannel");
-class HttpChannelNavUI {
-    startWait() {
-        nav_1.nav.startWait();
+const app_1 = require("./app");
+const channelUIs = {};
+const channelNoUIs = {};
+class Api extends apiBase_1.ApiBase {
+    constructor(path, apiName, showWaiting) {
+        super(path, showWaiting);
+        this.apiName = apiName ? apiName : undefined;
+        this.showWaiting = showWaiting;
     }
-    endWait() {
-        nav_1.nav.endWait();
-    }
-    showError(error) {
+    getHttpChannel() {
         return __awaiter(this, void 0, void 0, function* () {
-            nav_1.nav.endWait();
-            /*
-            if (error.name === 'SyntaxError') {
-                error = {
-                    name: error.name,
-                    message: error.message,
-                }
-            }*/
-            yield nav_1.nav.onError(error);
+            let channels;
+            if (this.showWaiting === true || this.showWaiting === undefined) {
+                channels = channelUIs;
+            }
+            else {
+                channels = channelNoUIs;
+            }
+            let channel = channels[this.apiName];
+            if (channel !== undefined)
+                return channel;
+            // await center Channel get api
+            let apiToken = yield app_1.appApi(this.apiName);
+            channel = new httpChannel_1.HttpChannel(apiToken.url, apiToken.token);
+            return channels[this.apiName] = channel;
         });
-    }
-}
-// 应该用上面的NavUI
-const httpChannelNav = new httpChannel_1.HttpChannel(new HttpChannelNavUI());
-function refetchApi(url, options, resolve, reject) {
-    return __awaiter(this, void 0, void 0, function* () {
-        yield httpChannelNav.fetch(url, options, resolve, reject);
-    });
-}
-exports.refetchApi = refetchApi;
-class ApiNav {
-    constructor(path) {
-        this.path = path || '';
-    }
-    get(path, params) {
-        return httpChannelNav.get(this.path + path, params);
-    }
-    post(path, params) {
-        return httpChannelNav.post(this.path + path, params);
-    }
-    put(path, params) {
-        return httpChannelNav.put(this.path + path, params);
-    }
-    delete(path, params) {
-        return httpChannelNav.delete(this.path + path, params);
-    }
-}
-exports.ApiNav = ApiNav;
-// 应该用上面的NavUI
-const httpChannel = new httpChannel_1.HttpChannel();
-class Api {
-    constructor(path) {
-        this.path = path || '';
-    }
-    get(path, params) {
-        return httpChannel.get(this.path + path, params);
-    }
-    post(path, params) {
-        return httpChannel.post(this.path + path, params);
-    }
-    put(path, params) {
-        return httpChannel.put(this.path + path, params);
-    }
-    delete(path, params) {
-        return httpChannel.delete(this.path + path, params);
     }
 }
 exports.Api = Api;

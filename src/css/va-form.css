@@ -33,8 +33,6 @@ div.entry-form>form>header {
 div.entry-form>form>header>img {
 	position: absolute;
 	left: 0;
-	width: 40px;
-	height: 40px;
 }
 div.entry-form>form>header>span {
 	font-size: x-large;

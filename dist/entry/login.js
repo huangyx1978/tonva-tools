@@ -16,6 +16,7 @@ const register_1 = require("./register");
 const forget_1 = require("./forget");
 const userApi_1 = require("./userApi");
 require("../css/va-form.css");
+const logo = require('../img/logo.svg');
 class Login extends React.Component {
     constructor(props) {
         super(props);
@@ -108,7 +109,7 @@ class Login extends React.Component {
             React.createElement(reactstrap_1.Container, { className: 'entry-form' },
                 React.createElement(reactstrap_1.Form, { onSubmit: this.onSubmit },
                     React.createElement("header", null,
-                        React.createElement("img", { src: '/img/logo.png' }),
+                        React.createElement("img", { className: 'App-logo', src: logo }),
                         React.createElement("span", null, "\u540C\u82B1")),
                     React.createElement(reactstrap_1.Input, { type: 'text', placeholder: "用户名...", name: 'username', value: username, onChange: e => this.inputChange(e), onFocus: e => this.inputFocus(e) }),
                     React.createElement(reactstrap_1.Input, { type: 'password', placeholder: "密码...", name: 'password', value: password, onChange: e => this.inputChange(e), onFocus: e => this.inputFocus(e) }),

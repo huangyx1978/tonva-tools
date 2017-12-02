@@ -3,7 +3,7 @@ import {observable} from 'mobx';
 import {User, decodeToken} from '../user';
 import {Page} from './page';
 //import LoginView from '../entry/login';
-import {netToken} from '../net';
+import {netToken} from '../net/netToken';
 import FetchErrorView from './fetchErrorView';
 import {FetchError} from '../fetchError';
 import {appUrl, appApi, setAppHash} from '../net/app';

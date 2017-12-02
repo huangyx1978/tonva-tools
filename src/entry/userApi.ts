@@ -1,7 +1,7 @@
-import {Api} from '../net';
+import {CenterApi} from '../net';
 import {User, decodeToken} from '../user';
 
-export class UserApi extends Api {
+export class UserApi extends CenterApi {
     login(params: {user: string, pwd: string}) {
         return this.get('login', params)
             .then((token?:string) => {

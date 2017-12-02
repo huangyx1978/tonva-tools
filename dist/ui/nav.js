@@ -17,7 +17,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const React = require("react");
 const mobx_1 = require("mobx");
 //import LoginView from '../entry/login';
-const net_1 = require("../net");
+const netToken_1 = require("../net/netToken");
 const fetchErrorView_1 = require("./fetchErrorView");
 const app_1 = require("../net/app");
 require("font-awesome/css/font-awesome.min.css");
@@ -272,7 +272,7 @@ class Nav {
     logined(user) {
         Object.assign(this.user, user);
         this.local.user.set(user);
-        net_1.netToken.set(user.token);
+        netToken_1.netToken.set(user.token);
         this.nav.showAppView(); //.show(this.appView);
     }
     showLogin() {

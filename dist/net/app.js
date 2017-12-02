@@ -9,22 +9,32 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const uid_1 = require("../uid");
+const centerApi_1 = require("./centerApi");
+const apiTokens = {};
 const appsInFrame = {};
 let appHash;
 window.addEventListener('message', function (evt) {
-    let e = evt;
-    var message = e.data;
-    switch (message.type) {
-        default: break;
-        case 'app-api':
-            console.log("receive PostMessage: %s", JSON.stringify(message));
-            e.source.postMessage({ type: 'app-api-return', url: window.location.href }, "*");
-            break;
-        case 'app-api-return':
-            console.log("app-api-return: %s", JSON.stringify(message));
-            break;
-    }
+    return __awaiter(this, void 0, void 0, function* () {
+        let e = evt;
+        var message = e.data;
+        switch (message.type) {
+            default: break;
+            case 'app-api':
+                console.log("receive PostMessage: %s", JSON.stringify(message));
+                let ret = yield onReceiveAppApiMessage(message.hash);
+                e.source.postMessage({ type: 'app-api-return', url: ret.url, token: ret.token }, "*");
+                break;
+            case 'app-api-return':
+                console.log("app-api-return: %s", JSON.stringify(message));
+                break;
+        }
+    });
 });
+function onReceiveAppApiMessage(hash) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return { url: 'ddd', token: 'ttt' };
+    });
+}
 let parent = window.parent;
 if (parent !== undefined) {
     //console.log("postMessage: %s", window.location.origin);
@@ -49,7 +59,38 @@ function appUrl(url, unitId, appId) {
 exports.appUrl = appUrl;
 function appApi(apiName) {
     return __awaiter(this, void 0, void 0, function* () {
-        return;
+        let apiToken = apiTokens[apiName];
+        if (apiToken !== undefined)
+            return apiToken;
+        if (window === window.parent) {
+            apiToken = yield centerApi_1.apiTokenApi.api({ dd: 'd' });
+            apiTokens[apiName] = apiToken;
+            return apiToken;
+        }
+        console.log("appApi parent send: %s", appHash);
+        apiToken = {
+            url: undefined,
+            token: undefined,
+            resolve: undefined,
+            reject: undefined,
+        };
+        apiTokens[apiName] = apiToken;
+        return new Promise((resolve, reject) => {
+            apiToken.resolve = (at) => __awaiter(this, void 0, void 0, function* () {
+                let a = yield at;
+                console.log('return from parent window: %s', JSON.stringify(a));
+                apiToken.url = a.url;
+                apiToken.token = a.token;
+                resolve(apiToken);
+            });
+            apiToken.reject = reject;
+            window.parent.postMessage({
+                type: 'app-api',
+                hash: appHash,
+            }, "*");
+        });
+        //apiToken = await apiTokenApi.api({dd: 'd'});
+        //return apiToken;
     });
 }
 exports.appApi = appApi;

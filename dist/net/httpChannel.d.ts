@@ -1,13 +1,9 @@
-import { FetchError } from '../fetchError';
-export declare function setToken(t?: string): void;
-export interface HttpChannelUI {
-    startWait(): void;
-    endWait(): void;
-    showError(error: FetchError): Promise<void>;
-}
+import { HttpChannelUI } from './httpChannelUI';
 export declare class HttpChannel {
+    private hostUrl;
+    private apiToken;
     private ui?;
-    constructor(ui?: HttpChannelUI);
+    constructor(hostUrl: string, apiToken: string, ui?: HttpChannelUI);
     private startWait();
     private endWait();
     private showError(error);

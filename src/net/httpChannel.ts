@@ -1,43 +1,15 @@
 //import nav from './nav';
 import {FetchError} from '../fetchError';
-
-const apiHost = process.env.REACT_APP_APIHOST;
-let token:string|undefined = undefined;
-
-export function setToken(t?:string) {
-    token = t;
-}
-/*
-export interface FetchError {
-    url: string,
-    options: any,
-    resolve:(value?:any)=>void, 
-    reject: (reason?:any)=>void
-    error: any
-}
-*/
-/*
-export interface HttpChannelError {
-    url: string,
-    options: any,
-    resolve:(value?:any)=>void, 
-    reject: (reason?:any)=>void
-    //name:string; 
-    //message:string;
-    error?: string;
-    json?: string;
-}
-*/
-export interface HttpChannelUI {
-    startWait():void;
-    endWait():void;
-    showError(error:FetchError):Promise<void>;
-}
+import {HttpChannelUI} from './httpChannelUI';
 
 export class HttpChannel {
+    private hostUrl: string;
+    private apiToken: string;
     private ui?: HttpChannelUI;
 
-    constructor(ui?: HttpChannelUI) {
+    constructor(hostUrl: string, apiToken: string, ui?: HttpChannelUI) {
+        this.hostUrl = hostUrl;
+        this.apiToken = apiToken;
         this.ui = ui;
         this.startWait = this.startWait.bind(this);
         this.endWait = this.endWait.bind(this);
@@ -147,7 +119,7 @@ export class HttpChannel {
 
     private innerFetch(url: string, options: any): Promise<any> {
         return new Promise<any>(async (resolve, reject) => 
-            await this.fetch(apiHost + url, options, resolve, reject)
+            await this.fetch(this.hostUrl + url, options, resolve, reject)
         );
     }
 
@@ -157,8 +129,8 @@ export class HttpChannel {
         headers.append('Content-Type', 'application/json;charset=UTF-8');
         // headers.append('')
         //headers.append('a', 'b');
-        if (token) { 
-            headers.append('Authorization', token); 
+        if (this.apiToken) { 
+            headers.append('Authorization', this.apiToken); 
         }
         let options = {
             headers: headers,

@@ -8,14 +8,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const apiHost = process.env.REACT_APP_APIHOST;
-let token = undefined;
-function setToken(t) {
-    token = t;
-}
-exports.setToken = setToken;
 class HttpChannel {
-    constructor(ui) {
+    constructor(hostUrl, apiToken, ui) {
+        this.hostUrl = hostUrl;
+        this.apiToken = apiToken;
         this.ui = ui;
         this.startWait = this.startWait.bind(this);
         this.endWait = this.endWait.bind(this);
@@ -123,7 +119,7 @@ class HttpChannel {
         });
     }
     innerFetch(url, options) {
-        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () { return yield this.fetch(apiHost + url, options, resolve, reject); }));
+        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () { return yield this.fetch(this.hostUrl + url, options, resolve, reject); }));
     }
     buildOptions() {
         let headers = new Headers();
@@ -131,8 +127,8 @@ class HttpChannel {
         headers.append('Content-Type', 'application/json;charset=UTF-8');
         // headers.append('')
         //headers.append('a', 'b');
-        if (token) {
-            headers.append('Authorization', token);
+        if (this.apiToken) {
+            headers.append('Authorization', this.apiToken);
         }
         let options = {
             headers: headers,

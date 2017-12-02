@@ -8,6 +8,8 @@ import Forget from './forget';
 import userApi from './userApi';
 import '../css/va-form.css';
 
+const logo = require('../img/logo.svg');
+
 export interface Values {
     username: string;
     password: string;
@@ -118,7 +120,7 @@ export default class Login extends React.Component<{}, State> {
         <Container className='entry-form'>
             <Form onSubmit={this.onSubmit}>
                 <header>
-                    <img src='/img/logo.png' />
+                    <img className='App-logo' src={logo} />
                     <span>同花</span>
                 </header>
                 <Input type='text' placeholder="用户名..."

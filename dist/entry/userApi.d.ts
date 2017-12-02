@@ -1,6 +1,6 @@
-import { Api } from '../net';
+import { CenterApi } from '../net';
 import { User } from '../user';
-export declare class UserApi extends Api {
+export declare class UserApi extends CenterApi {
     login(params: {
         user: string;
         pwd: string;
