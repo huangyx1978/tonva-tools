@@ -1,4 +1,3 @@
-"use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -13,17 +12,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-const React = require("react");
-const mobx_1 = require("mobx");
+import * as React from 'react';
+import { observable } from 'mobx';
 //import LoginView from '../entry/login';
-const netToken_1 = require("../net/netToken");
-const fetchErrorView_1 = require("./fetchErrorView");
-const app_1 = require("../net/app");
-require("font-awesome/css/font-awesome.min.css");
-require("../css/va.css");
+import { netToken } from '../net/netToken';
+import FetchErrorView from './fetchErrorView';
+import { appUrl, appApi, setAppHash } from '../net/app';
+import 'font-awesome/css/font-awesome.min.css';
+import '../css/va.css';
 ;
-class NavView extends React.Component {
+export class NavView extends React.Component {
     constructor(props) {
         super(props);
         this.waitCount = 0;
@@ -38,28 +36,28 @@ class NavView extends React.Component {
     }
     componentDidMount() {
         return __awaiter(this, void 0, void 0, function* () {
-            exports.nav.set(this);
+            nav.set(this);
             let user;
             let hash = document.location.hash;
             if (hash !== undefined && hash.length === 10 && hash.startsWith('tv')) {
                 //user = decodeToken(token);
-                app_1.setAppHash(hash);
+                setAppHash(hash);
                 this.showAppView(); //.show(this.appView);
                 return;
             }
             else {
                 // window.addEventListener('message', e => this.receiveMessage(e));
-                user = exports.nav.local.user.get();
+                user = nav.local.user.get();
             }
             if (user !== undefined) {
-                exports.nav.logined(user);
+                nav.logined(user);
             }
             else {
                 // if (this.loginingView === undefined)
                 // nav.show(<div>no token</div>);
                 // else
                 // nav.show(this.loginingView); //<LoginView />);
-                yield exports.nav.showLogin();
+                yield nav.showLogin();
             }
             /*
             let view:JSX.Element;
@@ -142,7 +140,7 @@ class NavView extends React.Component {
                     this.show(loginView);
                 }*/
                 //this.props.showLogin();
-                yield exports.nav.showLogin();
+                yield nav.showLogin();
                 return;
             }
             this.setState({
@@ -232,7 +230,7 @@ class NavView extends React.Component {
                 React.createElement("span", { className: "sr-only" }, "Loading..."));
         }
         if (fetchError)
-            elError = React.createElement(fetchErrorView_1.default, Object.assign({ clearError: () => this.setState({ fetchError: undefined }) }, fetchError));
+            elError = React.createElement(FetchErrorView, Object.assign({ clearError: () => this.setState({ fetchError: undefined }) }, fetchError));
         return (React.createElement("ul", { className: 'va' },
             stack.map((view, index) => {
                 let p = {
@@ -254,8 +252,7 @@ class NavView extends React.Component {
         this.stack.push({ view: view });
     }
 }
-exports.NavView = NavView;
-class Nav {
+export class Nav {
     constructor() {
         //private appView: JSX.Element;
         this.local = new LocalData();
@@ -272,13 +269,13 @@ class Nav {
     logined(user) {
         Object.assign(this.user, user);
         this.local.user.set(user);
-        netToken_1.netToken.set(user.token);
+        netToken.set(user.token);
         this.nav.showAppView(); //.show(this.appView);
     }
     showLogin() {
         return __awaiter(this, void 0, void 0, function* () {
             if (this.loginView === undefined) {
-                let lv = yield Promise.resolve().then(() => require('../entry/login'));
+                let lv = yield import('../entry/login');
                 this.loginView = React.createElement(lv.default, null);
             }
             this.nav.show(this.loginView);
@@ -333,14 +330,14 @@ class Nav {
     }
     navToApp(url, unitId, appId) {
         // show in iframe
-        exports.nav.push(React.createElement("article", { className: 'app-container' },
+        nav.push(React.createElement("article", { className: 'app-container' },
             React.createElement("span", { onClick: () => this.back() },
                 React.createElement("i", { className: "fa fa-arrow-left" })),
-            React.createElement("iframe", { src: app_1.appUrl(url, unitId, appId) })));
+            React.createElement("iframe", { src: appUrl(url, unitId, appId) })));
     }
     getAppApi(apiName) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield app_1.appApi(apiName);
+            return yield appApi(apiName);
         });
     }
     navToSite(url) {
@@ -349,10 +346,9 @@ class Nav {
     }
 }
 __decorate([
-    mobx_1.observable
+    observable
 ], Nav.prototype, "user", void 0);
-exports.Nav = Nav;
-class Data {
+export class Data {
     constructor(name) { this.name = name; }
     get() {
         if (this.value !== undefined)
@@ -373,8 +369,7 @@ class Data {
         localStorage.removeItem(this.name);
     }
 }
-exports.Data = Data;
-class LocalData {
+export class LocalData {
     constructor() {
         this.user = new Data('user');
         this.homeTabCur = new Data('homeTabCur');
@@ -386,6 +381,5 @@ class LocalData {
         ].map(d => d.clear());
     }
 }
-exports.LocalData = LocalData;
-exports.nav = new Nav();
+export const nav = new Nav();
 //# sourceMappingURL=nav.js.map

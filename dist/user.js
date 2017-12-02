@@ -1,7 +1,5 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const jwtDecode = require("jwt-decode");
-function decodeToken(token) {
+import * as jwtDecode from 'jwt-decode';
+export function decodeToken(token) {
     let ret = jwtDecode(token);
     let accesses;
     if (ret.accesses)
@@ -14,5 +12,4 @@ function decodeToken(token) {
     };
     return user;
 }
-exports.decodeToken = decodeToken;
 //# sourceMappingURL=user.js.map

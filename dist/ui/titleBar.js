@@ -1,9 +1,7 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const React = require("react");
-const className = require("classnames");
-const nav_1 = require("./nav");
-class TitleBar extends React.Component {
+import * as React from 'react';
+import * as className from 'classnames';
+import { nav } from './nav';
+export class TitleBar extends React.Component {
     constructor(props) {
         super(props);
         this.navChange = this.navChange.bind(this);
@@ -13,7 +11,7 @@ class TitleBar extends React.Component {
     }
     navChange() {
         this.setState({
-            hasBack: nav_1.nav.level > 1
+            hasBack: nav.level > 1
         });
     }
     componentWillMount() {
@@ -24,7 +22,7 @@ class TitleBar extends React.Component {
         //nav.events.remove('change', this.navChangeHandler);
     }
     back() {
-        nav_1.nav.back(); // 这个才会显示confirm box，在dataForm里面，如果输入了数据的话
+        nav.back(); // 这个才会显示confirm box，在dataForm里面，如果输入了数据的话
     }
     render() {
         let b = this.state.hasBack || self != top;
@@ -50,5 +48,4 @@ class TitleBar extends React.Component {
             right));
     }
 }
-exports.TitleBar = TitleBar;
 //# sourceMappingURL=titleBar.js.map

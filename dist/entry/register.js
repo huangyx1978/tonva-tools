@@ -1,13 +1,11 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const React = require("react");
-const reactstrap_1 = require("reactstrap");
-const ui_1 = require("../ui");
-const login_1 = require("./login");
-const userApi_1 = require("./userApi");
-const regSuccess_1 = require("./regSuccess");
-require("../css/va-form.css");
-class Register extends React.Component {
+import * as React from 'react';
+import { Container, Form, Button, Input } from 'reactstrap';
+import { nav, Page } from '../ui';
+import LoginView from './login';
+import userApi from './userApi';
+import RegSuccess from './regSuccess';
+import '../css/va-form.css';
+export default class Register extends React.Component {
     constructor(props) {
         super(props);
         this.values = {
@@ -23,7 +21,7 @@ class Register extends React.Component {
         };
     }
     click() {
-        ui_1.nav.replace(React.createElement(login_1.default, null));
+        nav.replace(React.createElement(LoginView, null));
     }
     submit() {
         const { user, pwd, rePwd, country, mobile, email } = this.state.values;
@@ -34,7 +32,7 @@ class Register extends React.Component {
             this.timeOutError();
             return false;
         }
-        userApi_1.default.register({
+        userApi.register({
             nick: undefined,
             user: user,
             pwd: pwd,
@@ -46,8 +44,8 @@ class Register extends React.Component {
             switch (ret) {
                 default: throw 'unknown return';
                 case 0:
-                    ui_1.nav.clear();
-                    ui_1.nav.show(React.createElement(regSuccess_1.default, { user: user, pwd: pwd }));
+                    nav.clear();
+                    nav.show(React.createElement(RegSuccess, { user: user, pwd: pwd }));
                     return;
                 case 1:
                     msg = '用户名 ' + user + ' ';
@@ -99,15 +97,15 @@ class Register extends React.Component {
     render() {
         let { values, disabled, pwdError, regError } = this.state;
         let { user, pwd, rePwd } = values;
-        return (React.createElement(ui_1.Page, { header: "注册" },
-            React.createElement(reactstrap_1.Container, { className: "entry-form" },
-                React.createElement(reactstrap_1.Form, null,
-                    React.createElement(reactstrap_1.Input, { type: "text", placeholder: "用户名...", name: "user", value: user, onChange: e => this.inputChange(e), onFocus: e => this.inputFocus(e) }),
-                    React.createElement(reactstrap_1.Input, { type: "password", placeholder: "密码...", name: "pwd", value: pwd, onChange: e => this.inputChange(e), onFocus: e => this.inputFocus(e) }),
-                    React.createElement(reactstrap_1.Input, { type: "password", placeholder: "重复密码...", name: "rePwd", value: rePwd, onChange: e => this.inputChange(e), onFocus: e => this.inputFocus(e) }),
+        return (React.createElement(Page, { header: "注册" },
+            React.createElement(Container, { className: "entry-form" },
+                React.createElement(Form, null,
+                    React.createElement(Input, { type: "text", placeholder: "用户名...", name: "user", value: user, onChange: e => this.inputChange(e), onFocus: e => this.inputFocus(e) }),
+                    React.createElement(Input, { type: "password", placeholder: "密码...", name: "pwd", value: pwd, onChange: e => this.inputChange(e), onFocus: e => this.inputFocus(e) }),
+                    React.createElement(Input, { type: "password", placeholder: "重复密码...", name: "rePwd", value: rePwd, onChange: e => this.inputChange(e), onFocus: e => this.inputFocus(e) }),
                     React.createElement("span", { className: this.errorClass(pwdError) }, "\u5BC6\u7801\u9519\u8BEF\uFF01"),
                     React.createElement("span", { className: this.errorClass(regError !== undefined) }, regError),
-                    React.createElement(reactstrap_1.Button, { onClick: () => this.submit(), disabled: disabled, block: true, color: "success" }, "\u6CE8\u518C\u65B0\u7528\u6237")))));
+                    React.createElement(Button, { onClick: () => this.submit(), disabled: disabled, block: true, color: "success" }, "\u6CE8\u518C\u65B0\u7528\u6237")))));
     }
     errorClass(error) {
         if (error === false) {
@@ -115,7 +113,6 @@ class Register extends React.Component {
         }
     }
 }
-exports.default = Register;
 /*
             
             <div className="row">

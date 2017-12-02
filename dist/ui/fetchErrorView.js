@@ -1,12 +1,10 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const React = require("react");
-const net_1 = require("../net");
-class FetchErrorView extends React.Component {
+import * as React from 'react';
+import { refetchApi } from '../net';
+export default class FetchErrorView extends React.Component {
     click() {
         this.props.clearError();
         const { url, options, resolve, reject } = this.props;
-        net_1.refetchApi(url, options, resolve, reject);
+        refetchApi(url, options, resolve, reject);
     }
     render() {
         let { error } = this.props;
@@ -31,5 +29,4 @@ class FetchErrorView extends React.Component {
                 errContent));
     }
 }
-exports.default = FetchErrorView;
 //# sourceMappingURL=fetchErrorView.js.map

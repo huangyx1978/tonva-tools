@@ -1,4 +1,3 @@
-"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -7,17 +6,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-const React = require("react");
-const reactstrap_1 = require("reactstrap");
-const classNames = require("classnames");
-const ui_1 = require("../ui");
-const register_1 = require("./register");
-const forget_1 = require("./forget");
-const userApi_1 = require("./userApi");
-require("../css/va-form.css");
+import * as React from 'react';
+import { Form, Input, Container, Button } from 'reactstrap';
+import * as classNames from 'classnames';
+import { nav, Page } from '../ui';
+import RegisterView from './register';
+import Forget from './forget';
+import userApi from './userApi';
+import '../css/va-form.css';
 const logo = require('../img/logo.svg');
-class Login extends React.Component {
+export default class Login extends React.Component {
     constructor(props) {
         super(props);
         this.values = {
@@ -32,7 +30,7 @@ class Login extends React.Component {
         this.onSubmit = this.onSubmit.bind(this);
     }
     click() {
-        ui_1.nav.replace(React.createElement(register_1.default, null));
+        nav.replace(React.createElement(RegisterView, null));
     }
     inputChange(event) {
         const target = event.target;
@@ -73,7 +71,7 @@ class Login extends React.Component {
         return __awaiter(this, void 0, void 0, function* () {
             e.preventDefault();
             let { username, password } = this.values;
-            let user = yield userApi_1.default.login({
+            let user = yield userApi.login({
                 user: username,
                 pwd: password
             });
@@ -81,7 +79,7 @@ class Login extends React.Component {
                 this.failed();
             }
             else {
-                ui_1.nav.logined(user);
+                nav.logined(user);
                 // this.succeed(user);
             }
         });
@@ -104,22 +102,21 @@ class Login extends React.Component {
         let { hasError, values, disabled } = this.state;
         let { username, password } = values;
         let footer = React.createElement("div", { className: 'text-center' },
-            React.createElement(reactstrap_1.Button, { color: "link", style: { margin: '0px auto' }, onClick: () => ui_1.nav.push(React.createElement(register_1.default, null)) }, "\u5982\u679C\u6CA1\u6709\u8D26\u53F7\uFF0C\u8BF7\u6CE8\u518C"));
-        return (React.createElement(ui_1.Page, { header: false, footer: footer },
-            React.createElement(reactstrap_1.Container, { className: 'entry-form' },
-                React.createElement(reactstrap_1.Form, { onSubmit: this.onSubmit },
+            React.createElement(Button, { color: "link", style: { margin: '0px auto' }, onClick: () => nav.push(React.createElement(RegisterView, null)) }, "\u5982\u679C\u6CA1\u6709\u8D26\u53F7\uFF0C\u8BF7\u6CE8\u518C"));
+        return (React.createElement(Page, { header: false, footer: footer },
+            React.createElement(Container, { className: 'entry-form' },
+                React.createElement(Form, { onSubmit: this.onSubmit },
                     React.createElement("header", null,
                         React.createElement("img", { className: 'App-logo', src: logo }),
                         React.createElement("span", null, "\u540C\u82B1")),
-                    React.createElement(reactstrap_1.Input, { type: 'text', placeholder: "用户名...", name: 'username', value: username, onChange: e => this.inputChange(e), onFocus: e => this.inputFocus(e) }),
-                    React.createElement(reactstrap_1.Input, { type: 'password', placeholder: "密码...", name: 'password', value: password, onChange: e => this.inputChange(e), onFocus: e => this.inputFocus(e) }),
+                    React.createElement(Input, { type: 'text', placeholder: "用户名...", name: 'username', value: username, onChange: e => this.inputChange(e), onFocus: e => this.inputFocus(e) }),
+                    React.createElement(Input, { type: 'password', placeholder: "密码...", name: 'password', value: password, onChange: e => this.inputChange(e), onFocus: e => this.inputFocus(e) }),
                     React.createElement("span", { className: classNames(hasError === false ? 'hidden-xs-up' : undefined) }, "\u7528\u6237\u540D\u6216\u5BC6\u7801\u9519\uFF01"),
-                    React.createElement(reactstrap_1.Button, { type: 'submit', disabled: disabled, block: true, color: 'success' }, "\u767B\u5F55"),
+                    React.createElement(Button, { type: 'submit', disabled: disabled, block: true, color: 'success' }, "\u767B\u5F55"),
                     React.createElement("div", { style: { display: 'flex', alignItems: 'center' } },
-                        React.createElement(reactstrap_1.Button, { color: "link", block: true, onClick: () => ui_1.nav.push(React.createElement(forget_1.default, null)) }, "\u5FD8\u8BB0\u5BC6\u7801"))))));
+                        React.createElement(Button, { color: "link", block: true, onClick: () => nav.push(React.createElement(Forget, null)) }, "\u5FD8\u8BB0\u5BC6\u7801"))))));
     }
 }
-exports.default = Login;
 /*
 <Container>
 <div className="row">

@@ -32,3 +32,14 @@ export class Api extends ApiBase {
         return channels[this.apiName] = channel;
     }
 }
+
+//import {Api} from 'tonva-tools';
+
+export class TestApi extends Api {
+    async v(param: {}):Promise<any> {
+        return this.get('v', param);
+    }
+}
+
+//const testApi = new TestApi("/v", "v");
+//export default testApi;

@@ -1,7 +1,5 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 const wsHost = process.env.REACT_APP_WSHOST;
-class WSChannel {
+export class WSChannel {
     constructor() {
         this.handlerSeed = 1;
         this.anyHandlers = {};
@@ -92,7 +90,6 @@ class WSChannel {
         });
     }
 }
-exports.WSChannel = WSChannel;
 const wsChannel = new WSChannel();
-exports.default = wsChannel;
+export default wsChannel;
 //# sourceMappingURL=wsChannel.js.map

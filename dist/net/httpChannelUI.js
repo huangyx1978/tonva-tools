@@ -1,4 +1,3 @@
-"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -7,18 +6,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-const nav_1 = require("../ui/nav");
-class HttpChannelNavUI {
+import { nav } from '../ui/nav';
+export class HttpChannelNavUI {
     startWait() {
-        nav_1.nav.startWait();
+        nav.startWait();
     }
     endWait() {
-        nav_1.nav.endWait();
+        nav.endWait();
     }
     showError(error) {
         return __awaiter(this, void 0, void 0, function* () {
-            nav_1.nav.endWait();
+            nav.endWait();
             /*
             if (error.name === 'SyntaxError') {
                 error = {
@@ -26,9 +24,8 @@ class HttpChannelNavUI {
                     message: error.message,
                 }
             }*/
-            yield nav_1.nav.onError(error);
+            yield nav.onError(error);
         });
     }
 }
-exports.HttpChannelNavUI = HttpChannelNavUI;
 //# sourceMappingURL=httpChannelUI.js.map

@@ -1,9 +1,7 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const React = require("react");
-const classNames = require("classnames");
-require("../css/va-row.css");
-class ListRow extends React.Component {
+import * as React from 'react';
+import * as classNames from 'classnames';
+import '../css/va-row.css';
+export class ListRow extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -28,5 +26,4 @@ class ListRow extends React.Component {
             footer));
     }
 }
-exports.ListRow = ListRow;
 //# sourceMappingURL=listRow.js.map

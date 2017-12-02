@@ -1,4 +1,3 @@
-"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -7,9 +6,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-const uid_1 = require("../uid");
-const centerApi_1 = require("./centerApi");
+import { uid } from '../uid';
+import { apiTokenApi } from './centerApi';
 const apiTokens = {};
 const appsInFrame = {};
 let appHash;
@@ -40,14 +38,13 @@ if (parent !== undefined) {
     //console.log("postMessage: %s", window.location.origin);
     parent.postMessage({ type: 'app-api', url: window.location.href }, "*");
 }
-function setAppHash(hash) {
+export function setAppHash(hash) {
     appHash = hash;
 }
-exports.setAppHash = setAppHash;
-function appUrl(url, unitId, appId) {
+export function appUrl(url, unitId, appId) {
     let u;
     for (;;) {
-        u = uid_1.uid();
+        u = uid();
         let a = appsInFrame[u];
         if (a === undefined) {
             appsInFrame[u] = { unit: unitId, app: appId };
@@ -56,14 +53,13 @@ function appUrl(url, unitId, appId) {
     }
     return url + '#tv' + u;
 }
-exports.appUrl = appUrl;
-function appApi(apiName) {
+export function appApi(apiName) {
     return __awaiter(this, void 0, void 0, function* () {
         let apiToken = apiTokens[apiName];
         if (apiToken !== undefined)
             return apiToken;
         if (window === window.parent) {
-            apiToken = yield centerApi_1.apiTokenApi.api({ dd: 'd' });
+            apiToken = yield apiTokenApi.api({ dd: 'd' });
             apiTokens[apiName] = apiToken;
             return apiToken;
         }
@@ -93,5 +89,4 @@ function appApi(apiName) {
         //return apiToken;
     });
 }
-exports.appApi = appApi;
 //# sourceMappingURL=app.js.map

@@ -1,9 +1,7 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const React = require("react");
-const reactstrap_1 = require("reactstrap");
-const classNames = require("classnames");
-class LabelRow extends React.Component {
+import * as React from 'react';
+import { Row, Col } from 'reactstrap';
+import * as classNames from 'classnames';
+export class LabelRow extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -22,13 +20,12 @@ class LabelRow extends React.Component {
         let c = classNames('label-row', this.props.className, {
             pressed: this.state.isPressed
         });
-        return (React.createElement(reactstrap_1.Row, { className: c, onMouseDown: () => this.mouseDown(), onMouseUp: () => this.mouseUp() },
-            React.createElement(reactstrap_1.Col, { tag: 'label', xs: 3 }, this.props.label),
-            React.createElement(reactstrap_1.Col, { xs: 9 }, this.props.children)));
+        return (React.createElement(Row, { className: c, onMouseDown: () => this.mouseDown(), onMouseUp: () => this.mouseUp() },
+            React.createElement(Col, { tag: 'label', xs: 3 }, this.props.label),
+            React.createElement(Col, { xs: 9 }, this.props.children)));
     }
 }
-exports.LabelRow = LabelRow;
-class ActionRow extends React.Component {
+export class ActionRow extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -50,5 +47,4 @@ class ActionRow extends React.Component {
         return (React.createElement("div", { className: c, onMouseDown: () => this.mouseDown(), onMouseUp: () => this.mouseUp() }, this.props.children));
     }
 }
-exports.ActionRow = ActionRow;
 //# sourceMappingURL=row.js.map

@@ -1,9 +1,7 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const React = require("react");
-const classNames = require("classnames");
-const _ = require("lodash");
-const titleBar_1 = require("./titleBar");
+import * as React from 'react';
+import * as classNames from 'classnames';
+import * as _ from 'lodash';
+import { TitleBar } from './titleBar';
 const scrollTimeGap = 100;
 class ScrollView extends React.Component {
     constructor(props) {
@@ -39,7 +37,7 @@ class ScrollView extends React.Component {
         return (React.createElement("main", { className: this.props.className, onScroll: this.onScroll }, this.props.children));
     }
 }
-class Page extends React.Component {
+export class Page extends React.Component {
     constructor(props) {
         super(props);
         this.tabs = props.tabs;
@@ -101,7 +99,7 @@ class Page extends React.Component {
         }));
         let titleBar;
         if (header !== false)
-            titleBar = React.createElement(titleBar_1.TitleBar, { close: close, center: cur.header || cur.title, right: right });
+            titleBar = React.createElement(TitleBar, { close: close, center: cur.header || cur.title, right: right });
         return React.createElement("article", { className: 'page-container' },
             titleBar,
             React.createElement("section", null, this.state.tabs.map((tab, index) => {
@@ -117,7 +115,7 @@ class Page extends React.Component {
         const { close, header, right, onScroll, onScrollTop, onScrollBottom, children } = this.props;
         let titleBar;
         if (header !== false)
-            titleBar = React.createElement(titleBar_1.TitleBar, { close: close, center: header, right: right });
+            titleBar = React.createElement(TitleBar, { close: close, center: header, right: right });
         return (React.createElement("article", { className: 'page-container' },
             titleBar,
             React.createElement("section", null,
@@ -135,5 +133,4 @@ class Page extends React.Component {
             return this.renderSingle(elFooter);
     }
 }
-exports.Page = Page;
 //# sourceMappingURL=page.js.map

@@ -1,4 +1,3 @@
-"use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -13,14 +12,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-const React = require("react");
-const mobx_1 = require("mobx");
-const _ = require("lodash");
-const page_1 = require("../page");
-const nav_1 = require("../nav");
-const inputSchema_1 = require("./inputSchema");
-class FormSchema {
+import * as React from 'react';
+import { computed } from 'mobx';
+import * as _ from 'lodash';
+import { Page } from '../page';
+import { nav } from '../nav';
+import { inputFactory } from './inputSchema';
+export class FormSchema {
     constructor(formFields) {
         let { fields, onSumit, fieldTag, submitText, resetButton, clearButton } = formFields;
         this.fieldTag = fieldTag || 'div';
@@ -37,7 +35,7 @@ class FormSchema {
         this._inputs = {};
         this.inputs = [];
         for (let field of fields) {
-            let v = this._inputs[field.name] = inputSchema_1.inputFactory(this, field);
+            let v = this._inputs[field.name] = inputFactory(this, field);
             this.inputs.push(v);
         }
         this.onSubmit = this.onSubmit.bind(this);
@@ -98,11 +96,11 @@ class FormSchema {
                     return;
                 }
             }
-            nav_1.nav.push(React.createElement(ResultPage, { return: ret, onFinish: this.onFinish, onNext: this.onNext }));
+            nav.push(React.createElement(ResultPage, { return: ret, onFinish: this.onFinish, onNext: this.onNext }));
         });
     }
     onFinish() {
-        nav_1.nav.pop();
+        nav.pop();
     }
     onNext() {
         this.clear();
@@ -147,12 +145,11 @@ class FormSchema {
     }
 }
 __decorate([
-    mobx_1.computed
+    computed
 ], FormSchema.prototype, "hasError", null);
 __decorate([
-    mobx_1.computed
+    computed
 ], FormSchema.prototype, "notFilled", null);
-exports.FormSchema = FormSchema;
 class ResultPage extends React.Component {
     render() {
         let { return: ret, onNext, onFinish } = this.props;
@@ -160,14 +157,14 @@ class ResultPage extends React.Component {
         if (message === undefined) {
             message = success === true ? '提交成功' : '提交发生错误';
         }
-        return React.createElement(page_1.Page, { close: true },
+        return React.createElement(Page, { close: true },
             React.createElement("div", { className: 'jumbotron' },
                 React.createElement("div", { className: 'lead' }, message),
                 React.createElement("p", null, JSON.stringify(result)),
                 React.createElement("hr", { className: "my-4" }),
                 React.createElement("div", { className: 'lead' },
-                    React.createElement("button", { className: 'btn btn-primary mr-2', type: 'button', onClick: () => { nav_1.nav.pop(); onFinish(); } }, "\u5B8C\u6210"),
-                    React.createElement("button", { className: 'btn btn-default mr-2', type: 'button', onClick: () => { nav_1.nav.pop(); onNext(); } }, "\u7EE7\u7EED"))));
+                    React.createElement("button", { className: 'btn btn-primary mr-2', type: 'button', onClick: () => { nav.pop(); onFinish(); } }, "\u5B8C\u6210"),
+                    React.createElement("button", { className: 'btn btn-default mr-2', type: 'button', onClick: () => { nav.pop(); onNext(); } }, "\u7EE7\u7EED"))));
     }
 }
 //# sourceMappingURL=formSchema.js.map
