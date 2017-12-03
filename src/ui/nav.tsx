@@ -55,7 +55,7 @@ export class NavView extends React.Component<Props, State> {
 
         let user: User;
         let hash = document.location.hash;
-        if (hash !== undefined && hash.length === 10 && hash.startsWith('tv')) {
+        if (hash !== undefined && hash.length === 11 && hash.startsWith('#tv')) {
             //user = decodeToken(token);
             setAppHash(hash);
             this.showAppView(); //.show(this.appView);
@@ -359,11 +359,12 @@ export class Nav {
     }
     navToApp(url: string, unitId: number, appId: number) {
         // show in iframe
+        let src = appUrl(url, unitId, appId);
         nav.push(<article className='app-container'>
             <span onClick={()=>this.back()}>
                 <i className="fa fa-arrow-left" />
             </span>
-            <iframe src={appUrl(url, unitId, appId)} />
+            <iframe src={src} />
         </article>);
     }
     async getAppApi(apiName: string): Promise<{url:string, token:string}> {

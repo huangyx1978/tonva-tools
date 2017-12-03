@@ -36,14 +36,4 @@ export class Api extends ApiBase {
         });
     }
 }
-//import {Api} from 'tonva-tools';
-export class TestApi extends Api {
-    v(param) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.get('v', param);
-        });
-    }
-}
-//const testApi = new TestApi("/v", "v");
-//export default testApi;
 //# sourceMappingURL=api.js.map

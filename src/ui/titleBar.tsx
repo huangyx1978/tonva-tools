@@ -7,9 +7,10 @@ import {ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem,
 import {nav} from './nav';
 
 export interface TitleBarProps {
-    close?: boolean,
-    center: string | JSX.Element,
-    right?: JSX.Element,
+    close?: boolean;
+    center: string | JSX.Element;
+    right?: JSX.Element;
+    debugLogout?: boolean;
 }
 export interface TitleBarState {
     hasBack: boolean;
@@ -42,7 +43,13 @@ export class TitleBar extends React.Component<TitleBarProps, TitleBarState> {
         let b = this.state.hasBack || self != top;
         let r = this.props.right;
         let c = this.props.center;
-        let back, pop;
+        let back, pop, debugLogout;
+        if (this.props.debugLogout === true && self === top) {
+            debugLogout = <Button className="dropdown-toggle" color="secondary" size="sm" 
+                onClick={()=>nav.logout()}>
+                <i className="fa fa-sign-out" />
+            </Button>
+        }
         if (b) {
             let cn = className('fa', this.props.close === true? 'fa-close' : 'fa-arrow-left');
             back = (
@@ -56,7 +63,7 @@ export class TitleBar extends React.Component<TitleBarProps, TitleBarState> {
             pop = <header onClick={()=>window.open(document.location.href)} />;
         }
         let right;
-        if (r) right = <aside>{r}</aside>;
+        if (r || debugLogout) right = <aside>{r} {debugLogout}</aside>;
         return (
         <header>
             {pop}

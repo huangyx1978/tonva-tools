@@ -39,7 +39,7 @@ export class NavView extends React.Component {
             nav.set(this);
             let user;
             let hash = document.location.hash;
-            if (hash !== undefined && hash.length === 10 && hash.startsWith('tv')) {
+            if (hash !== undefined && hash.length === 11 && hash.startsWith('#tv')) {
                 //user = decodeToken(token);
                 setAppHash(hash);
                 this.showAppView(); //.show(this.appView);
@@ -330,10 +330,11 @@ export class Nav {
     }
     navToApp(url, unitId, appId) {
         // show in iframe
+        let src = appUrl(url, unitId, appId);
         nav.push(React.createElement("article", { className: 'app-container' },
             React.createElement("span", { onClick: () => this.back() },
                 React.createElement("i", { className: "fa fa-arrow-left" })),
-            React.createElement("iframe", { src: appUrl(url, unitId, appId) })));
+            React.createElement("iframe", { src: src })));
     }
     getAppApi(apiName) {
         return __awaiter(this, void 0, void 0, function* () {

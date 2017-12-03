@@ -1,5 +1,6 @@
 import * as React from 'react';
 import * as className from 'classnames';
+import { Button } from 'reactstrap';
 import { nav } from './nav';
 export class TitleBar extends React.Component {
     constructor(props) {
@@ -28,7 +29,11 @@ export class TitleBar extends React.Component {
         let b = this.state.hasBack || self != top;
         let r = this.props.right;
         let c = this.props.center;
-        let back, pop;
+        let back, pop, debugLogout;
+        if (this.props.debugLogout === true && self === top) {
+            debugLogout = React.createElement(Button, { className: "dropdown-toggle", color: "secondary", size: "sm", onClick: () => nav.logout() },
+                React.createElement("i", { className: "fa fa-sign-out" }));
+        }
         if (b) {
             let cn = className('fa', this.props.close === true ? 'fa-close' : 'fa-arrow-left');
             back = (React.createElement("nav", { onClick: this.back },
@@ -39,8 +44,11 @@ export class TitleBar extends React.Component {
             pop = React.createElement("header", { onClick: () => window.open(document.location.href) });
         }
         let right;
-        if (r)
-            right = React.createElement("aside", null, r);
+        if (r || debugLogout)
+            right = React.createElement("aside", null,
+                r,
+                " ",
+                debugLogout);
         return (React.createElement("header", null,
             pop,
             back,

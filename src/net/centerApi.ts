@@ -45,9 +45,9 @@ export abstract class CenterApi extends ApiBase {
 }
 
 export class ApiTokenApi extends CenterApi {
-    api(params: {dd:string}) {
-        return this.get('api', params);
+    api(params: {unit:number, app:number, apiName:string}) {
+        return this.get('app-api', params);
     }
 }
 
-export const apiTokenApi = new ApiTokenApi('tv/token');
+export const apiTokenApi = new ApiTokenApi('tv/tie/');

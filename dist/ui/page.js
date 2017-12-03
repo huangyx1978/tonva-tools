@@ -115,7 +115,7 @@ export class Page extends React.Component {
         const { close, header, right, onScroll, onScrollTop, onScrollBottom, children } = this.props;
         let titleBar;
         if (header !== false)
-            titleBar = React.createElement(TitleBar, { close: close, center: header, right: right });
+            titleBar = React.createElement(TitleBar, { close: close, center: header, right: right, debugLogout: this.props.debugLogout });
         return (React.createElement("article", { className: 'page-container' },
             titleBar,
             React.createElement("section", null,

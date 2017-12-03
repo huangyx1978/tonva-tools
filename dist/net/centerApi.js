@@ -51,8 +51,8 @@ export class CenterApi extends ApiBase {
 }
 export class ApiTokenApi extends CenterApi {
     api(params) {
-        return this.get('api', params);
+        return this.get('app-api', params);
     }
 }
-export const apiTokenApi = new ApiTokenApi('tv/token');
+export const apiTokenApi = new ApiTokenApi('tv/tie/');
 //# sourceMappingURL=centerApi.js.map

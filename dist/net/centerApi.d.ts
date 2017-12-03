@@ -9,7 +9,9 @@ export declare abstract class CenterApi extends ApiBase {
 }
 export declare class ApiTokenApi extends CenterApi {
     api(params: {
-        dd: string;
+        unit: number;
+        app: number;
+        apiName: string;
     }): Promise<any>;
 }
 export declare const apiTokenApi: ApiTokenApi;

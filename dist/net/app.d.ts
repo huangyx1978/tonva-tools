@@ -1,4 +1,5 @@
 export interface ApiToken {
+    name: string;
     url: string;
     token: string;
 }

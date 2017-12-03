@@ -67,6 +67,7 @@ export interface PageProps extends ScrollProps {
     right?: JSX.Element;
     footer?: JSX.Element;
     tabs?: Tab[];
+    debugLogout?: boolean;
 }
 export interface PageState {
     cur?: Tab;
@@ -174,7 +175,8 @@ export class Page extends React.Component<PageProps, PageState> {
             titleBar = <TitleBar 
                 close={close} 
                 center={header as any}
-                right={right} 
+                right={right}
+                debugLogout={this.props.debugLogout}
             />;
         return (
             <article className='page-container'>
