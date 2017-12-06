@@ -10,15 +10,24 @@ export class ListRow extends React.Component {
     }
     render() {
         let { date, main, vice, icon, unread, right, onClick } = this.props;
-        let header, isIcon;
+        let header, isIcon, noteNum;
+        if (unread !== undefined) {
+            if (unread > 0)
+                noteNum = React.createElement("b", null, unread);
+            else if (unread < 0)
+                noteNum = React.createElement("b", { className: 'dot' });
+        }
         switch (typeof icon) {
             case 'object':
-                header = React.createElement("header", null, icon);
+                header = React.createElement("header", null,
+                    icon,
+                    noteNum);
                 isIcon = false;
                 break;
             case 'string':
                 header = React.createElement("header", { className: 'icon' },
-                    React.createElement("img", { src: icon }));
+                    React.createElement("img", { src: icon }),
+                    noteNum);
                 isIcon = true;
                 break;
         }

@@ -30,14 +30,20 @@ export class ListRow extends React.Component<ListRowProps, ListRowState> {
     }
     render() {
         let {date, main, vice, icon, unread, right, onClick} = this.props;
-        let header, isIcon:boolean;
+        let header, isIcon:boolean, noteNum;
+        if (unread !== undefined) {
+            if (unread > 0)
+                noteNum = <b>{unread}</b>;
+            else if (unread < 0)
+                noteNum = <b className='dot' />;
+        }
         switch (typeof icon) {
             case 'object':
-                header = <header>{icon}</header>; 
+                header = <header>{icon}{noteNum}</header>; 
                 isIcon= false;
                 break;
             case 'string': 
-                header = <header className='icon'><img src={icon as string} /></header>; 
+                header = <header className='icon'><img src={icon as string} />{noteNum}</header>;
                 isIcon= true; 
                 break;
         }

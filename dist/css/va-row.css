@@ -10,6 +10,7 @@ li.va-row.icon {
   align-items: flex-start;
 }
   li.va-row>header {
+    position: relative;
     border: none;
     background: none;
     display: flex;
@@ -34,7 +35,7 @@ li.va-row.icon {
   }
   li.va-row>header>b {
     position: absolute;
-    left: -10px;
+    left: 30px;
     top: -6px;
     font-style: normal;
     font-size: 12px;
@@ -46,6 +47,13 @@ li.va-row.icon {
     width: 18px;
     height: 18px;
     text-align: center;
+  }
+  li.va-row>header>b.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+    left: 35px;
+    top: 0px;
   }
   li.va-row>div {
     display: flex;
