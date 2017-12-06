@@ -13,13 +13,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import * as React from 'react';
-import { computed } from 'mobx';
+import { observable, computed } from 'mobx';
 import * as _ from 'lodash';
+import * as classNames from 'classnames';
 import { Page } from '../page';
 import { nav } from '../nav';
 import { inputFactory } from './inputSchema';
 export class FormSchema {
     constructor(formFields) {
+        this.errors = [];
         let { fields, onSumit, fieldTag, submitText, resetButton, clearButton } = formFields;
         this.fieldTag = fieldTag || 'div';
         this.submitText = submitText || '提交';
@@ -34,7 +36,10 @@ export class FormSchema {
         this.submit = onSumit;
         this._inputs = {};
         this.inputs = [];
+        this.hasLabel = false;
         for (let field of fields) {
+            if (field.label !== undefined)
+                this.hasLabel = true;
             let v = this._inputs[field.name] = inputFactory(this, field);
             this.inputs.push(v);
         }
@@ -45,9 +50,11 @@ export class FormSchema {
     }
     clear() {
         this.inputs.forEach(v => v.clear());
+        this.errors.splice(0, this.errors.length);
     }
     reset() {
         this.inputs.forEach(v => v.reset());
+        this.errors.splice(0, this.errors.length);
     }
     values() {
         let ret = {};
@@ -80,10 +87,12 @@ export class FormSchema {
                 return;
             }
             let ret = yield this.submit(this.values());
-            if (ret === undefined) {
-                alert('no submit return');
+            if (ret === undefined)
                 return;
-            }
+            //if (ret === undefined) {
+            //    alert('no submit return');
+            //    return;
+            //}
             if (ret.success === true) {
                 if (this.onSuccess !== undefined) {
                     this.onSuccess(ret.result);
@@ -105,12 +114,18 @@ export class FormSchema {
     onNext() {
         this.clear();
     }
+    fieldContainerClassNames() {
+        return classNames(this.hasLabel ? 'col-sm-10' : 'col-sm-12');
+    }
     renderInput(vInput) {
         let { err } = vInput;
-        return React.createElement("input", Object.assign({ className: 'form-control has-success is-valid' }, vInput.props));
+        let cn = classNames('form-control', 'has-success', err ? 'is-invalid' : 'is-valid');
+        return React.createElement("input", Object.assign({ className: cn }, vInput.props));
     }
     renderLabel(vInput) {
-        return React.createElement("label", { className: 'col-sm-2 col-form-label' }, vInput.label);
+        if (this.hasLabel === false)
+            return null;
+        return React.createElement("label", { className: 'col-sm-2 col-form-label' }, vInput !== undefined ? vInput.label : null);
     }
     renderErr(vInput) {
         return React.createElement("div", { className: "invalid-feedback" }, vInput.err);
@@ -118,15 +133,17 @@ export class FormSchema {
     renderField(vInput) {
         return React.createElement("div", { className: 'form-group row', key: vInput.id },
             this.renderLabel(vInput),
-            React.createElement("div", { className: "col-sm-10" },
+            React.createElement("div", { className: this.fieldContainerClassNames() },
                 this.renderInput(vInput),
                 vInput.err && this.renderErr(vInput)));
     }
     renderSeperator(vInput) {
-        return React.createElement("hr", { key: _.uniqueId(), style: { margin: '20px 0px' } });
+        return null;
+        //return <hr key={_.uniqueId()} style={{margin:'20px 0px'}} />;
     }
     renderSumit() {
-        return React.createElement("button", { className: 'btn btn-primary', key: _.uniqueId(), type: 'submit', disabled: this.notFilled || this.hasError }, this.submitText);
+        let cn = classNames('btn', 'btn-primary', this.hasLabel ? undefined : 'btn-block');
+        return React.createElement("button", { className: cn, key: _.uniqueId(), type: 'submit', disabled: this.notFilled || this.hasError }, this.submitText);
     }
     renderReset() {
         return React.createElement("button", { className: 'btn btn-secondary"', key: _.uniqueId(), type: 'button', onClick: this.onReset }, this.resetButton);
@@ -134,16 +151,33 @@ export class FormSchema {
     renderClear() {
         return React.createElement("button", { className: 'btn btn-secondary"', key: _.uniqueId(), type: 'button', onClick: this.onClear }, this.clearButton);
     }
+    renderFormErrors() {
+        if (this.errors.length === 0)
+            return null;
+        return React.createElement("div", { className: 'form-group row' },
+            React.createElement("div", { className: this.fieldContainerClassNames() },
+                this.renderLabel(undefined),
+                this.errors.map(e => React.createElement("div", { className: 'invalid-feedback', style: { display: 'block' } }, e))));
+    }
     renderButtons() {
+        if (this.hasLabel === true) {
+            return React.createElement("div", { className: 'form-group row', key: _.uniqueId() },
+                this.renderLabel(undefined),
+                React.createElement("div", { className: this.fieldContainerClassNames() },
+                    React.createElement("div", { className: "row container" },
+                        React.createElement("div", { className: "col-auto mr-auto" }, this.renderSumit()),
+                        React.createElement("div", { className: "col-auto" }, this.clearButton && this.renderClear()),
+                        React.createElement("div", { className: "col-auto" }, this.resetButton && this.renderReset()))));
+        }
         return React.createElement("div", { className: 'form-group row', key: _.uniqueId() },
-            React.createElement("div", { className: 'col-sm-2' }),
-            React.createElement("div", { className: 'col-sm-10' },
-                React.createElement("div", { className: "row container" },
-                    React.createElement("div", { className: "col-auto mr-auto" }, this.renderSumit()),
-                    React.createElement("div", { className: "col-auto" }, this.clearButton && this.renderClear()),
-                    React.createElement("div", { className: "col-auto" }, this.resetButton && this.renderReset()))));
+            React.createElement("div", { className: this.fieldContainerClassNames() }, this.renderSumit()),
+            this.clearButton ? React.createElement("div", { className: "col-auto" }, "this.renderClear()") : null,
+            this.resetButton ? React.createElement("div", { className: "col-auto" }, "this.renderReset()") : null);
     }
 }
+__decorate([
+    observable
+], FormSchema.prototype, "errors", void 0);
 __decorate([
     computed
 ], FormSchema.prototype, "hasError", null);

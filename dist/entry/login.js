@@ -7,21 +7,56 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import * as React from 'react';
-import { Form, Input, Container, Button } from 'reactstrap';
-import * as classNames from 'classnames';
-import { nav, Page } from '../ui';
+import { Button } from 'reactstrap';
+import { nav, Page, FormSchema } from '../ui';
 import RegisterView from './register';
 import Forget from './forget';
 import userApi from './userApi';
-import '../css/va-form.css';
+import { ValidForm } from '../index';
 const logo = require('../img/logo.svg');
+/*
+export interface Values {
+    username: string;
+    password: string;
+}
+
+export interface State {
+    values: Values;
+    hasError: boolean;
+    disabled: boolean;
+}*/
 export default class Login extends React.Component {
+    constructor() {
+        super(...arguments);
+        this.schema = new FormSchema({
+            fields: [
+                {
+                    type: 'string',
+                    name: 'username',
+                    placeholder: '用户名',
+                    rules: ['required', 'maxlength:100']
+                },
+                {
+                    type: 'password',
+                    name: 'password',
+                    placeholder: '密码',
+                    rules: ['required', 'maxlength:100']
+                },
+            ],
+            onSumit: this.onLoginSubmit.bind(this),
+        });
+    }
+    /*
+    private values: Values = {
+        username: '',
+        password: '',
+    };
+    private inputUser: HTMLInputElement;
+    private inputPassword: HTMLInputElement;
+    private timeOut?: NodeJS.Timer;
+
     constructor(props) {
         super(props);
-        this.values = {
-            username: '',
-            password: '',
-        };
         this.state = {
             values: this.values,
             hasError: false,
@@ -29,28 +64,47 @@ export default class Login extends React.Component {
         };
         this.onSubmit = this.onSubmit.bind(this);
     }
+    */
+    onLoginSubmit(values) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let user = yield userApi.login({
+                user: values['username'],
+                pwd: values['password']
+            });
+            if (user === undefined) {
+                //this.failed();
+                this.schema.clear();
+                this.schema.errors.push('用户名或密码错！');
+            }
+            else {
+                nav.logined(user);
+            }
+            return undefined;
+        });
+    }
     click() {
         nav.replace(React.createElement(RegisterView, null));
     }
-    inputChange(event) {
+    /*
+    inputChange(event: any) {
         const target = event.target;
         const inputValue = target.type === 'checkbox' ? target.checked : target.value;
         const inputName = target.name;
         this.values[inputName] = inputValue;
-        let { username, password } = this.values;
-        let disabled = username.trim().length === 0 || password.length === 0;
+        let {username, password} =  this.values;
+        let disabled = username.trim().length===0 || password.length===0;
         this.setState({
             values: this.values,
             disabled: disabled,
         });
     }
-    inputFocus(event) {
-        this.setState({ hasError: false });
+    inputFocus(event: any) {
+        this.setState({hasError: false});
         if (this.timeOut !== undefined) {
             clearTimeout(this.timeOut);
             this.timeOut = undefined;
         }
-    }
+    }*/
     /*
     submit() {
         let {username, password} = this.values;
@@ -67,24 +121,23 @@ export default class Login extends React.Component {
         });
         return false;
     }*/
-    onSubmit(e) {
-        return __awaiter(this, void 0, void 0, function* () {
-            e.preventDefault();
-            let { username, password } = this.values;
-            let user = yield userApi.login({
-                user: username,
-                pwd: password
-            });
-            if (user === undefined) {
-                this.failed();
-            }
-            else {
-                nav.logined(user);
-                // this.succeed(user);
-            }
+    /*
+    async onSubmit(e: React.FormEvent<HTMLFormElement>) {
+        e.preventDefault();
+        let {username, password} = this.values;
+        let user = await userApi.login({
+            user: username,
+            pwd: password
         });
+        if (user === undefined) {
+            //this.failed();
+            this.schema.clear();
+        } else {
+            nav.logined(user);
+            // this.succeed(user);
+        }
     }
-    failed() {
+    private failed() {
         this.values.username = '';
         this.values.password = '';
         this.setState({
@@ -92,29 +145,80 @@ export default class Login extends React.Component {
             hasError: true,
             disabled: true,
         });
-        this.timeOut = global.setTimeout(() => {
-            this.setState({ hasError: false });
-            global.clearTimeout(this.timeOut);
-            this.timeOut = undefined;
-        }, 3000);
+        this.timeOut = global.setTimeout(
+            () => {
+                this.setState({hasError: false});
+                global.clearTimeout(this.timeOut);
+                this.timeOut = undefined;
+            },
+            3000);
     }
+    */
     render() {
-        let { hasError, values, disabled } = this.state;
-        let { username, password } = values;
         let footer = React.createElement("div", { className: 'text-center' },
             React.createElement(Button, { color: "link", style: { margin: '0px auto' }, onClick: () => nav.push(React.createElement(RegisterView, null)) }, "\u5982\u679C\u6CA1\u6709\u8D26\u53F7\uFF0C\u8BF7\u6CE8\u518C"));
-        return (React.createElement(Page, { header: false, footer: footer },
-            React.createElement(Container, { className: 'entry-form' },
-                React.createElement(Form, { onSubmit: this.onSubmit },
-                    React.createElement("header", null,
-                        React.createElement("img", { className: 'App-logo', src: logo }),
-                        React.createElement("span", null, "\u540C\u82B1")),
-                    React.createElement(Input, { type: 'text', placeholder: "用户名...", name: 'username', value: username, onChange: e => this.inputChange(e), onFocus: e => this.inputFocus(e) }),
-                    React.createElement(Input, { type: 'password', placeholder: "密码...", name: 'password', value: password, onChange: e => this.inputChange(e), onFocus: e => this.inputFocus(e) }),
-                    React.createElement("span", { className: classNames(hasError === false ? 'hidden-xs-up' : undefined) }, "\u7528\u6237\u540D\u6216\u5BC6\u7801\u9519\uFF01"),
-                    React.createElement(Button, { type: 'submit', disabled: disabled, block: true, color: 'success' }, "\u767B\u5F55"),
-                    React.createElement("div", { style: { display: 'flex', alignItems: 'center' } },
-                        React.createElement(Button, { color: "link", block: true, onClick: () => nav.push(React.createElement(Forget, null)) }, "\u5FD8\u8BB0\u5BC6\u7801"))))));
+        return React.createElement(Page, { header: false, footer: footer },
+            React.createElement("div", { style: {
+                    maxWidth: '400px',
+                    margin: '20px auto',
+                    padding: '0 30px',
+                } },
+                React.createElement("div", { className: 'container', style: { display: 'flex', position: 'relative' } },
+                    React.createElement("img", { className: 'App-logo', src: logo, style: { height: '60px', position: 'absolute' } }),
+                    React.createElement("span", { style: { flex: 1,
+                            fontSize: 'x-large',
+                            alignSelf: 'center',
+                            textAlign: 'center',
+                            margin: '10px',
+                        } }, "\u540C\u82B1")),
+                React.createElement("div", { style: { height: '20px' } }),
+                React.createElement(ValidForm, { formSchema: this.schema })),
+            React.createElement("div", { className: 'constainer' },
+                React.createElement(Button, { color: "link", block: true, onClick: () => nav.push(React.createElement(Forget, null)) }, "\u5FD8\u8BB0\u5BC6\u7801")));
+        /*
+                let {hasError, values, disabled} = this.state;
+                let {username, password} = values;
+                let footer = <div className='text-center'>
+                    <Button color="link" style={{margin:'0px auto'}}
+                        onClick={() => nav.push(<RegisterView />)}>
+                        如果没有账号，请注册
+                    </Button>
+                </div>;
+        
+                return (<Page header={false} footer={footer}>
+                <Container className='entry-form'>
+                    <Form onSubmit={this.onSubmit}>
+                        <header>
+                            <img className='App-logo' src={logo} />
+                            <span>同花</span>
+                        </header>
+                        <Input type='text' placeholder="用户名..."
+                            name='username'
+                            value={username}
+                            onChange={e => this.inputChange(e)}
+                            onFocus={e => this.inputFocus(e)} />
+                        <Input type='password' placeholder="密码..."
+                            name='password'
+                            value={password}
+                            onChange={e => this.inputChange(e)}
+                            onFocus={e => this.inputFocus(e)} />
+                        <span className={classNames(hasError===false? 'hidden-xs-up':undefined)}>用户名或密码错！</span>
+                        <Button
+                            type='submit'
+                            disabled={disabled}
+                            block={true}
+                            color='success'>登录</Button>
+                        <div style={{display:'flex', alignItems:'center'}}>
+                            <Button color="link" block={true}
+                                onClick={() => nav.push(<Forget />)}>
+                                忘记密码
+                            </Button>
+                        </div>
+                    </Form>
+                </Container>
+                </Page>
+                );
+        */
     }
 }
 /*

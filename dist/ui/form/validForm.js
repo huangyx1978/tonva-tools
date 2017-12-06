@@ -23,6 +23,9 @@ let ValidForm = class ValidForm extends React.Component {
             if (sep !== null)
                 content.push(sep);
             content.push(formSchema.renderButtons());
+            let errors = formSchema.renderFormErrors();
+            if (errors !== null)
+                content.push(errors);
         }
         else
             content = children;

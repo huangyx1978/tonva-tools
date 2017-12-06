@@ -13,7 +13,7 @@ const centerHost = process.env.REACT_APP_APIHOST;
 let centerToken = undefined;
 export function setCenterToken(t) {
     centerToken = t;
-    if (t === undefined) {
+    if (t !== undefined) {
         centerChannel = undefined;
         centerChannelUI = undefined;
     }
@@ -29,11 +29,6 @@ function getCenterChannel() {
     if (centerChannel !== undefined)
         return centerChannel;
     return centerChannel = new HttpChannel(centerHost, centerToken);
-}
-export function refetchApi(url, options, resolve, reject) {
-    return __awaiter(this, void 0, void 0, function* () {
-        yield centerChannelUI.fetch(url, options, resolve, reject);
-    });
 }
 export class CenterApi extends ApiBase {
     constructor(path, showWaiting) {

@@ -5,7 +5,7 @@ import {ListItem, ListRow} from './listRow';
 
 export interface ListViewProps {
     className?: string;
-    items: any[];
+    items?: any[];
     renderRow?: (item:any, index:number, ex?:any) => JSX.Element;
     ex?: any;
     header?: string|JSX.Element;
@@ -39,16 +39,15 @@ export class ListView extends React.Component<ListViewProps, null> {
         }
         else {
             content = items.map((item, index) => {
-                let onClick;
-                if (itemClick !== undefined) onClick = ()=>itemClick(item);
+                let onClick = item.onClick;
+                if (onClick === undefined && itemClick !== undefined) 
+                    onClick = ()=>itemClick(item);
                 let listItem:ListItem;
                 if (converter !== undefined) {
                     listItem = converter(item);
                 }
                 else {
                     listItem = {
-                        key: item.key,
-                        onClick: onClick,
                         ...item
                     }
                 }

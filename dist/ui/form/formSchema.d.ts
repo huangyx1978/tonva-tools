@@ -10,11 +10,13 @@ export declare class FormSchema {
     resetButton?: string;
     clearButton?: string;
     inputs: InputSchema[];
+    hasLabel: boolean;
+    errors: string[];
     onError: (result: any) => void;
     onSuccess: (result: any) => void;
     constructor(formFields: FormFields);
-    private clear();
-    private reset();
+    clear(): void;
+    reset(): void;
     values(): object;
     readonly hasError: boolean;
     readonly notFilled: boolean;
@@ -24,6 +26,7 @@ export declare class FormSchema {
     onSubmit(event: FormEvent<HTMLFormElement>): Promise<void>;
     private onFinish();
     private onNext();
+    private fieldContainerClassNames();
     renderInput(vInput: InputSchema): JSX.Element;
     renderLabel(vInput: InputSchema): JSX.Element;
     renderErr(vInput: InputSchema): JSX.Element;
@@ -32,5 +35,6 @@ export declare class FormSchema {
     renderSumit(): JSX.Element;
     renderReset(): JSX.Element;
     renderClear(): JSX.Element;
+    renderFormErrors(): JSX.Element;
     renderButtons(): JSX.Element;
 }

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {observable, computed} from 'mobx';
 import * as _ from 'lodash';
+import * as classNames from 'classnames';
 import {Page} from '../page';
 import {nav} from '../nav';
 import {Field, FormFields, Rule, Rules, SubmitReturn} from './def';
@@ -9,12 +10,14 @@ import { FormEvent } from 'react';
 
 export class FormSchema {
     private _inputs: {[name:string]: InputSchema};
-    private submit: (values:any) => Promise<SubmitReturn>;
+    private submit: (values:any) => Promise<SubmitReturn|undefined>;
     fieldTag: string;
     submitText: string;
     resetButton?: string;
     clearButton?: string;
     inputs: InputSchema[];
+    hasLabel: boolean;
+    @observable errors: string[] = [];
     onError: (result:any) => void;
     onSuccess: (result:any) => void;
     constructor(formFields: FormFields) {
@@ -28,8 +31,10 @@ export class FormSchema {
         this.submit = onSumit;
         this._inputs = {};
         this.inputs = [];
+        this.hasLabel = false;
         for (let field of fields) {
-            let v = this._inputs[field.name] = inputFactory(this, field);
+            if (field.label !== undefined) this.hasLabel = true;
+            let v = this._inputs[field.name] = inputFactory(this, field);            
             this.inputs.push(v);
         }
         this.onSubmit = this.onSubmit.bind(this);
@@ -38,11 +43,13 @@ export class FormSchema {
         this.onNext = this.onNext.bind(this);
     }
 
-    private clear() {
+    clear() {
         this.inputs.forEach(v => v.clear());
+        this.errors.splice(0, this.errors.length);
     }
-    private reset() {
+    reset() {
         this.inputs.forEach(v => v.reset());
+        this.errors.splice(0, this.errors.length);
     }
 
     values():object {
@@ -78,10 +85,12 @@ export class FormSchema {
             return;
         }
         let ret = await this.submit(this.values());
-        if (ret === undefined) {
-            alert('no submit return');
-            return;
-        }
+        if (ret === undefined) return;
+        //if (ret === undefined) {
+        //    alert('no submit return');
+        //    return;
+        //}
+
         if (ret.success === true) {
             if (this.onSuccess !== undefined) {
                 this.onSuccess(ret.result);
@@ -105,12 +114,18 @@ export class FormSchema {
         this.clear();
     }
 
+    private fieldContainerClassNames() {
+        return classNames(this.hasLabel? 'col-sm-10' : 'col-sm-12');
+    }
+
     renderInput(vInput:InputSchema):JSX.Element {
         let {err} = vInput;
-        return <input className='form-control has-success is-valid' {...vInput.props} />;
+        let cn = classNames('form-control', 'has-success', err? 'is-invalid':'is-valid');
+        return <input className={cn} {...vInput.props} />;
     }
     renderLabel(vInput:InputSchema):JSX.Element {
-        return <label className='col-sm-2 col-form-label'>{vInput.label}</label>
+        if (this.hasLabel === false) return null;
+        return <label className='col-sm-2 col-form-label'>{vInput !== undefined? vInput.label : null}</label>
     }
     renderErr(vInput:InputSchema):JSX.Element {
         return <div className="invalid-feedback">{vInput.err}</div>
@@ -118,18 +133,20 @@ export class FormSchema {
     renderField(vInput:InputSchema):JSX.Element {
         return <div className='form-group row' key={vInput.id}>
             {this.renderLabel(vInput)}
-            <div className="col-sm-10">
+            <div className={this.fieldContainerClassNames()}>
                 {this.renderInput(vInput)}
                 {vInput.err && this.renderErr(vInput)}
             </div>
         </div>
     }
     renderSeperator(vInput?:InputSchema):JSX.Element {
-        return <hr key={_.uniqueId()} style={{margin:'20px 0px'}} />;
+        return null;
+        //return <hr key={_.uniqueId()} style={{margin:'20px 0px'}} />;
     }
     renderSumit():JSX.Element {
+        let cn = classNames('btn', 'btn-primary', this.hasLabel? undefined: 'btn-block');
         return <button 
-            className='btn btn-primary'
+            className={cn}
             key={_.uniqueId()} 
             type='submit' 
             disabled={this.notFilled || this.hasError}>
@@ -152,17 +169,35 @@ export class FormSchema {
             {this.clearButton}
         </button>
     }
+    renderFormErrors():JSX.Element {
+        if (this.errors.length === 0) return null;
+        return <div className='form-group row'><div className={this.fieldContainerClassNames()}>
+            {this.renderLabel(undefined)}
+            {
+            this.errors.map(e => <div className='invalid-feedback' style={{display:'block'}}>{e}</div>)
+            }
+        </div></div>;
+    }
     renderButtons():JSX.Element {
-        return <div className='form-group row' key={_.uniqueId()}>
-            <div className='col-sm-2'/>
-            <div className='col-sm-10'>
-                <div className="row container">
-                    <div className="col-auto mr-auto">{this.renderSumit()}</div>
-                    <div className="col-auto">{this.clearButton&&this.renderClear()}</div>
-                    <div className="col-auto">{this.resetButton&&this.renderReset()}</div>
+        if (this.hasLabel === true) {
+            return <div className='form-group row' key={_.uniqueId()}>
+                {this.renderLabel(undefined)}
+                <div className={this.fieldContainerClassNames()}>
+                    <div className="row container">
+                        <div className="col-auto mr-auto">{this.renderSumit()}</div>
+                        <div className="col-auto">{this.clearButton&&this.renderClear()}</div>
+                        <div className="col-auto">{this.resetButton&&this.renderReset()}</div>
+                    </div>
                 </div>
+            </div>;
+        }
+        return <div className='form-group row' key={_.uniqueId()}>
+            <div className={this.fieldContainerClassNames()}>
+                {this.renderSumit()}
             </div>
-        </div>
+            {this.clearButton? <div className="col-auto">this.renderClear()</div>:null }
+            {this.resetButton? <div className="col-auto">this.renderReset()</div>:null }
+        </div>;
     }
 }
 

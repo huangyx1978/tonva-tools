@@ -35,7 +35,7 @@ export abstract class InputSchema {
         this.props = {
             name: field.name,
             placeholder: field.placeholder,
-            onFocus: () => {this.err = undefined},
+            onFocus: () => {this.err = undefined; this.formSchema.errors = [];},
         }
         this.setProps();
         this.buildValidators();
@@ -92,6 +92,7 @@ class UnkownInputSchema extends InputSchema {
 abstract class SingleInputSchema extends InputSchema {
     protected _input: HTMLInputElement;
     protected setProps() {
+        this.props.type = 'text';
         this.props.onBlur = () => {
             if (this.validators !== undefined) {
                 for (let v of this.validators) {
@@ -118,7 +119,7 @@ abstract class SingleInputSchema extends InputSchema {
         let value = this._input.value;
         if (value === undefined) return;
         if (value.trim().length > 0) return undefined;
-        return '必填内容';
+        return '不能为空';
     }
 }
 
@@ -190,7 +191,6 @@ class FloatInputSchema extends NumberInputSchema {
 }
 
 class StringInputSchema extends SingleInputSchema {
-    type = 'text';
     protected stringValidator(rule:string, param?:string):Validator|undefined {
         switch (rule) {
             default: return super.stringValidator(rule, param);
@@ -198,6 +198,13 @@ class StringInputSchema extends SingleInputSchema {
                 this.props.maxLength = param;
                 return;
         }
+    }
+}
+
+class PasswordInputSchema extends StringInputSchema {
+    protected setProps() {
+        super.setProps();
+        this.props.type = 'password';
     }
 }
 
@@ -218,6 +225,7 @@ export function inputFactory(formSchema:FormSchema, field: Field): InputSchema {
         case 'dec': return new DecInputSchema(formSchema, field);
         case 'float': return new FloatInputSchema(formSchema, field);
         case 'string': return new StringInputSchema(formSchema, field);
+        case 'password': return new PasswordInputSchema(formSchema, field);
         case 'text': return new TextInputSchema(formSchema, field);
     }
 }

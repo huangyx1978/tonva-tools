@@ -76,6 +76,7 @@ export class HttpChannel {
             console.log('%s %s', options.method, path);
             function buildError(err) {
                 return {
+                    channel: this,
                     url: path,
                     options: options,
                     resolve: resolve,
@@ -87,6 +88,7 @@ export class HttpChannel {
                 .then((res) => __awaiter(this, void 0, void 0, function* () {
                 that.endWait();
                 if (res.ok === false) {
+                    console.log('call error %s', res.statusText);
                     throw res.statusText;
                 }
                 let ct = res.headers.get('content-type');

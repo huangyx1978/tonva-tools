@@ -3,7 +3,7 @@ import * as React from 'react';
 import { ListItem } from './listRow';
 export interface ListViewProps {
     className?: string;
-    items: any[];
+    items?: any[];
     renderRow?: (item: any, index: number, ex?: any) => JSX.Element;
     ex?: any;
     header?: string | JSX.Element;

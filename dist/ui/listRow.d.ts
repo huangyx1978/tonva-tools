@@ -2,16 +2,16 @@
 import * as React from 'react';
 import '../css/va-row.css';
 export interface ListItem {
-    key: string | number | undefined;
-    date: Date;
-    icon: string;
-    main: string;
-    vice: string;
+    key?: string | number | undefined;
+    date?: Date;
+    icon?: string | JSX.Element;
+    main?: string;
+    vice?: string;
     right?: string | JSX.Element;
-    unread: number;
+    unread?: number;
+    onClick?: () => void;
 }
 export interface ListRowProps extends ListItem {
-    onClick: () => void;
 }
 export interface ListRowState {
     pressed: boolean;

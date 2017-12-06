@@ -45,10 +45,11 @@ export class TitleBar extends React.Component<TitleBarProps, TitleBarState> {
         let c = this.props.center;
         let back, pop, debugLogout;
         if (this.props.debugLogout === true && self === top) {
-            debugLogout = <Button className="dropdown-toggle" color="secondary" size="sm" 
+            debugLogout = <a className="dropdown-toggle btn btn-secondary btn-sm"
+                role="button"
                 onClick={()=>nav.logout()}>
                 <i className="fa fa-sign-out" />
-            </Button>
+            </a>
         }
         if (b) {
             let cn = className('fa', this.props.close === true? 'fa-close' : 'fa-arrow-left');

@@ -8,7 +8,7 @@ let centerToken:string|undefined = undefined;
 
 export function setCenterToken(t?:string) {
     centerToken = t;
-    if (t === undefined) {
+    if (t !== undefined) {
         centerChannel = undefined;
         centerChannelUI = undefined;
     }
@@ -23,10 +23,6 @@ function getCenterChannelUI():HttpChannel {
 function getCenterChannel():HttpChannel {
     if (centerChannel !== undefined) return centerChannel;
     return centerChannel = new HttpChannel(centerHost, centerToken);
-}
-
-export async function refetchApi(url, options, resolve, reject) {
-    await centerChannelUI.fetch(url, options, resolve, reject);
 }
 
 export abstract class CenterApi extends ApiBase {

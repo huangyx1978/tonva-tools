@@ -86,6 +86,11 @@ export function appApi(apiName) {
         if (window === window.parent) {
             apiToken = yield apiTokenApi.api({ unit: debugUnitId, app: debugAppId, apiName: apiName });
             apiTokens[apiName] = apiToken;
+            if (apiToken === undefined) {
+                let err = 'unauthorized call: apiTokenApi center return undefined!';
+                //console.log(err);
+                throw err;
+            }
             return apiToken;
         }
         console.log("appApi parent send: %s", appHash);

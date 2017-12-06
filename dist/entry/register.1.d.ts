@@ -1,6 +1,6 @@
 /// <reference types="react" />
 import * as React from 'react';
-import { SubmitReturn } from '../ui';
+import '../css/va-form.css';
 export interface Values {
     user: string;
     pwd: string;
@@ -17,9 +17,15 @@ export interface State {
     pwdError: boolean;
     regError: string;
 }
-export default class Register extends React.Component<{}, null> {
-    private schema;
-    onLoginSubmit(values: any): Promise<SubmitReturn | undefined>;
+export default class Register extends React.Component<Props, State> {
+    private values;
+    private timeOut;
+    constructor(props: Props);
     click(): void;
+    submit(): boolean;
+    timeOutError(): void;
+    inputChange(event: any): void;
+    inputFocus(e: any): void;
     render(): JSX.Element;
+    private errorClass(error);
 }

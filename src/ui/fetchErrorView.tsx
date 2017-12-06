@@ -9,8 +9,8 @@ export interface FetchErrorProps extends FetchError {
 export default class FetchErrorView extends React.Component<FetchErrorProps, null> {
     private click() {
         this.props.clearError();
-        const {url, options, resolve, reject} = this.props;
-        refetchApi(url, options, resolve, reject);
+        const {channel, url, options, resolve, reject} = this.props;
+        refetchApi(channel, url, options, resolve, reject);
     }
     render() {
         let {error} = this.props;

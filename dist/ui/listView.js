@@ -23,15 +23,15 @@ let ListView = class ListView extends React.Component {
         }
         else {
             content = items.map((item, index) => {
-                let onClick;
-                if (itemClick !== undefined)
+                let onClick = item.onClick;
+                if (onClick === undefined && itemClick !== undefined)
                     onClick = () => itemClick(item);
                 let listItem;
                 if (converter !== undefined) {
                     listItem = converter(item);
                 }
                 else {
-                    listItem = Object.assign({ key: item.key, onClick: onClick }, item);
+                    listItem = Object.assign({}, item);
                 }
                 return React.createElement(ListRow, Object.assign({ onClick: onClick }, listItem));
             });

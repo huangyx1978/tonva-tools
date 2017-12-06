@@ -1,5 +1,9 @@
 import {HttpChannel} from './httpChannel';
 
+export async function refetchApi(channel:HttpChannel, url, options, resolve, reject) {
+    await channel.fetch(url, options, resolve, reject);
+}
+
 export abstract class ApiBase {
     private path: string;
     protected showWaiting: boolean;

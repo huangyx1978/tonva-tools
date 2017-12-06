@@ -1,6 +1,5 @@
 import * as React from 'react';
 import * as className from 'classnames';
-import { Button } from 'reactstrap';
 import { nav } from './nav';
 export class TitleBar extends React.Component {
     constructor(props) {
@@ -31,7 +30,7 @@ export class TitleBar extends React.Component {
         let c = this.props.center;
         let back, pop, debugLogout;
         if (this.props.debugLogout === true && self === top) {
-            debugLogout = React.createElement(Button, { className: "dropdown-toggle", color: "secondary", size: "sm", onClick: () => nav.logout() },
+            debugLogout = React.createElement("a", { className: "dropdown-toggle btn btn-secondary btn-sm", role: "button", onClick: () => nav.logout() },
                 React.createElement("i", { className: "fa fa-sign-out" }));
         }
         if (b) {

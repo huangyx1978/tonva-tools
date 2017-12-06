@@ -92,6 +92,11 @@ export async function appApi(apiName: string): Promise<ApiToken> {
     if (window === window.parent) {
         apiToken = await apiTokenApi.api({unit: debugUnitId, app: debugAppId, apiName:apiName});
         apiTokens[apiName] = apiToken;
+        if (apiToken === undefined) {
+            let err = 'unauthorized call: apiTokenApi center return undefined!';
+            //console.log(err);
+            throw err;
+        }
         return apiToken;
     }
     console.log("appApi parent send: %s", appHash);
