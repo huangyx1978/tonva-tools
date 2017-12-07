@@ -35,7 +35,32 @@ body, body>div, ul.va, ul.va>li, ul.va>li>article {
     width: 100%;
     align-self: center;
   }
-
+  div.va-tab>div {
+    font-size: medium;
+  }
+  div.red-dot {
+    position: relative;
+  }
+  div.red-dot>u {
+    position: absolute;
+    display: block;
+    right: -12px;
+    top: -2px;
+    height: 8px;
+    width: 8px;
+    background-color: red;
+    border-radius: 4px;
+    color: white;
+    font-size: 12px;
+    text-decoration: none;
+  }
+  div.red-dot.num>u {
+    right: -20px;
+    top: -6px;
+    height: 18px;
+    width: 18px;
+    border-radius: 9px;
+  }
   ul.va {
       list-style: none;
       padding: 0;

@@ -7,8 +7,7 @@ export declare class WSChannel {
     private handlerSeed;
     private anyHandlers;
     private msgHandlers;
-    onWsReceiveAny(handler: (type: string, msg: any) => void): number;
-    endWsReceiveAny(handlerId: number): void;
+    onWsReceiveAny(handler: (msg: any) => void): number;
     onWsReceive(type: string, handler: (msg: any) => void): number;
     endWsReceive(handlerId: number): void;
     sendWs(msg: any): void;

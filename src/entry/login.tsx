@@ -69,7 +69,7 @@ export default class Login extends React.Component<{}, null> {
             this.schema.clear();
             this.schema.errors.push('用户名或密码错！');
         } else {
-            nav.logined(user);
+            await nav.logined(user);
         }
         return undefined;
     }

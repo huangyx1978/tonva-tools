@@ -1,4 +1,11 @@
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
 import * as React from 'react';
+import { observer } from 'mobx-react';
 import * as classNames from 'classnames';
 import * as _ from 'lodash';
 import { TitleBar } from './titleBar';
@@ -37,7 +44,7 @@ class ScrollView extends React.Component {
         return (React.createElement("main", { className: this.props.className, onScroll: this.onScroll }, this.props.children));
     }
 }
-export class Page extends React.Component {
+let Page = class Page extends React.Component {
     constructor(props) {
         super(props);
         this.tabs = props.tabs;
@@ -90,12 +97,26 @@ export class Page extends React.Component {
         const { header, close, right } = this.props;
         let cur = this.state.cur;
         let tabs = React.createElement("div", null, this.state.tabs.map((tab, index) => {
-            let img;
-            if (tab.icon !== undefined)
-                img = React.createElement("img", { src: tab.icon });
-            return React.createElement("div", { key: index, className: classNames({ cur: tab.isSelected }), onClick: () => this.onTabClick(tab) },
+            const { icon, isSelected, title, redDot } = tab;
+            let img, redDotView, cn;
+            if (icon !== undefined)
+                img = React.createElement("img", { src: icon });
+            if (redDot !== undefined) {
+                let v = redDot.get();
+                if (v < 0) {
+                    cn = classNames('red-dot');
+                    redDotView = React.createElement("u", null);
+                }
+                else if (v > 0) {
+                    cn = classNames('red-dot', 'num');
+                    redDotView = React.createElement("u", null, v);
+                }
+            }
+            return React.createElement("div", { key: index, className: classNames('va-tab', { cur: isSelected }), onClick: () => this.onTabClick(tab) },
                 img,
-                React.createElement("div", null, tab.title));
+                React.createElement("div", { className: cn },
+                    title,
+                    redDotView));
         }));
         let titleBar;
         if (header !== false)
@@ -132,5 +153,9 @@ export class Page extends React.Component {
         else
             return this.renderSingle(elFooter);
     }
-}
+};
+Page = __decorate([
+    observer
+], Page);
+export { Page };
 //# sourceMappingURL=page.js.map

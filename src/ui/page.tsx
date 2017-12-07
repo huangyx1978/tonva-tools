@@ -1,4 +1,6 @@
 import * as React from 'react';
+import {IComputedValue} from 'mobx';
+import {observer} from 'mobx-react';
 import * as classNames from 'classnames';
 import * as _ from 'lodash';
 import {TitleBar} from './titleBar';
@@ -56,6 +58,7 @@ export interface Tab extends ScrollProps {
     content?: JSX.Element;
     header?: string;
     isSelected?: boolean;
+    redDot?: IComputedValue<number>;
 }
 export interface TabState extends Tab {
     isMounted?: boolean;
@@ -73,6 +76,8 @@ export interface PageState {
     cur?: Tab;
     tabs?: TabState[];
 }
+
+@observer
 export class Page extends React.Component<PageProps, PageState> {
     private tabs:TabState[];
     constructor(props: PageProps) {
@@ -128,12 +133,24 @@ export class Page extends React.Component<PageProps, PageState> {
         let cur = this.state.cur;
         let tabs = <div>{
                 this.state.tabs.map((tab, index) => {
-                    let img;
-                    if (tab.icon !== undefined) img = <img src={tab.icon} />;
+                    const {icon, isSelected, title, redDot} = tab;
+                    let img, redDotView, cn;
+                    if (icon !== undefined) img = <img src={icon} />;
+                    if (redDot !== undefined) {
+                        let v = redDot.get();
+                        if (v < 0) {
+                            cn = classNames('red-dot');
+                            redDotView = <u />;
+                        }
+                        else if (v > 0) {
+                            cn = classNames('red-dot', 'num');
+                            redDotView = <u>{v}</u>;
+                        }
+                    }
                     return <div key={index}
-                        className= {classNames({cur: tab.isSelected})}
+                        className= {classNames('va-tab', {cur: isSelected})}
                         onClick={() => this.onTabClick(tab)}>
-                        {img}<div>{tab.title}</div>
+                        {img}<div className={cn}>{title}{redDotView}</div>
                     </div>
                 })
             }</div>;

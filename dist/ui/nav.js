@@ -14,10 +14,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import * as React from 'react';
 import { observable } from 'mobx';
-//import LoginView from '../entry/login';
 import { netToken } from '../net/netToken';
 import FetchErrorView from './fetchErrorView';
 import { appUrl, appApi, setAppHash } from '../net/app';
+import { LocalData } from '../local';
+import { ws } from '../net';
 import 'font-awesome/css/font-awesome.min.css';
 import '../css/va.css';
 ;
@@ -50,7 +51,7 @@ export class NavView extends React.Component {
                 user = nav.local.user.get();
             }
             if (user !== undefined) {
-                nav.logined(user);
+                yield nav.logined(user);
             }
             else {
                 // if (this.loginingView === undefined)
@@ -267,10 +268,13 @@ export class Nav {
         this.nav = nav;
     }
     logined(user) {
-        Object.assign(this.user, user);
-        this.local.user.set(user);
-        netToken.set(user.token);
-        this.nav.showAppView(); //.show(this.appView);
+        return __awaiter(this, void 0, void 0, function* () {
+            Object.assign(this.user, user);
+            this.local.user.set(user);
+            netToken.set(user.token);
+            this.nav.showAppView(); //.show(this.appView);
+            yield ws.connect();
+        });
     }
     showLogin() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -349,38 +353,5 @@ export class Nav {
 __decorate([
     observable
 ], Nav.prototype, "user", void 0);
-export class Data {
-    constructor(name) { this.name = name; }
-    get() {
-        if (this.value !== undefined)
-            return this.value;
-        let v = localStorage.getItem(this.name);
-        return this.value = v === null ? undefined : JSON.parse(v);
-    }
-    set(value) {
-        if (!value) {
-            this.clear();
-            return;
-        }
-        this.value = value;
-        localStorage.setItem(this.name, JSON.stringify(value));
-    }
-    clear() {
-        this.value = undefined;
-        localStorage.removeItem(this.name);
-    }
-}
-export class LocalData {
-    constructor() {
-        this.user = new Data('user');
-        this.homeTabCur = new Data('homeTabCur');
-    }
-    logoutClear() {
-        [
-            this.user,
-            this.homeTabCur
-        ].map(d => d.clear());
-    }
-}
 export const nav = new Nav();
 //# sourceMappingURL=nav.js.map

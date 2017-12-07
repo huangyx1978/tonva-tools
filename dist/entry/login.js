@@ -77,7 +77,7 @@ export default class Login extends React.Component {
                 this.schema.errors.push('用户名或密码错！');
             }
             else {
-                nav.logined(user);
+                yield nav.logined(user);
             }
             return undefined;
         });

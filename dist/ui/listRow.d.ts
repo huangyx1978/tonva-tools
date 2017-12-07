@@ -1,5 +1,6 @@
 /// <reference types="react" />
 import * as React from 'react';
+import { IComputedValue } from 'mobx';
 import '../css/va-row.css';
 export interface ListItem {
     key?: string | number | undefined;
@@ -8,8 +9,8 @@ export interface ListItem {
     main?: string;
     vice?: string;
     right?: string | JSX.Element;
-    unread?: number;
     onClick?: () => void;
+    unread?: number | IComputedValue<number>;
 }
 export interface ListRowProps extends ListItem {
 }

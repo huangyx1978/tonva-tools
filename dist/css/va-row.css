@@ -36,7 +36,7 @@ li.va-row.icon {
   li.va-row>header>b {
     position: absolute;
     left: 30px;
-    top: -6px;
+    top: -2px;
     font-style: normal;
     font-size: 12px;
     font-weight: normal;
@@ -47,6 +47,9 @@ li.va-row.icon {
     width: 18px;
     height: 18px;
     text-align: center;
+  }
+  li.va-row.icon>header>b {
+    top: -6px;
   }
   li.va-row>header>b.dot {
     width: 10px;

@@ -17,7 +17,9 @@ export class WSChannel {
                 return;
             }
             let ws = new WebSocket(wsHost, this.token);
+            console.log('connect webSocket %s', wsHost);
             ws.onopen = (ev) => {
+                console.log('webSocket connected %s', wsHost);
                 netThis.ws = ws;
                 resolve();
             };
@@ -52,15 +54,16 @@ export class WSChannel {
         */
         //console.log('ws msg:', event);
         try {
+            console.log('websocket message: %s', event.data);
             let json = JSON.parse(event.data);
-            let t = json.type, data = json.data;
+            let t = json.type;
             for (let i in this.anyHandlers) {
-                this.anyHandlers[i](t, data);
+                this.anyHandlers[i](json);
             }
             for (let i in this.msgHandlers) {
                 let {type, handler} = this.msgHandlers[i];
                 if (type !== t) continue;
-                handler(data);
+                handler(json);
             }
         }
         catch (err) {
@@ -68,15 +71,12 @@ export class WSChannel {
         }
     }
     private handlerSeed = 1;
-    private anyHandlers:{[id:number]:any} = {};
-    private msgHandlers:{[id:number]:any} = {};
-    onWsReceiveAny(handler:(type:string, msg:any)=>void):number {
+    private anyHandlers:{[id:number]:(msg:any)=>void} = {};
+    private msgHandlers:{[id:number]:{type:string, handler:(msg:any)=>void}} = {};
+    onWsReceiveAny(handler:(msg:any)=>void):number {
         let seed = this.handlerSeed++;
         this.anyHandlers[seed] = handler;
         return seed;
-    }
-    endWsReceiveAny(handlerId:number) {
-        this.anyHandlers[handlerId] = undefined;
     }
     onWsReceive(type:string, handler:(msg:any)=>void):number {
         let seed = this.handlerSeed++;
@@ -84,6 +84,7 @@ export class WSChannel {
         return seed;
     }
     endWsReceive(handlerId:number) {
+        this.anyHandlers[handlerId] = undefined;
         this.msgHandlers[handlerId] = undefined;
     }
     sendWs(msg:any) {

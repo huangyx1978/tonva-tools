@@ -1,5 +1,7 @@
 import * as React from 'react';
 import * as classNames from 'classnames';
+import {IObservableValue, IComputedValue} from 'mobx';
+import {observer} from 'mobx-react';
 import '../css/va-row.css';
 
 export interface ListItem {
@@ -9,8 +11,8 @@ export interface ListItem {
     main?: string;
     vice?: string;
     right?: string | JSX.Element;
-    unread?: number;         // <0 表示red dot
     onClick?: () => void;
+    unread?: number|IComputedValue<number>;         // <0 表示red dot
 }
 
 export interface ListRowProps extends ListItem {
@@ -21,6 +23,7 @@ export interface ListRowState {
     pressed: boolean;
 }
 
+@observer
 export class ListRow extends React.Component<ListRowProps, ListRowState> {
     constructor(props) {
         super(props);
@@ -32,9 +35,12 @@ export class ListRow extends React.Component<ListRowProps, ListRowState> {
         let {date, main, vice, icon, unread, right, onClick} = this.props;
         let header, isIcon:boolean, noteNum;
         if (unread !== undefined) {
-            if (unread > 0)
-                noteNum = <b>{unread}</b>;
-            else if (unread < 0)
+            let uv:number;
+            if (typeof unread === 'number') uv = unread;
+            else uv = unread.get();
+                if (uv > 0)
+                noteNum = <b>{uv}</b>;
+            else if (uv < 0)
                 noteNum = <b className='dot' />;
         }
         switch (typeof icon) {

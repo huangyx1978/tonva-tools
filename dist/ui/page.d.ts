@@ -1,5 +1,6 @@
 /// <reference types="react" />
 import * as React from 'react';
+import { IComputedValue } from 'mobx';
 export interface ScrollProps {
     onScroll?: (e: any) => void;
     onScrollTop?: () => void;
@@ -11,6 +12,7 @@ export interface Tab extends ScrollProps {
     content?: JSX.Element;
     header?: string;
     isSelected?: boolean;
+    redDot?: IComputedValue<number>;
 }
 export interface TabState extends Tab {
     isMounted?: boolean;

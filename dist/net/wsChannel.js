@@ -16,7 +16,9 @@ export class WSChannel {
                 return;
             }
             let ws = new WebSocket(wsHost, this.token);
+            console.log('connect webSocket %s', wsHost);
             ws.onopen = (ev) => {
+                console.log('webSocket connected %s', wsHost);
                 netThis.ws = ws;
                 resolve();
             };
@@ -51,16 +53,17 @@ export class WSChannel {
         */
         //console.log('ws msg:', event);
         try {
+            console.log('websocket message: %s', event.data);
             let json = JSON.parse(event.data);
-            let t = json.type, data = json.data;
+            let t = json.type;
             for (let i in this.anyHandlers) {
-                this.anyHandlers[i](t, data);
+                this.anyHandlers[i](json);
             }
             for (let i in this.msgHandlers) {
                 let { type, handler } = this.msgHandlers[i];
                 if (type !== t)
                     continue;
-                handler(data);
+                handler(json);
             }
         }
         catch (err) {
@@ -72,15 +75,13 @@ export class WSChannel {
         this.anyHandlers[seed] = handler;
         return seed;
     }
-    endWsReceiveAny(handlerId) {
-        this.anyHandlers[handlerId] = undefined;
-    }
     onWsReceive(type, handler) {
         let seed = this.handlerSeed++;
         this.msgHandlers[seed] = { type: type, handler: handler };
         return seed;
     }
     endWsReceive(handlerId) {
+        this.anyHandlers[handlerId] = undefined;
         this.msgHandlers[handlerId] = undefined;
     }
     sendWs(msg) {

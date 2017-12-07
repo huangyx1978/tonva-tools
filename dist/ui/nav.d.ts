@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { User } from '../user';
 import { FetchError } from '../fetchError';
+import { LocalData } from '../local';
 import 'font-awesome/css/font-awesome.min.css';
 import '../css/va.css';
 export interface Props {
@@ -46,7 +47,7 @@ export declare class Nav {
     local: LocalData;
     user: User;
     set(nav: NavView): void;
-    logined(user: User): void;
+    logined(user: User): Promise<void>;
     showLogin(): Promise<void>;
     logout(): Promise<void>;
     readonly level: Number;
@@ -67,21 +68,5 @@ export declare class Nav {
         token: string;
     }>;
     navToSite(url: string): void;
-}
-export interface ClearableData {
-    clear(): void;
-}
-export declare class Data<T> implements ClearableData {
-    private name;
-    private value?;
-    constructor(name: string);
-    get(): T;
-    set(value: T): void;
-    clear(): void;
-}
-export declare class LocalData {
-    user: Data<User>;
-    homeTabCur: Data<number>;
-    logoutClear(): void;
 }
 export declare const nav: Nav;
