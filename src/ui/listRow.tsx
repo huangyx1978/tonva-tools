@@ -5,11 +5,13 @@ import {observer} from 'mobx-react';
 import '../css/va-row.css';
 
 export interface ListItem {
-    key?: string|number|undefined;
+    key: string|number;
     date?: Date;
     icon?: string | JSX.Element;
     main?: string;
     vice?: string;
+    middle?: string | JSX.Element;
+    midSize?: number;
     right?: string | JSX.Element;
     onClick?: () => void;
     unread?: number|IComputedValue<number>;         // <0 表示red dot
@@ -32,7 +34,7 @@ export class ListRow extends React.Component<ListRowProps, ListRowState> {
         }
     }
     render() {
-        let {date, main, vice, icon, unread, right, onClick} = this.props;
+        let {date, main, vice, middle, midSize, icon, unread, right, onClick} = this.props;
         let header, isIcon:boolean, noteNum;
         if (unread !== undefined) {
             let uv:number;
@@ -53,6 +55,17 @@ export class ListRow extends React.Component<ListRowProps, ListRowState> {
                 isIcon= true; 
                 break;
         }
+        let mid;
+        if (middle !== undefined) {
+            switch (typeof middle) {
+                case 'string':
+                    mid = <div style={{flex:midSize}}>{middle}</div>;
+                    break;
+                default:
+                    mid = middle;
+                    break;
+            }
+        }
         let footer;
         if (right !== undefined) {
             if (typeof right === 'string')
@@ -70,6 +83,7 @@ export class ListRow extends React.Component<ListRowProps, ListRowState> {
                 <div>{main}</div>
                 {viceSpan}
             </div>
+            {mid}
             {footer}
         </li>
         );

@@ -3,6 +3,7 @@ export declare class WSChannel {
     private ws?;
     setToken(token?: string): void;
     connect(): Promise<void>;
+    close(): void;
     private wsMessage(event);
     private handlerSeed;
     private anyHandlers;

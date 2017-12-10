@@ -1,5 +1,6 @@
+import {nav} from '../ui';
 import {uid} from '../uid';
-import {apiTokenApi} from './centerApi';
+import {apiTokenApi, callCenterapi} from './centerApi';
 
 const debugAppId = Number(process.env.REACT_APP_DEBUG_APPID);
 const debugUnitId = Number(process.env.REACT_APP_DEBUG_UNITID);
@@ -15,19 +16,36 @@ interface ApiTokenAction extends ApiToken {
 }
 const apiTokens:{[apiName:string]: ApiTokenAction}  = {};
 
-interface AppInFrame {
+export interface AppInFrame {
+    hash: string;
     unit: number;   // unit id
     app: number;    // app id
 }
 const appsInFrame:{[key:string]:AppInFrame} = {};
 
-let appHash:string;
+export let meInFrame:AppInFrame = {
+    hash: undefined,
+    unit: Number(process.env.REACT_APP_DEBUG_UNITID),
+    app: Number(process.env.REACT_APP_DEBUG_APPID)
+};
 
 window.addEventListener('message', async function(evt) {
     let e:any = evt;
     var message = e.data;
     switch (message.type) {
         default: break;
+        case 'hide-frame-back':
+            hideFrameBack(message.hash);
+            break;
+        case 'pop-app':
+            nav.back();
+            break;
+        case 'center-api':
+            await callCenterApiFromMessage(e.source, message);
+            break;
+        case 'center-api-return':
+            bridgeCenterApiReturn(message);
+            break;
         case 'app-api':
             console.log("receive PostMessage: %s", JSON.stringify(message));
             let ret = await onReceiveAppApiMessage(message.hash, message.apiName);
@@ -43,6 +61,12 @@ window.addEventListener('message', async function(evt) {
             break;
     }
 });
+
+function hideFrameBack(hash:string) {
+    console.log('hideFrameBack %s', hash);
+    let el = document.getElementById(hash);
+    if (el !== undefined) el.hidden = true;
+}
 
 async function onReceiveAppApiMessage(hash: string, apiName: string): Promise<ApiToken> {
     let appInFrame = appsInFrame[hash];
@@ -62,28 +86,30 @@ function onAppApiReturn(apiName: string, url: string, token: string) {
     action.token = token;
     action.resolve(action);
 }
-/*
-let parent = window.parent;
-if (parent !== undefined) {
-    //console.log("postMessage: %s", window.location.origin);
-    parent.postMessage({type: 'app-api', url: window.location.href}, "*");
-}
-*/
-export function setAppHash(hash: string) {
-    appHash = hash.substr(3);
+
+export function setMeInFrame(appHash: string):AppInFrame {
+    let p0 = 3;
+    let p1 = appHash.indexOf('-', p0);
+    if (p1<p0) return;
+    let p2 = appHash.indexOf('-', p1+1);
+    if (p2<p1) return;
+    meInFrame.hash = appHash.substring(p0, p1);
+    meInFrame.unit = Number(appHash.substring(p1+1, p2));
+    meInFrame.app = Number(appHash.substring(p2+1));
+    return meInFrame;
 }
 
-export function appUrl(url: string, unitId: number, appId: number) {
+export function appUrl(url: string, unitId: number, appId: number):{url:string; hash:string} {
     let u:string;
     for (;;) {
         u = uid();
         let a = appsInFrame[u];
         if (a === undefined) {
-            appsInFrame[u] = {unit:unitId, app:appId};
+            appsInFrame[u] = {hash:u, unit:unitId, app:appId};
             break;
         }
     }
-    return url + '#tv' + u;
+    return {url: url + '#tv' + u + '-' + unitId + '-' + appId, hash: u};
 }
 
 export async function appApi(apiName: string): Promise<ApiToken> {
@@ -99,7 +125,7 @@ export async function appApi(apiName: string): Promise<ApiToken> {
         }
         return apiToken;
     }
-    console.log("appApi parent send: %s", appHash);
+    console.log("appApi parent send: %s", meInFrame.hash);
     apiToken = {
         name: apiName,
         url: undefined,
@@ -120,9 +146,58 @@ export async function appApi(apiName: string): Promise<ApiToken> {
         window.parent.postMessage({
             type: 'app-api',
             apiName: apiName,
-            hash: appHash,
+            hash: meInFrame.hash,
         }, "*");
     });
     //apiToken = await apiTokenApi.api({dd: 'd'});
     //return apiToken;
+}
+
+interface BridgeCenterApi {
+    id: string;
+    resolve: (value?:any)=>any;
+    reject: (reason?:any)=>void;
+}
+const brideCenterApis:{[id:string]: BridgeCenterApi} = {};
+export function bridgeCenterApi(url:string, method:string, body:any):Promise<any> {
+    return new Promise<any>(async (resolve, reject) => {
+        let callId:string;
+        for (;;) {
+            callId = uid();
+            let bca = brideCenterApis[callId];
+            if (bca === undefined) {
+                brideCenterApis[callId] = {
+                    id: callId,
+                    resolve: resolve,
+                    reject: reject,
+                }
+                break;
+            }
+        }
+        window.parent.postMessage({
+            type: 'center-api',
+            callId: callId,
+            url: url,
+            method: method,
+            body: body
+        }, '*');
+    });
+}
+
+async function callCenterApiFromMessage(from:Window, message):Promise<void> {
+    let {callId, url, method, body} = message;
+    let result = await callCenterapi.directCall(url, method, body);
+    from.postMessage({
+        type: 'center-api-return',
+        callId: callId,
+        result: result,
+    }, '*');
+}
+
+function bridgeCenterApiReturn(message:any) {
+    let {callId, result} = message;
+    let bca = brideCenterApis[callId];
+    if (bca === undefined) return;
+    brideCenterApis[callId] = undefined;
+    bca.resolve(result);
 }

@@ -5,6 +5,7 @@ export declare abstract class ApiBase {
     protected showWaiting: boolean;
     constructor(path: string, showWaiting: boolean);
     protected abstract getHttpChannel(): Promise<HttpChannel>;
+    protected call(url: string, method: string, body: any): Promise<any>;
     protected get(path: string, params: any): Promise<any>;
     protected post(path: string, params: any): Promise<any>;
     protected put(path: string, params: any): Promise<any>;

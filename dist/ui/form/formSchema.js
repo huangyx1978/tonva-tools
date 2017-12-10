@@ -73,6 +73,12 @@ export class FormSchema {
         });
     }
     $(name) { return this._inputs[name]; }
+    setInputError(name, err) {
+        let input = this._inputs[name];
+        if (input === undefined)
+            return;
+        input.err = err;
+    }
     onReset() {
         this.reset();
     }

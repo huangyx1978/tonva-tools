@@ -14,3 +14,7 @@ export declare class ApiTokenApi extends CenterApi {
     }): Promise<any>;
 }
 export declare const apiTokenApi: ApiTokenApi;
+export declare class CallCenterApi extends CenterApi {
+    directCall(url: string, method: string, body: any): Promise<any>;
+}
+export declare const callCenterapi: CallCenterApi;

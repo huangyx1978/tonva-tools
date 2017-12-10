@@ -8,6 +8,7 @@ let centerToken:string|undefined = undefined;
 
 export function setCenterToken(t?:string) {
     centerToken = t;
+    console.log('setCenterToken %s', t);
     if (t !== undefined) {
         centerChannel = undefined;
         centerChannelUI = undefined;
@@ -18,11 +19,11 @@ let centerChannelUI:HttpChannel;
 let centerChannel:HttpChannel;
 function getCenterChannelUI():HttpChannel {
     if (centerChannelUI !== undefined) return centerChannelUI;
-    return centerChannelUI = new HttpChannel(centerHost, centerToken, new HttpChannelNavUI());
+    return centerChannelUI = new HttpChannel(true, centerHost, centerToken, new HttpChannelNavUI());
 }
 function getCenterChannel():HttpChannel {
     if (centerChannel !== undefined) return centerChannel;
-    return centerChannel = new HttpChannel(centerHost, centerToken);
+    return centerChannel = new HttpChannel(true, centerHost, centerToken);
 }
 
 export abstract class CenterApi extends ApiBase {
@@ -47,3 +48,11 @@ export class ApiTokenApi extends CenterApi {
 }
 
 export const apiTokenApi = new ApiTokenApi('tv/tie/');
+
+
+export class CallCenterApi extends CenterApi {
+    directCall(url:string, method:string, body:any):Promise<any> {
+        return this.call(url, method, body);
+    }
+}
+export const callCenterapi = new CallCenterApi('');

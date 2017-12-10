@@ -21,6 +21,7 @@ export declare class FormSchema {
     readonly hasError: boolean;
     readonly notFilled: boolean;
     $(name: string): InputSchema;
+    setInputError(name: string, err: string): void;
     onReset(): void;
     onClear(): void;
     onSubmit(event: FormEvent<HTMLFormElement>): Promise<void>;

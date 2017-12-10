@@ -1,13 +1,16 @@
 //import nav from './nav';
+import {bridgeCenterApi} from './appBridge';
 import {FetchError} from '../fetchError';
 import {HttpChannelUI} from './httpChannelUI';
 
 export class HttpChannel {
+    private isCenter: boolean;
     private hostUrl: string;
     private apiToken: string;
     private ui?: HttpChannelUI;
 
-    constructor(hostUrl: string, apiToken: string, ui?: HttpChannelUI) {
+    constructor(isCenter: boolean, hostUrl: string, apiToken: string, ui?: HttpChannelUI) {
+        this.isCenter = isCenter;
         this.hostUrl = hostUrl;
         this.apiToken = apiToken;
         this.ui = ui;
@@ -120,9 +123,21 @@ export class HttpChannel {
     }
 
     private innerFetch(url: string, options: any): Promise<any> {
-        return new Promise<any>(async (resolve, reject) => 
-            await this.fetch(this.hostUrl + url, options, resolve, reject)
-        );
+        let u = this.hostUrl + url;
+        if (this.isCenter === true && this.apiToken === undefined && self !== window.parent)
+            return bridgeCenterApi(u, options.method, options.body);
+        return new Promise<any>(async (resolve, reject) => {
+            await this.fetch(u, options, resolve, reject);
+        });
+    }
+
+    callFetch(url:string, method:string, body:any):Promise<any> {
+        let options = this.buildOptions();
+        options.method = method;
+        options.body = body;
+        return new Promise<any>(async (resolve, reject) => {
+            await this.fetch(url, options, resolve, reject);
+        });
     }
 
     private buildOptions(): any {

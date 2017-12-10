@@ -6,8 +6,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+//import nav from './nav';
+import { bridgeCenterApi } from './appBridge';
 export class HttpChannel {
-    constructor(hostUrl, apiToken, ui) {
+    constructor(isCenter, hostUrl, apiToken, ui) {
+        this.isCenter = isCenter;
         this.hostUrl = hostUrl;
         this.apiToken = apiToken;
         this.ui = ui;
@@ -119,7 +122,20 @@ export class HttpChannel {
         });
     }
     innerFetch(url, options) {
-        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () { return yield this.fetch(this.hostUrl + url, options, resolve, reject); }));
+        let u = this.hostUrl + url;
+        if (this.isCenter === true && this.apiToken === undefined && self !== window.parent)
+            return bridgeCenterApi(u, options.method, options.body);
+        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+            yield this.fetch(u, options, resolve, reject);
+        }));
+    }
+    callFetch(url, method, body) {
+        let options = this.buildOptions();
+        options.method = method;
+        options.body = body;
+        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+            yield this.fetch(url, options, resolve, reject);
+        }));
     }
     buildOptions() {
         let headers = new Headers();

@@ -16,7 +16,7 @@ let ListRow = class ListRow extends React.Component {
         };
     }
     render() {
-        let { date, main, vice, icon, unread, right, onClick } = this.props;
+        let { date, main, vice, middle, midSize, icon, unread, right, onClick } = this.props;
         let header, isIcon, noteNum;
         if (unread !== undefined) {
             let uv;
@@ -43,6 +43,17 @@ let ListRow = class ListRow extends React.Component {
                 isIcon = true;
                 break;
         }
+        let mid;
+        if (middle !== undefined) {
+            switch (typeof middle) {
+                case 'string':
+                    mid = React.createElement("div", { style: { flex: midSize } }, middle);
+                    break;
+                default:
+                    mid = middle;
+                    break;
+            }
+        }
         let footer;
         if (right !== undefined) {
             if (typeof right === 'string')
@@ -60,6 +71,7 @@ let ListRow = class ListRow extends React.Component {
             React.createElement("div", null,
                 React.createElement("div", null, main),
                 viceSpan),
+            mid,
             footer));
     }
 };

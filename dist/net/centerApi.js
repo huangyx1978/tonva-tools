@@ -13,6 +13,7 @@ const centerHost = process.env.REACT_APP_APIHOST;
 let centerToken = undefined;
 export function setCenterToken(t) {
     centerToken = t;
+    console.log('setCenterToken %s', t);
     if (t !== undefined) {
         centerChannel = undefined;
         centerChannelUI = undefined;
@@ -23,12 +24,12 @@ let centerChannel;
 function getCenterChannelUI() {
     if (centerChannelUI !== undefined)
         return centerChannelUI;
-    return centerChannelUI = new HttpChannel(centerHost, centerToken, new HttpChannelNavUI());
+    return centerChannelUI = new HttpChannel(true, centerHost, centerToken, new HttpChannelNavUI());
 }
 function getCenterChannel() {
     if (centerChannel !== undefined)
         return centerChannel;
-    return centerChannel = new HttpChannel(centerHost, centerToken);
+    return centerChannel = new HttpChannel(true, centerHost, centerToken);
 }
 export class CenterApi extends ApiBase {
     constructor(path, showWaiting) {
@@ -50,4 +51,10 @@ export class ApiTokenApi extends CenterApi {
     }
 }
 export const apiTokenApi = new ApiTokenApi('tv/tie/');
+export class CallCenterApi extends CenterApi {
+    directCall(url, method, body) {
+        return this.call(url, method, body);
+    }
+}
+export const callCenterapi = new CallCenterApi('');
 //# sourceMappingURL=centerApi.js.map

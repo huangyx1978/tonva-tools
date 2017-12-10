@@ -8,7 +8,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { ApiBase } from './apiBase';
 import { HttpChannel } from './httpChannel';
-import { appApi } from './app';
+import { HttpChannelNavUI } from './httpChannelUI';
+import { appApi } from './appBridge';
 const channelUIs = {};
 const channelNoUIs = {};
 export class Api extends ApiBase {
@@ -20,8 +21,10 @@ export class Api extends ApiBase {
     getHttpChannel() {
         return __awaiter(this, void 0, void 0, function* () {
             let channels;
+            let channelUI;
             if (this.showWaiting === true || this.showWaiting === undefined) {
                 channels = channelUIs;
+                channelUI = new HttpChannelNavUI();
             }
             else {
                 channels = channelNoUIs;
@@ -31,7 +34,7 @@ export class Api extends ApiBase {
                 return channel;
             // await center Channel get api
             let apiToken = yield appApi(this.apiName);
-            channel = new HttpChannel(apiToken.url, apiToken.token);
+            channel = new HttpChannel(false, apiToken.url, apiToken.token, channelUI);
             return channels[this.apiName] = channel;
         });
     }

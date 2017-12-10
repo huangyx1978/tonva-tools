@@ -15,6 +15,11 @@ export abstract class ApiBase {
 
     protected abstract async getHttpChannel(): Promise<HttpChannel>;
 
+    protected async call(url:string, method:string, body:any):Promise<any> {
+        let channel = await this.getHttpChannel();
+        return await channel.callFetch(url, method, body);
+    }
+
     protected async get(path:string, params:any): Promise<any> {
         let channel = await this.getHttpChannel();
         return await channel.get(this.path + path, params);

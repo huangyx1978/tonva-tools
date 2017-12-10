@@ -16,9 +16,9 @@ import * as React from 'react';
 import { observable } from 'mobx';
 import { netToken } from '../net/netToken';
 import FetchErrorView from './fetchErrorView';
-import { appUrl, appApi, setAppHash } from '../net/app';
+import { appUrl, appApi, setMeInFrame } from '../net/appBridge';
 import { LocalData } from '../local';
-import { ws } from '../net';
+//import {ws} from '../net';
 import 'font-awesome/css/font-awesome.min.css';
 import '../css/va.css';
 ;
@@ -40,57 +40,24 @@ export class NavView extends React.Component {
             nav.set(this);
             let user;
             let hash = document.location.hash;
-            if (hash !== undefined && hash.length === 11 && hash.startsWith('#tv')) {
+            if (hash !== undefined && hash.startsWith('#tv')) {
                 //user = decodeToken(token);
-                setAppHash(hash);
+                let mif = setMeInFrame(hash);
+                if (self !== window.parent) {
+                    window.parent.postMessage({ type: 'hide-frame-back', hash: mif.hash }, '*');
+                }
                 this.showAppView(); //.show(this.appView);
                 return;
             }
             else {
-                // window.addEventListener('message', e => this.receiveMessage(e));
                 user = nav.local.user.get();
             }
             if (user !== undefined) {
                 yield nav.logined(user);
             }
             else {
-                // if (this.loginingView === undefined)
-                // nav.show(<div>no token</div>);
-                // else
-                // nav.show(this.loginingView); //<LoginView />);
                 yield nav.showLogin();
             }
-            /*
-            let view:JSX.Element;
-            let v = this.props.view;
-    
-            let path = window.location.pathname;
-            if (path === undefined) {
-                path = '';
-            }
-            else {
-                if (path.substr(0, 1) === '/')
-                    path = path.substr(1).toLowerCase();
-            }
-            let token = window.location.hash;
-            if (token) {
-                token = token.substr(1);
-            }
-    
-            if (typeof v === 'function') {
-                view = v(path);
-            }
-            else {
-                view = v;
-            }*/
-            /*
-            start(
-                this.props.dispatch,
-                this.props.serverUrl,
-                this.props.login,
-                view,
-                token);
-            */
         });
     }
     get level() {
@@ -204,7 +171,7 @@ export class NavView extends React.Component {
         if (len === 0)
             return;
         if (len === 1 && self != window.top) {
-            window.top.postMessage({ cmd: 'popPage' }, '*');
+            window.top.postMessage({ type: 'pop-app' }, '*');
             return;
         }
         let top = stack[len - 1];
@@ -273,7 +240,7 @@ export class Nav {
             this.local.user.set(user);
             netToken.set(user.token);
             this.nav.showAppView(); //.show(this.appView);
-            yield ws.connect();
+            //await ws.connect();
         });
     }
     showLogin() {
@@ -334,11 +301,11 @@ export class Nav {
     }
     navToApp(url, unitId, appId) {
         // show in iframe
-        let src = appUrl(url, unitId, appId);
+        let uh = appUrl(url, unitId, appId);
         nav.push(React.createElement("article", { className: 'app-container' },
-            React.createElement("span", { onClick: () => this.back() },
+            React.createElement("span", { id: uh.hash, onClick: () => this.back() },
                 React.createElement("i", { className: "fa fa-arrow-left" })),
-            React.createElement("iframe", { src: src })));
+            React.createElement("iframe", { src: uh.url })));
     }
     getAppApi(apiName) {
         return __awaiter(this, void 0, void 0, function* () {

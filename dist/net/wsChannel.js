@@ -32,6 +32,10 @@ export class WSChannel {
             };
         });
     }
+    close() {
+        if (this.ws !== undefined)
+            this.ws.close();
+    }
     wsMessage(event) {
         /*
         event dump:

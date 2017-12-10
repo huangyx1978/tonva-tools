@@ -16,6 +16,12 @@ export class ApiBase {
         this.path = path || '';
         this.showWaiting = showWaiting;
     }
+    call(url, method, body) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let channel = yield this.getHttpChannel();
+            return yield channel.callFetch(url, method, body);
+        });
+    }
     get(path, params) {
         return __awaiter(this, void 0, void 0, function* () {
             let channel = yield this.getHttpChannel();
