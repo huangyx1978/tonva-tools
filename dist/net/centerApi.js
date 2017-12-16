@@ -14,10 +14,8 @@ let centerToken = undefined;
 export function setCenterToken(t) {
     centerToken = t;
     console.log('setCenterToken %s', t);
-    if (t !== undefined) {
-        centerChannel = undefined;
-        centerChannelUI = undefined;
-    }
+    centerChannel = undefined;
+    centerChannelUI = undefined;
 }
 let centerChannelUI;
 let centerChannel;
@@ -32,14 +30,13 @@ function getCenterChannel() {
     return centerChannel = new HttpChannel(true, centerHost, centerToken);
 }
 export class CenterApi extends ApiBase {
+    //private channel: HttpChannel;
     constructor(path, showWaiting) {
         super(path, showWaiting);
     }
     getHttpChannel() {
         return __awaiter(this, void 0, void 0, function* () {
-            if (this.channel !== undefined)
-                return this.channel;
-            return this.channel = (this.showWaiting === true || this.showWaiting === undefined) ?
+            return (this.showWaiting === true || this.showWaiting === undefined) ?
                 getCenterChannelUI() :
                 getCenterChannel();
         });

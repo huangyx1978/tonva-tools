@@ -8,7 +8,7 @@ export declare class Err extends React.Component<{
     render(): JSX.Element;
 }
 export declare type Validator = (values?: any) => string | undefined;
-export declare abstract class InputSchema {
+export declare abstract class FieldView {
     protected element: HTMLElement;
     props: any;
     id: string;
@@ -32,4 +32,4 @@ export declare abstract class InputSchema {
     protected stringValidator(rule: string, param?: string): Validator | undefined;
     protected required(values?: any): string | undefined;
 }
-export declare function inputFactory(formSchema: FormSchema, field: Field): InputSchema;
+export declare function inputFactory(formSchema: FormSchema, field: Field): FieldView;

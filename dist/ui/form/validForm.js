@@ -5,10 +5,14 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import * as React from 'react';
+import * as classNames from 'classnames';
 import { observer } from 'mobx-react';
 let ValidForm = class ValidForm extends React.Component {
+    componentDidMount() {
+        this.props.formSchema.setInputValues();
+    }
     render() {
-        let { children, formSchema } = this.props;
+        let { className, children, formSchema } = this.props;
         let content;
         if (children === undefined) {
             let sep;
@@ -29,7 +33,7 @@ let ValidForm = class ValidForm extends React.Component {
         }
         else
             content = children;
-        return React.createElement("div", { className: 'container' },
+        return React.createElement("div", { className: classNames('container', className) },
             React.createElement("form", { onSubmit: formSchema.onSubmit }, content));
     }
 };

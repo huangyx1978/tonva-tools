@@ -13,8 +13,9 @@ li.va-row.icon {
     position: relative;
     border: none;
     background: none;
+    width: 40px;
     display: flex;
-    padding: 4px;
+    padding: 4px 2px;
     align-items: center;
     justify-content: center;
   }
@@ -22,7 +23,6 @@ li.va-row.icon {
     position: relative;
     display: block;
     border-radius: 6px;
-    width: 40px;
     height: 40px;
     margin: 4px 4px 4px 4px;
     padding: 0px;
@@ -63,7 +63,7 @@ li.va-row.icon {
     flex: 1;
     flex-direction: column;
     margin: 0;
-    padding: 0px 4px 0px 16px;
+    padding: 0px 4px 0px 12px;
     min-width: 200px;
   }
   li.va-row>div.none {

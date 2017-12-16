@@ -29,10 +29,14 @@ let ListView = class ListView extends React.Component {
                 let listItem;
                 if (converter !== undefined) {
                     listItem = converter(item);
+                    if (listItem === undefined)
+                        return null;
                 }
                 else {
                     listItem = Object.assign({}, item);
                 }
+                if (listItem.key === undefined)
+                    listItem.key = listItem.main;
                 return React.createElement(ListRow, Object.assign({ onClick: onClick }, listItem));
             });
         }
@@ -44,9 +48,9 @@ let ListView = class ListView extends React.Component {
                 elHeader = header;
             }
         }
-        return (React.createElement("div", { className: 'va-list' },
+        return (React.createElement("div", { className: cn },
             elHeader,
-            React.createElement("ul", { className: cn }, content),
+            React.createElement("ul", null, content),
             footer));
     }
 };

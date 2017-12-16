@@ -10,8 +10,12 @@ import { ApiBase } from './apiBase';
 import { HttpChannel } from './httpChannel';
 import { HttpChannelNavUI } from './httpChannelUI';
 import { appApi } from './appBridge';
-const channelUIs = {};
-const channelNoUIs = {};
+let channelUIs = {};
+let channelNoUIs = {};
+export function logoutApis() {
+    channelUIs = {};
+    channelNoUIs = {};
+}
 export class Api extends ApiBase {
     constructor(path, apiName, showWaiting) {
         super(path, showWaiting);

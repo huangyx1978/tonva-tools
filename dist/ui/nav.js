@@ -18,6 +18,7 @@ import { netToken } from '../net/netToken';
 import FetchErrorView from './fetchErrorView';
 import { appUrl, appApi, setMeInFrame } from '../net/appBridge';
 import { LocalData } from '../local';
+import { logoutApis, setCenterToken } from '../net';
 //import {ws} from '../net';
 import 'font-awesome/css/font-awesome.min.css';
 import '../css/va.css';
@@ -167,7 +168,6 @@ export class NavView extends React.Component {
     back(confirm = true) {
         let stack = this.stack;
         let len = stack.length;
-        console.log('pages: %s', len);
         if (len === 0)
             return;
         if (len === 1 && self != window.top) {
@@ -182,6 +182,7 @@ export class NavView extends React.Component {
         else {
             this.pop();
         }
+        console.log('pages: %s', stack.length);
     }
     confirmBox(message) {
         return window.confirm(message);
@@ -236,9 +237,9 @@ export class Nav {
     }
     logined(user) {
         return __awaiter(this, void 0, void 0, function* () {
-            Object.assign(this.user, user);
             this.local.user.set(user);
             netToken.set(user.token);
+            this.user = user;
             this.nav.showAppView(); //.show(this.appView);
             //await ws.connect();
         });
@@ -255,6 +256,9 @@ export class Nav {
     logout() {
         return __awaiter(this, void 0, void 0, function* () {
             this.local.logoutClear();
+            this.user = {};
+            logoutApis();
+            setCenterToken(undefined);
             yield this.showLogin();
         });
     }

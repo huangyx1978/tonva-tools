@@ -5,7 +5,7 @@ import {observer} from 'mobx-react';
 import '../css/va-row.css';
 
 export interface ListItem {
-    key: string|number;
+    key?: string|number;
     date?: Date;
     icon?: string | JSX.Element;
     main?: string;

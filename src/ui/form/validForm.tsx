@@ -1,16 +1,20 @@
 import * as React from 'react';
+import * as classNames from 'classnames';
 import {observer} from 'mobx-react';
-import {InputSchema} from './inputSchema';
 import {FormSchema} from './formSchema';
 
 export interface FormProps {
+    className?: string;
     formSchema: FormSchema;
 }
 
 @observer 
 export class ValidForm extends React.Component<FormProps, {}> {
+    componentDidMount() {
+        this.props.formSchema.setInputValues();
+    }
     render() {
-        let {children, formSchema} = this.props;
+        let {className, children, formSchema} = this.props;
         let content:any[];
         if (children === undefined) {
             let sep;
@@ -28,7 +32,7 @@ export class ValidForm extends React.Component<FormProps, {}> {
         }
         else
             content = children as any;
-        return <div className='container'>
+        return <div className={classNames('container', className)}>
             <form onSubmit={formSchema.onSubmit}>{content}</form>
         </div>;
     }

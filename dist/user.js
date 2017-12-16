@@ -7,7 +7,7 @@ export function decodeToken(token) {
     let user = {
         id: ret.id,
         name: ret.name,
-        accesses: accesses,
+        // accesses: accesses,
         token: token
     };
     return user;

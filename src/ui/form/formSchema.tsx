@@ -4,11 +4,12 @@ import * as _ from 'lodash';
 import * as classNames from 'classnames';
 import {Page} from '../page';
 import {nav} from '../nav';
-import {Field, FormFields, Rule, Rules, SubmitReturn} from './def';
+import {Field, FormFields, Rule, Rules, SubmitReturn} from './field';
 import {InputSchema, inputFactory, Err} from './inputSchema';
 import { FormEvent } from 'react';
 
 export class FormSchema {
+    private initValues: any;
     private _inputs: {[name:string]: InputSchema};
     private submit: (values:any) => Promise<SubmitReturn|undefined>;
     fieldTag: string;
@@ -20,8 +21,9 @@ export class FormSchema {
     @observable errors: string[] = [];
     onError: (result:any) => void;
     onSuccess: (result:any) => void;
-    constructor(formFields: FormFields) {
+    constructor(formFields: FormFields, values?: any) {
         let {fields, onSumit, fieldTag, submitText, resetButton, clearButton} = formFields;
+        this.initValues = values;
         this.fieldTag = fieldTag || 'div';
         this.submitText = submitText || '提交';
         if (resetButton === true) this.resetButton = '重来';
@@ -33,8 +35,14 @@ export class FormSchema {
         this.inputs = [];
         this.hasLabel = false;
         for (let field of fields) {
+            let name = field.name;
+            /*
+            if (values !== undefined) {
+                let v = values[name];
+                if (v !== undefined) field.defaultValue = v;
+            }*/
             if (field.label !== undefined) this.hasLabel = true;
-            let v = this._inputs[field.name] = inputFactory(this, field);            
+            let v = this._inputs[field.name] = inputFactory(this, field);
             this.inputs.push(v);
         }
         this.onSubmit = this.onSubmit.bind(this);
@@ -55,7 +63,9 @@ export class FormSchema {
     values():object {
         let ret:any = {};
         for (let vi of this.inputs) {
-            ret[vi.field.name] = vi.value;
+            let v = vi.value;
+            if (v === '') v = undefined;
+            ret[vi.field.name] = v;
         }
         return ret;
     }
@@ -64,13 +74,20 @@ export class FormSchema {
         return this.inputs.some(vi => vi.err !== undefined);
     }
     @computed get notFilled():boolean {
-        return this.inputs.every(vi => {
-            let ret = !vi.value;
-            return ret;
-        });
+        let ret = this.inputs.every(vi => !vi.filled);
+        console.log('not filled %s', ret);
+        return ret;
     }
 
     $(name:string):InputSchema {return this._inputs[name];}
+
+    removeInput(name:string) {
+        let input = this._inputs[name];
+        if (input !== undefined) {
+            let index = this.inputs.findIndex(v => v===input);
+            if (index>=0) this.inputs.splice(index, 1);
+        }
+    }
 
     setInputError(name:string, err:string) {
         let input = this._inputs[name];
@@ -124,10 +141,39 @@ export class FormSchema {
         return classNames(this.hasLabel? 'col-sm-10' : 'col-sm-12');
     }
 
+    setInputValues() {
+        if (this.initValues === undefined) return;
+        for (let i in this._inputs) {
+            let v = this.initValues[i];
+            if (v !== undefined) this._inputs[i].setInitValue(v);
+        }
+    }
+
     renderInput(vInput:InputSchema):JSX.Element {
+        switch (vInput.field.type) {
+            default: return this.renderString(vInput);
+            case 'checkbox': return this.renderCheckBox(vInput);
+            case 'text': return this.renderTextArea(vInput);
+        }
+    }
+    renderString(vInput:InputSchema):JSX.Element {
         let {err} = vInput;
         let cn = classNames('form-control', 'has-success', err? 'is-invalid':'is-valid');
         return <input className={cn} {...vInput.props} />;
+    }
+    renderTextArea(vInput:InputSchema):JSX.Element {
+        let {err} = vInput;
+        let {value, inputtag, ...attributes} = vInput.props;
+        let cn = classNames('form-control', 'has-success', err? 'is-invalid':'is-valid');
+        return <textarea className={cn} {...attributes}>{vInput.value}</textarea>;
+    }
+    renderCheckBox(vInput:InputSchema):JSX.Element {
+        let {props, field, value} = vInput;
+        return <label className='form-check-label h-100 align-items-center d-flex bg-light'>
+            <input type='checkbox' className='form-check-input position-static ml-0' 
+                name={field.name} checked={vInput.value===1} onChange={props.onChange} 
+                ref={props.ref} />
+        </label>;
     }
     renderLabel(vInput:InputSchema):JSX.Element {
         if (this.hasLabel === false) return null;

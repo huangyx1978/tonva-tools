@@ -45,12 +45,14 @@ export class ListView extends React.Component<ListViewProps, null> {
                 let listItem:ListItem;
                 if (converter !== undefined) {
                     listItem = converter(item);
+                    if (listItem === undefined) return null;
                 }
                 else {
                     listItem = {
                         ...item
                     }
                 }
+                if (listItem.key === undefined) listItem.key = listItem.main;
                 return <ListRow onClick={onClick} {...listItem} />;
             });
         }
@@ -64,9 +66,9 @@ export class ListView extends React.Component<ListViewProps, null> {
         }
 
         return (
-        <div className='va-list'>
+        <div className={cn}>
             {elHeader}
-            <ul className={cn}>
+            <ul>
                 {content}
             </ul>
             {footer}

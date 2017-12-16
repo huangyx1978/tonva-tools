@@ -3,8 +3,13 @@ import {HttpChannel} from './httpChannel';
 import {HttpChannelUI, HttpChannelNavUI} from './httpChannelUI';
 import {appApi} from './appBridge';
 
-const channelUIs:{[name:string]: HttpChannel} = {};
-const channelNoUIs:{[name:string]: HttpChannel} = {};
+let channelUIs:{[name:string]: HttpChannel} = {};
+let channelNoUIs:{[name:string]: HttpChannel} = {};
+
+export function logoutApis() {
+    channelUIs = {};
+    channelNoUIs = {};
+}
 
 export class Api extends ApiBase {
     private apiName: string;

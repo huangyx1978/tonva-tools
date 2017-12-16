@@ -1,12 +1,16 @@
 export declare type Rule = string | ((values: any) => string);
 export declare type Rules = Rule[];
 export declare type Field = {
-    type: 'int' | 'dec' | 'float' | 'string' | 'text' | 'password' | 'checkbox' | 'radios' | 'select';
+    type: 'int' | 'dec' | 'float' | 'string' | 'text' | 'password' | 'checkbox' | 'radios' | 'select' | 'pick-id';
     name: string;
     label?: string;
     placeholder?: string;
     rules?: Rules | Rule;
     defaultValue?: any;
+    list?: string[] | {
+        value: any;
+        text: string;
+    }[];
 };
 export interface SubmitReturn {
     success: boolean;

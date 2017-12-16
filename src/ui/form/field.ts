@@ -1,13 +1,19 @@
+import {InputSchema} from './inputSchema';
 
 export type Rule = string|((values:any)=>string);
 export type Rules = Rule[];
+
 export type Field = {
-    type:'int'|'dec'|'float'|'string'|'text'|'password';
+    type:'int'|'dec'|'float'|'string'|'text'|'password'|'checkbox'|'radios'|'select'|'pick-id';
     name:string;
     label?:string;
     placeholder?:string;
     rules?:Rules|Rule;
+    defaultValue?:any;
+    list?:string[]|{value:any, text:string}[];
+    //pick?:
 };
+
 export interface SubmitReturn {
     success: boolean;
     message?: string

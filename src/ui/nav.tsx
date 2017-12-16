@@ -7,6 +7,8 @@ import FetchErrorView from './fetchErrorView';
 import {FetchError} from '../fetchError';
 import {appUrl, appApi, setMeInFrame} from '../net/appBridge';
 import {LocalData} from '../local';
+import {logoutApis, setCenterToken} from '../net';
+
 //import {ws} from '../net';
 import 'font-awesome/css/font-awesome.min.css';
 import '../css/va.css';
@@ -186,7 +188,6 @@ export class NavView extends React.Component<Props, State> {
     back(confirm:boolean = true) {
         let stack = this.stack;
         let len = stack.length;
-        console.log('pages: %s', len);
         if (len === 0) return;
         if (len === 1 && self!=window.top) {
             window.top.postMessage({type:'pop-app'}, '*');
@@ -199,6 +200,7 @@ export class NavView extends React.Component<Props, State> {
         else {
             this.pop();
         }
+        console.log('pages: %s', stack.length);
     }
 
     confirmBox(message?:string): boolean {
@@ -267,9 +269,9 @@ export class Nav {
     }
 
     async logined(user: User) {
-        Object.assign(this.user, user);
         this.local.user.set(user);
         netToken.set(user.token);
+        this.user = user;
         this.nav.showAppView(); //.show(this.appView);
         //await ws.connect();
     }
@@ -284,6 +286,9 @@ export class Nav {
 
     async logout() {
         this.local.logoutClear();
+        this.user = {} as User;
+        logoutApis();
+        setCenterToken(undefined);
         await this.showLogin();
     }
  

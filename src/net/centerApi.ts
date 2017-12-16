@@ -9,10 +9,8 @@ let centerToken:string|undefined = undefined;
 export function setCenterToken(t?:string) {
     centerToken = t;
     console.log('setCenterToken %s', t);
-    if (t !== undefined) {
-        centerChannel = undefined;
-        centerChannelUI = undefined;
-    }
+    centerChannel = undefined;
+    centerChannelUI = undefined;
 }
 
 let centerChannelUI:HttpChannel;
@@ -27,15 +25,14 @@ function getCenterChannel():HttpChannel {
 }
 
 export abstract class CenterApi extends ApiBase {
-    private channel: HttpChannel;
+    //private channel: HttpChannel;
 
     constructor(path: string, showWaiting?: boolean) {
         super(path, showWaiting);
     }
 
     protected async getHttpChannel(): Promise<HttpChannel> {
-        if (this.channel !== undefined) return this.channel;
-        return this.channel = (this.showWaiting === true || this.showWaiting === undefined)?
+        return (this.showWaiting === true || this.showWaiting === undefined)?
             getCenterChannelUI():
             getCenterChannel();
     }

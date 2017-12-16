@@ -19,18 +19,23 @@ Err = __decorate([
 export { Err };
 export class InputSchema {
     constructor(formSchema, field) {
-        this.inputTag = 'input';
-        this.field = field;
+        this.field = _.clone(field);
         this.formSchema = formSchema;
         this.id = _.uniqueId();
         this.label = field.label;
+        this.value = field.defaultValue;
         this.props = {
             name: field.name,
             placeholder: field.placeholder,
             onFocus: () => { this.err = undefined; this.formSchema.errors = []; },
+            ref: this.ref.bind(this),
         };
         this.setProps();
         this.buildValidators();
+    }
+    parseValue(value) { return value; }
+    ref(element) {
+        this.element = element;
     }
     reset() {
         this.value = undefined;
@@ -39,6 +44,13 @@ export class InputSchema {
     clear() {
         this.value = undefined;
         this.err = undefined;
+    }
+    get defaultValue() { return this.field.defaultValue; }
+    setInitValue(value) { }
+    get filled() {
+        let ret = this.value !== undefined && this.value !== this.defaultValue;
+        console.log('%s value=%s default=%s ret=%s', this.field.name, this.value, this.defaultValue, ret);
+        return ret;
     }
     buildValidators() {
         let rules = this.field.rules;
@@ -88,6 +100,7 @@ class UnkownInputSchema extends InputSchema {
 class SingleInputSchema extends InputSchema {
     setProps() {
         this.props.type = 'text';
+        this.props.value = this.value;
         this.props.onBlur = () => {
             if (this.validators !== undefined) {
                 for (let v of this.validators) {
@@ -98,21 +111,21 @@ class SingleInputSchema extends InputSchema {
                     }
                 }
             }
-            this.value = this._input.value;
+            this.value = this.parseValue(this.element.value);
         };
-        this.props.ref = this.ref.bind(this);
     }
-    ref(input) {
-        this._input = input;
+    setInitValue(value) {
+        this.element.value = value;
+        this.value = this.parseValue(value);
     }
     clear() {
         super.clear();
-        this._input.value = '';
+        this.element.value = this.field.defaultValue;
     }
     required(values) {
-        if (this._input === undefined)
+        if (this.element === undefined)
             return undefined;
-        let value = this._input.value;
+        let value = this.element.value;
         if (value === undefined)
             return;
         if (value.trim().length > 0)
@@ -154,7 +167,7 @@ class NumberInputSchema extends SingleInputSchema {
     min(values) {
         if (this._min === undefined)
             return;
-        let value = this._input.value;
+        let value = this.element.value;
         if (value === undefined)
             return;
         if (value.trim().length === 0)
@@ -169,7 +182,7 @@ class NumberInputSchema extends SingleInputSchema {
     max(values) {
         if (this._max === undefined)
             return;
-        let value = this._input.value;
+        let value = this.element.value;
         if (value === undefined)
             return;
         if (value.trim().length === 0)
@@ -206,10 +219,40 @@ class PasswordInputSchema extends StringInputSchema {
 }
 class TextInputSchema extends InputSchema {
     setProps() {
-        this.props.inputTag = 'textarea';
-        this.props.ref = (textArea) => {
-            this._textArea = textArea;
+        this.props.onBlur = () => {
+            if (this.validators !== undefined) {
+                for (let v of this.validators) {
+                    let ret = v();
+                    if (ret !== undefined) {
+                        this.err = ret;
+                        return;
+                    }
+                }
+            }
+            this.value = this.parseValue(this.element.value);
         };
+    }
+    setInitValue(value) {
+        this.element.value = value;
+        this.value = this.parseValue(value);
+    }
+}
+class CheckBoxSchema extends InputSchema {
+    setProps() {
+        this.props.type = 'checkbox';
+        this.props.onChange = (event) => {
+            this.value = event.target.checked === true ? 1 : 0;
+        };
+    }
+    get defaultValue() {
+        let d = this.field.defaultValue;
+        if (d !== undefined)
+            return d;
+        return 0;
+    }
+    setInitValue(value) {
+        this.element.checked = value !== 0 ? true : false;
+        this.value = value;
     }
 }
 export function inputFactory(formSchema, field) {
@@ -221,6 +264,7 @@ export function inputFactory(formSchema, field) {
         case 'string': return new StringInputSchema(formSchema, field);
         case 'password': return new PasswordInputSchema(formSchema, field);
         case 'text': return new TextInputSchema(formSchema, field);
+        case 'checkbox': return new CheckBoxSchema(formSchema, field);
     }
 }
 //# sourceMappingURL=inputSchema.js.map
