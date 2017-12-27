@@ -22,11 +22,13 @@ export default class FetchErrorView extends React.Component {
         else {
             errContent = React.createElement("div", null, error);
         }
-        return React.createElement("li", { className: 'va-error', onClick: () => this.click() },
-            React.createElement("div", null,
-                React.createElement("div", null, "\u7F51\u7EDC\u51FA\u73B0\u95EE\u9898"),
-                React.createElement("div", null, "\u70B9\u51FB\u91CD\u65B0\u8BBF\u95EE"),
-                errContent));
+        return React.createElement("li", { onClick: () => this.click() },
+            React.createElement("article", { className: "page-container" },
+                React.createElement("section", null,
+                    React.createElement("div", { className: "va-error" },
+                        React.createElement("div", null, "\u7F51\u7EDC\u51FA\u73B0\u95EE\u9898"),
+                        React.createElement("div", null, "\u70B9\u51FB\u91CD\u65B0\u8BBF\u95EE"),
+                        errContent))));
     }
 }
 //# sourceMappingURL=fetchErrorView.js.map

@@ -26,13 +26,17 @@ export default class FetchErrorView extends React.Component<FetchErrorProps, nul
         else {
             errContent = <div>{error}</div>;
         }
-        return <li className='va-error'
+        return <li
             onClick={() => this.click()}>
-                <div>
-                    <div>网络出现问题</div>
-                    <div>点击重新访问</div>
-                    {errContent}
-                </div>
+            <article className="page-container">
+                <section>
+                    <div  className="va-error">
+                        <div>网络出现问题</div>
+                        <div>点击重新访问</div>
+                        {errContent}
+                    </div>
+                </section>
+            </article>
         </li>;
     }
 }

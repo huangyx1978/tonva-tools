@@ -79,7 +79,7 @@ export class HttpChannel {
             console.log('%s %s', options.method, path);
             function buildError(err) {
                 return {
-                    channel: this,
+                    channel: that,
                     url: path,
                     options: options,
                     resolve: resolve,
