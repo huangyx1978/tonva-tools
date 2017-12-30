@@ -56,19 +56,17 @@ export class NavView extends React.Component<Props, State> {
     {
         nav.set(this);
 
-        let user: User;
         let hash = document.location.hash;
         if (hash !== undefined && hash.startsWith('#tv')) {
-            //user = decodeToken(token);
             let mif = setMeInFrame(hash);
+            nav.user = {id:0} as User;
             if (self !== window.parent) {
                 window.parent.postMessage({type:'hide-frame-back', hash: mif.hash}, '*');
             }
-            this.showAppView(); //.show(this.appView);
+            this.showAppView();
             return;
-        } else {
-            user = nav.local.user.get();
         }
+        let user: User = nav.local.user.get();
         if (user !== undefined) {
             await nav.logined(user);
         } else {
@@ -254,16 +252,9 @@ export class NavView extends React.Component<Props, State> {
 export class Nav {
     private nav:NavView;
     private loginView: JSX.Element;
-    //private appView: JSX.Element;
     local: LocalData = new LocalData();
-    @observable user: User = {} as User;
+    @observable user: User = undefined; // = {id:undefined, name:undefined, token:undefined};
     
-    /*
-    setViews(loginView: JSX.Element, appView: JSX.Element) {
-        this.loginView = loginView;
-        this.appView = appView;
-    }*/
-
     set(nav:NavView) {
         this.nav = nav;
     }
@@ -272,8 +263,7 @@ export class Nav {
         this.local.user.set(user);
         netToken.set(user.token);
         this.user = user;
-        this.nav.showAppView(); //.show(this.appView);
-        //await ws.connect();
+        this.nav.showAppView();
     }
 
     async showLogin() {
@@ -286,7 +276,7 @@ export class Nav {
 
     async logout() {
         this.local.logoutClear();
-        this.user = {} as User;
+        this.user = undefined; //{} as User;
         logoutApis();
         setCenterToken(undefined);
         await this.showLogin();
@@ -295,9 +285,6 @@ export class Nav {
     get level() {
         return this.nav.level;
     }
-    //get events() {
-    //    return this.nav.events;
-    //}
     startWait() {
         this.nav.startWait();
     }

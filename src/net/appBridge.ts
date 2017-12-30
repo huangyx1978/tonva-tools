@@ -18,8 +18,8 @@ const apiTokens:{[apiName:string]: ApiTokenAction}  = {};
 
 export interface AppInFrame {
     hash: string;
-    unit: number;   // unit id
-    app: number;    // app id
+    unit: number;       // unit id
+    app: number;        // app id
 }
 const appsInFrame:{[key:string]:AppInFrame} = {};
 
@@ -27,7 +27,7 @@ export let meInFrame:AppInFrame = {
     hash: undefined,
     unit: Number(process.env.REACT_APP_DEBUG_UNITID),
     app: Number(process.env.REACT_APP_DEBUG_APPID)
-};
+}
 
 window.addEventListener('message', async function(evt) {
     let e:any = evt;

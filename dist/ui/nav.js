@@ -39,20 +39,17 @@ export class NavView extends React.Component {
     componentDidMount() {
         return __awaiter(this, void 0, void 0, function* () {
             nav.set(this);
-            let user;
             let hash = document.location.hash;
             if (hash !== undefined && hash.startsWith('#tv')) {
-                //user = decodeToken(token);
                 let mif = setMeInFrame(hash);
+                nav.user = { id: 0 };
                 if (self !== window.parent) {
                     window.parent.postMessage({ type: 'hide-frame-back', hash: mif.hash }, '*');
                 }
-                this.showAppView(); //.show(this.appView);
+                this.showAppView();
                 return;
             }
-            else {
-                user = nav.local.user.get();
-            }
+            let user = nav.local.user.get();
             if (user !== undefined) {
                 yield nav.logined(user);
             }
@@ -223,15 +220,9 @@ export class NavView extends React.Component {
 }
 export class Nav {
     constructor() {
-        //private appView: JSX.Element;
         this.local = new LocalData();
-        this.user = {};
+        this.user = undefined; // = {id:undefined, name:undefined, token:undefined};
     }
-    /*
-    setViews(loginView: JSX.Element, appView: JSX.Element) {
-        this.loginView = loginView;
-        this.appView = appView;
-    }*/
     set(nav) {
         this.nav = nav;
     }
@@ -240,8 +231,7 @@ export class Nav {
             this.local.user.set(user);
             netToken.set(user.token);
             this.user = user;
-            this.nav.showAppView(); //.show(this.appView);
-            //await ws.connect();
+            this.nav.showAppView();
         });
     }
     showLogin() {
@@ -256,7 +246,7 @@ export class Nav {
     logout() {
         return __awaiter(this, void 0, void 0, function* () {
             this.local.logoutClear();
-            this.user = {};
+            this.user = undefined; //{} as User;
             logoutApis();
             setCenterToken(undefined);
             yield this.showLogin();
@@ -265,9 +255,6 @@ export class Nav {
     get level() {
         return this.nav.level;
     }
-    //get events() {
-    //    return this.nav.events;
-    //}
     startWait() {
         this.nav.startWait();
     }
