@@ -64,7 +64,6 @@ export interface TabState extends Tab {
     isMounted?: boolean;
 }
 export interface PageProps extends ScrollProps {
-    // mainClass?: string,
     close?: boolean;
     header?: boolean | string | JSX.Element;
     right?: JSX.Element;
