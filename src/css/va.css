@@ -12,7 +12,9 @@ body {
     flex-direction: column;
     background-color: lightblue;
 }
-
+.cursor-pointer {
+  cursor: pointer;
+}
 div#root {
     width: 100%;
     height: 100%;

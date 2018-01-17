@@ -1,5 +1,6 @@
 export * from './user';
 export * from './net';
 export * from './ui';
-//export * from './entry';
+export { PagedItems } from './pagedItems';
+export { CacheIds } from './cacheIds';
 //# sourceMappingURL=index.js.map

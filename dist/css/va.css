@@ -20,6 +20,9 @@ div#root {
     display: flex;
     flex-direction: column;
 }
+.cursor-pointer {
+  cursor: pointer;
+}
 
 main * {
     box-sizing: border-box;
