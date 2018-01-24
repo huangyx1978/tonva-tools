@@ -319,7 +319,6 @@ export class Nav {
         return this.nav.confirmBox(message);
     }
     navToApp(url: string, unitId: number, appId: number) {
-        // show in iframe
         let uh = appUrl(url, unitId, appId);
         nav.push(<article className='app-container'>
             <span id={uh.hash} onClick={()=>this.back()}>
