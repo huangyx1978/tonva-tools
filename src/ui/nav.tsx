@@ -327,9 +327,10 @@ export class Nav {
             <iframe src={uh.url} />
         </article>);
     }
+    /*
     async getAppApi(apiName: string): Promise<{url:string, token:string}> {
         return await appApi(apiName);
-    }
+    }*/
     navToSite(url: string) {
         // show in new window
         window.open(url);

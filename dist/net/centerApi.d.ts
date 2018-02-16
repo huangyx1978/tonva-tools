@@ -8,7 +8,7 @@ export declare abstract class CenterApi extends ApiBase {
 export declare class ApiTokenApi extends CenterApi {
     api(params: {
         unit: number;
-        app: number;
+        apiOwner: string;
         apiName: string;
     }): Promise<any>;
 }

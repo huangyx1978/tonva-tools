@@ -87,8 +87,8 @@ export class WSChannel {
         return seed;
     }
     endWsReceive(handlerId:number) {
-        this.anyHandlers[handlerId] = undefined;
-        this.msgHandlers[handlerId] = undefined;
+        delete this.anyHandlers[handlerId];
+        delete this.msgHandlers[handlerId];
     }
     sendWs(msg:any) {
         let netThis = this;

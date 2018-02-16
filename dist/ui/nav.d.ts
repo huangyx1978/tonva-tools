@@ -63,10 +63,6 @@ export declare class Nav {
     regConfirmClose(confirmClose: () => boolean): void;
     confirmBox(message?: string): boolean;
     navToApp(url: string, unitId: number, appId: number): void;
-    getAppApi(apiName: string): Promise<{
-        url: string;
-        token: string;
-    }>;
     navToSite(url: string): void;
 }
 export declare const nav: Nav;

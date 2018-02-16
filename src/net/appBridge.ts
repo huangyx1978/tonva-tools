@@ -48,9 +48,10 @@ window.addEventListener('message', async function(evt) {
             break;
         case 'app-api':
             console.log("receive PostMessage: %s", JSON.stringify(message));
-            let ret = await onReceiveAppApiMessage(message.hash, message.apiName);
+            let ret = await onReceiveAppApiMessage(message.hash, message.apiOwner, message.apiName);
             e.source.postMessage({
                 type: 'app-api-return', 
+                apiOwner: message.apiOwner,
                 apiName: message.apiName, 
                 url: ret.url, 
                 token: ret.token}, "*");
@@ -68,11 +69,11 @@ function hideFrameBack(hash:string) {
     if (el !== undefined) el.hidden = true;
 }
 
-async function onReceiveAppApiMessage(hash: string, apiName: string): Promise<ApiToken> {
+async function onReceiveAppApiMessage(hash: string, apiOwner:string, apiName: string): Promise<ApiToken> {
     let appInFrame = appsInFrame[hash];
     if (appInFrame === undefined) return {name:apiName, url:undefined, token:undefined};
     let {unit, app} = appInFrame;
-    let ret = await apiTokenApi.api({unit: unit, app: app, apiName: apiName});
+    let ret = await apiTokenApi.api({unit: unit, apiOwner: apiOwner, apiName: apiName});
     return {name: apiName, url: ret.url, token: ret.token};
 }
 
@@ -112,12 +113,12 @@ export function appUrl(url: string, unitId: number, appId: number):{url:string; 
     return {url: url + '#tv' + u + '-' + unitId + '-' + appId, hash: u};
 }
 
-export async function appApi(apiName: string): Promise<ApiToken> {
-    let apiToken = apiTokens[apiName];
+export async function appApi(api:string, apiOwner:string, apiName:string): Promise<ApiToken> {
+    let apiToken = apiTokens[api];
     if (apiToken !== undefined) return apiToken;
     if (window === window.parent) {
-        apiToken = await apiTokenApi.api({unit: debugUnitId, app: debugAppId, apiName:apiName});
-        apiTokens[apiName] = apiToken;
+        apiToken = await apiTokenApi.api({unit: debugUnitId, apiOwner:apiOwner, apiName:apiName});
+        apiTokens[api] = apiToken;
         if (apiToken === undefined) {
             let err = 'unauthorized call: apiTokenApi center return undefined!';
             //console.log(err);
@@ -127,13 +128,13 @@ export async function appApi(apiName: string): Promise<ApiToken> {
     }
     console.log("appApi parent send: %s", meInFrame.hash);
     apiToken = {
-        name: apiName,
+        name: api,
         url: undefined,
         token: undefined,
         resolve: undefined,
         reject: undefined,
     };
-    apiTokens[apiName] = apiToken;
+    apiTokens[api] = apiToken;
     return new Promise<ApiToken>((resolve, reject) => {
         apiToken.resolve = async (at) => {
             let a = await at;
@@ -145,7 +146,7 @@ export async function appApi(apiName: string): Promise<ApiToken> {
         apiToken.reject = reject;
         window.parent.postMessage({
             type: 'app-api',
-            apiName: apiName,
+            apiName: api,
             hash: meInFrame.hash,
         }, "*");
     });

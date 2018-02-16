@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import { HttpChannelNavUI } from './httpChannelUI';
 import { HttpChannel } from './httpChannel';
 import { ApiBase } from './apiBase';
-const centerHost = process.env.REACT_APP_APIHOST;
+const centerHost = process.env.REACT_APP_APIHOST_CENTER;
 let centerToken = undefined;
 export function setCenterToken(t) {
     centerToken = t;
@@ -44,7 +44,9 @@ export class CenterApi extends ApiBase {
 }
 export class ApiTokenApi extends CenterApi {
     api(params) {
-        return this.get('app-api', params);
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.get('app-api', params);
+        });
     }
 }
 export const apiTokenApi = new ApiTokenApi('tv/tie/');

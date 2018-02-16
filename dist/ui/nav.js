@@ -16,7 +16,7 @@ import * as React from 'react';
 import { observable } from 'mobx';
 import { netToken } from '../net/netToken';
 import FetchErrorView from './fetchErrorView';
-import { appUrl, appApi, setMeInFrame } from '../net/appBridge';
+import { appUrl, setMeInFrame } from '../net/appBridge';
 import { LocalData } from '../local';
 import { logoutApis, setCenterToken } from '../net';
 //import {ws} from '../net';
@@ -291,18 +291,16 @@ export class Nav {
         return this.nav.confirmBox(message);
     }
     navToApp(url, unitId, appId) {
-        // show in iframe
         let uh = appUrl(url, unitId, appId);
         nav.push(React.createElement("article", { className: 'app-container' },
             React.createElement("span", { id: uh.hash, onClick: () => this.back() },
                 React.createElement("i", { className: "fa fa-arrow-left" })),
             React.createElement("iframe", { src: uh.url })));
     }
-    getAppApi(apiName) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return yield appApi(apiName);
-        });
-    }
+    /*
+    async getAppApi(apiName: string): Promise<{url:string, token:string}> {
+        return await appApi(apiName);
+    }*/
     navToSite(url) {
         // show in new window
         window.open(url);

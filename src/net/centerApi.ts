@@ -3,7 +3,7 @@ import {HttpChannelNavUI} from './httpChannelUI';
 import {HttpChannel} from './httpChannel';
 import {ApiBase} from './apiBase';
 
-const centerHost = process.env.REACT_APP_APIHOST;
+const centerHost = process.env.REACT_APP_APIHOST_CENTER;
 let centerToken:string|undefined = undefined;
 
 export function setCenterToken(t?:string) {
@@ -39,8 +39,8 @@ export abstract class CenterApi extends ApiBase {
 }
 
 export class ApiTokenApi extends CenterApi {
-    api(params: {unit:number, app:number, apiName:string}) {
-        return this.get('app-api', params);
+    async api(params: {unit:number, apiOwner:string, apiName:string}):Promise<any> {
+        return await this.get('app-api', params);
     }
 }
 
