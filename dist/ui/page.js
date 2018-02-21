@@ -94,7 +94,7 @@ let Page = class Page extends React.Component {
         });
     }
     renderTabs(footer) {
-        const { header, close, right } = this.props;
+        const { header, back, right } = this.props;
         let cur = this.state.cur;
         let tabs = React.createElement("div", null, this.state.tabs.map((tab, index) => {
             const { icon, isSelected, title, redDot } = tab;
@@ -120,7 +120,7 @@ let Page = class Page extends React.Component {
         }));
         let titleBar;
         if (header !== false)
-            titleBar = React.createElement(TitleBar, { close: close, center: cur.header || cur.title, right: right });
+            titleBar = React.createElement(TitleBar, { back: back, center: cur.header || cur.title, right: right });
         return React.createElement("article", { className: 'page-container' },
             titleBar,
             React.createElement("section", null, this.state.tabs.map((tab, index) => {
@@ -133,10 +133,10 @@ let Page = class Page extends React.Component {
             footer);
     }
     renderSingle(footer) {
-        const { close, header, right, onScroll, onScrollTop, onScrollBottom, children } = this.props;
+        const { back, header, right, onScroll, onScrollTop, onScrollBottom, children } = this.props;
         let titleBar;
         if (header !== false)
-            titleBar = React.createElement(TitleBar, { close: close, center: header, right: right, debugLogout: this.props.debugLogout });
+            titleBar = React.createElement(TitleBar, { back: back, center: header, right: right, debugLogout: this.props.debugLogout });
         return (React.createElement("article", { className: 'page-container' },
             titleBar,
             React.createElement("section", null,
@@ -144,7 +144,7 @@ let Page = class Page extends React.Component {
             footer));
     }
     render() {
-        const { close, header, right, footer, onScroll, onScrollTop, onScrollBottom, children } = this.props;
+        const { back, header, right, footer, onScroll, onScrollTop, onScrollBottom, children } = this.props;
         let elFooter;
         if (footer !== undefined)
             elFooter = React.createElement("footer", null, footer);

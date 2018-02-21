@@ -6,7 +6,7 @@ export interface MenuItem {
     action: () => void;
 }
 export interface FormPageProps {
-    close?: boolean;
+    back?: 'back' | 'close' | 'none';
     header?: boolean | string | JSX.Element;
     rightMenu?: MenuItem[];
     footer?: JSX.Element;

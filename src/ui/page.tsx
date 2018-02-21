@@ -64,7 +64,7 @@ export interface TabState extends Tab {
     isMounted?: boolean;
 }
 export interface PageProps extends ScrollProps {
-    close?: boolean;
+    back?: 'close' | 'back' | 'none';
     header?: boolean | string | JSX.Element;
     right?: JSX.Element;
     footer?: JSX.Element;
@@ -128,7 +128,7 @@ export class Page extends React.Component<PageProps, PageState> {
     }
 
     private renderTabs(footer: JSX.Element) {
-        const {header, close, right} = this.props;
+        const {header, back, right} = this.props;
         let cur = this.state.cur;
         let tabs = <div>{
                 this.state.tabs.map((tab, index) => {
@@ -156,7 +156,7 @@ export class Page extends React.Component<PageProps, PageState> {
         let titleBar;
         if (header !== false)
             titleBar = <TitleBar 
-                close={close} 
+                back={back} 
                 center={cur.header || cur.title}
                 right={right} 
             />;
@@ -185,11 +185,11 @@ export class Page extends React.Component<PageProps, PageState> {
         </article>;
     }
     private renderSingle(footer: JSX.Element) {
-        const {close, header, right, onScroll, onScrollTop, onScrollBottom, children} = this.props;
+        const {back, header, right, onScroll, onScrollTop, onScrollBottom, children} = this.props;
         let titleBar;
         if (header !== false)
             titleBar = <TitleBar 
-                close={close} 
+                back={back} 
                 center={header as any}
                 right={right}
                 debugLogout={this.props.debugLogout}
@@ -212,7 +212,7 @@ export class Page extends React.Component<PageProps, PageState> {
     }
 
     render() {
-        const {close, header, right,
+        const {back, header, right,
             footer, 
             onScroll, onScrollTop, onScrollBottom, 
             children} = this.props;

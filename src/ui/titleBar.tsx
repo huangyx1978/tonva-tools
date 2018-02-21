@@ -7,7 +7,7 @@ import {ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem,
 import {nav} from './nav';
 
 export interface TitleBarProps {
-    close?: boolean;
+    back?: 'back' | 'close' | 'none';
     center: string | JSX.Element;
     right?: JSX.Element;
     debugLogout?: boolean;
@@ -52,12 +52,12 @@ export class TitleBar extends React.Component<TitleBarProps, TitleBarState> {
             </a>
         }
         if (b) {
-            let cn = className('fa', this.props.close === true? 'fa-close' : 'fa-arrow-left');
-            back = (
-            <nav onClick={this.back}>
-                <i className={cn} />
-            </nav>
-            );
+            switch (this.props.back) {
+                case 'none': back = undefined; break;
+                default:
+                case 'back': back = <nav onClick={this.back}><i className="fa fa-arrow-left" /></nav>; break;
+                case 'close': back = <nav onClick={this.back}><i className="fa fa-close" /></nav>; break;
+            }
         }
         if (self != top) {
             console.log(document.location.href);

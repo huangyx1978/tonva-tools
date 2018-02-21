@@ -11,7 +11,7 @@ export interface MenuItem {
 }
 
 export interface FormPageProps {
-    close?: boolean;
+    back?: 'back' | 'close' | 'none';
     header?: boolean | string | JSX.Element;
     rightMenu?: MenuItem[];
     footer?: JSX.Element;
@@ -49,8 +49,8 @@ export class FormPage extends React.Component<FormPageProps, FormPageState> {
         </ButtonDropdown>
     }
     render() {
-        let {close, header, rightMenu, footer, formSchema, children} = this.props;
-        return <Page header={header} close={close} right={this.renderMenu(rightMenu)} footer={footer}>
+        let {back, header, rightMenu, footer, formSchema, children} = this.props;
+        return <Page header={header} back={back} right={this.renderMenu(rightMenu)} footer={footer}>
             <ValidForm formSchema={formSchema} children={children} />
         </Page>;
     }

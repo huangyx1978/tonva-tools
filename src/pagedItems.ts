@@ -1,8 +1,13 @@
-import {observable} from 'mobx';
+import {observable, IObservableArray, computed} from 'mobx';
 
 export abstract class PagedItems<T> {
-    @observable items: T[] = null;
+    @observable private loaded: boolean = false;
+    private _items:IObservableArray<T> = observable.shallowArray<T>();
     @observable allLoaded: boolean = false;
+    @computed get items():IObservableArray<T> {
+        if (this.loaded === false) return undefined;
+        return this._items;
+    }
 
     protected param: any;
     protected pageStart = undefined;
@@ -13,16 +18,16 @@ export abstract class PagedItems<T> {
     protected abstract setPageStart(item:T);
 
     append(item:T) {
-        if (this.items === undefined) this.items = [];
         if (this.appendPosition === 'tail')
-            this.items.push(item);
+            this._items.push(item);
         else
-            this.items.unshift(item);
+            this._items.unshift(item);
     }
 
     async first(param:any):Promise<void> {
+        this.loaded = false;
         this.param = param;
-        this.items = undefined;
+        this._items.clear();
         this.allLoaded = false;
         this.setPageStart(undefined);
         await this.more();
@@ -30,6 +35,7 @@ export abstract class PagedItems<T> {
 
     async more():Promise<void> {
         if (this.allLoaded === true) return;
+        this.loaded = true;
         let ret = await this.load();
         let len = ret.length;
         if (len > this.pageSize) {
@@ -41,18 +47,13 @@ export abstract class PagedItems<T> {
             this.allLoaded = true;
         }
         if (len === 0) {
-            if (this.items === undefined) this.items = [];
+            this._items.clear();
             return;
         }
         this.setPageStart(ret[len-1]);
-        if (this.items === undefined) {
-            this.items = ret;
-            return;
-        }
-
         if (this.appendPosition === 'tail')
-            this.items.push(...ret);
+            this._items.push(...ret);
         else
-            this.items.unshift(...ret.reverse());
+            this._items.unshift(...ret.reverse());
     }
 }

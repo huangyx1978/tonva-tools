@@ -25,8 +25,8 @@ export class FormPage extends React.Component {
             })));
     }
     render() {
-        let { close, header, rightMenu, footer, formSchema, children } = this.props;
-        return React.createElement(Page, { header: header, close: close, right: this.renderMenu(rightMenu), footer: footer },
+        let { back, header, rightMenu, footer, formSchema, children } = this.props;
+        return React.createElement(Page, { header: header, back: back, right: this.renderMenu(rightMenu), footer: footer },
             React.createElement(ValidForm, { formSchema: formSchema, children: children }));
     }
 }

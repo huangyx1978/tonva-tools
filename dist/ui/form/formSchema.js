@@ -250,7 +250,7 @@ class ResultPage extends React.Component {
         if (message === undefined) {
             message = success === true ? '提交成功' : '提交发生错误';
         }
-        return React.createElement(Page, { close: true },
+        return React.createElement(Page, { back: "close" },
             React.createElement("div", { className: 'jumbotron' },
                 React.createElement("div", { className: 'lead' }, message),
                 React.createElement("p", null, JSON.stringify(result)),

@@ -1,7 +1,7 @@
 /// <reference types="react" />
 import * as React from 'react';
 export interface TitleBarProps {
-    close?: boolean;
+    back?: 'back' | 'close' | 'none';
     center: string | JSX.Element;
     right?: JSX.Element;
     debugLogout?: boolean;

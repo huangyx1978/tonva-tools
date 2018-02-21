@@ -265,7 +265,7 @@ class ResultPage extends React.Component<ResultProps, null> {
         if (message === undefined) {
             message = success === true? '提交成功': '提交发生错误'
         }
-        return <Page close={true}>
+        return <Page back="close">
         <div className='jumbotron'>
             <div className='lead'>{message}</div>
             <p>{JSON.stringify(result)}</p>

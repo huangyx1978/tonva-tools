@@ -12,27 +12,32 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { observable } from 'mobx';
+import { observable, computed } from 'mobx';
 export class PagedItems {
     constructor() {
-        this.items = null;
+        this.loaded = false;
+        this._items = observable.shallowArray();
         this.allLoaded = false;
         this.pageStart = undefined;
         this.pageSize = 30;
         this.appendPosition = 'tail';
     }
+    get items() {
+        if (this.loaded === false)
+            return undefined;
+        return this._items;
+    }
     append(item) {
-        if (this.items === undefined)
-            this.items = [];
         if (this.appendPosition === 'tail')
-            this.items.push(item);
+            this._items.push(item);
         else
-            this.items.unshift(item);
+            this._items.unshift(item);
     }
     first(param) {
         return __awaiter(this, void 0, void 0, function* () {
+            this.loaded = false;
             this.param = param;
-            this.items = undefined;
+            this._items.clear();
             this.allLoaded = false;
             this.setPageStart(undefined);
             yield this.more();
@@ -42,6 +47,7 @@ export class PagedItems {
         return __awaiter(this, void 0, void 0, function* () {
             if (this.allLoaded === true)
                 return;
+            this.loaded = true;
             let ret = yield this.load();
             let len = ret.length;
             if (len > this.pageSize) {
@@ -53,26 +59,24 @@ export class PagedItems {
                 this.allLoaded = true;
             }
             if (len === 0) {
-                if (this.items === undefined)
-                    this.items = [];
+                this._items.clear();
                 return;
             }
             this.setPageStart(ret[len - 1]);
-            if (this.items === undefined) {
-                this.items = ret;
-                return;
-            }
             if (this.appendPosition === 'tail')
-                this.items.push(...ret);
+                this._items.push(...ret);
             else
-                this.items.unshift(...ret.reverse());
+                this._items.unshift(...ret.reverse());
         });
     }
 }
 __decorate([
     observable
-], PagedItems.prototype, "items", void 0);
+], PagedItems.prototype, "loaded", void 0);
 __decorate([
     observable
 ], PagedItems.prototype, "allLoaded", void 0);
+__decorate([
+    computed
+], PagedItems.prototype, "items", null);
 //# sourceMappingURL=pagedItems.js.map

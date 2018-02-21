@@ -1,5 +1,4 @@
 import * as React from 'react';
-import * as className from 'classnames';
 import { nav } from './nav';
 export class TitleBar extends React.Component {
     constructor(props) {
@@ -34,9 +33,20 @@ export class TitleBar extends React.Component {
                 React.createElement("i", { className: "fa fa-sign-out" }));
         }
         if (b) {
-            let cn = className('fa', this.props.close === true ? 'fa-close' : 'fa-arrow-left');
-            back = (React.createElement("nav", { onClick: this.back },
-                React.createElement("i", { className: cn })));
+            switch (this.props.back) {
+                case 'none':
+                    back = undefined;
+                    break;
+                default:
+                case 'back':
+                    back = React.createElement("nav", { onClick: this.back },
+                        React.createElement("i", { className: "fa fa-arrow-left" }));
+                    break;
+                case 'close':
+                    back = React.createElement("nav", { onClick: this.back },
+                        React.createElement("i", { className: "fa fa-close" }));
+                    break;
+            }
         }
         if (self != top) {
             console.log(document.location.href);
