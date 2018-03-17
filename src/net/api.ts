@@ -12,12 +12,14 @@ export function logoutApis() {
 }
 
 export class Api extends ApiBase {
+    url: string;
     apiOwner: string;
     apiName: string;
     api: string;
 
-    constructor(path: string, apiOwner, apiName: string, showWaiting?: boolean) {
+    constructor(path: string, url:string, apiOwner, apiName: string, showWaiting?: boolean) {
         super(path, showWaiting);
+        this.url = url;
         if (apiName) {
             this.apiOwner = apiOwner;
             this.apiName = apiName;
@@ -39,12 +41,19 @@ export class Api extends ApiBase {
         let channel = channels[this.api];
         if (channel !== undefined) return channel;
         
-        // await center Channel get api
-        let owner = this.apiOwner;
-        if (owner === '$$$') owner = '___';
-        let apiUsql = 'REACT_APP_APIHOST_USQL_' + owner + '_' + this.apiName;
-        const usqlApiHost = process.env[apiUsql];
-        console.log('name:' + apiUsql + ' value:' + usqlApiHost);
+        let usqlApiHost:string;
+        if (this.url === undefined) {
+            // await center Channel get api
+            let owner = this.apiOwner;
+            if (owner === '$$$') owner = '___';
+            let apiUsql = 'REACT_APP_APIHOST_USQL_' + owner + '_' + this.apiName;
+            usqlApiHost = process.env[apiUsql];
+            console.log('name:' + apiUsql + ' value:' + usqlApiHost);
+        }
+        else {
+            usqlApiHost = this.url;
+            console.log('apiUsql: %s', usqlApiHost);
+        }
         let hash = document.location.hash;
         if (usqlApiHost !== undefined && 
             (hash === undefined || !hash.startsWith('#tv'))) {

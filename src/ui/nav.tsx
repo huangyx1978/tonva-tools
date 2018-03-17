@@ -10,8 +10,8 @@ import {LocalData} from '../local';
 import {logoutApis, setCenterToken} from '../net';
 
 //import {ws} from '../net';
-import 'font-awesome/css/font-awesome.min.css';
-import '../css/va.css';
+//import 'font-awesome/css/font-awesome.min.css';
+//import '../css/va.css';
 
 export interface Props //extends React.Props<Nav>
 {
@@ -20,6 +20,7 @@ export interface Props //extends React.Props<Nav>
     //view: JSX.Element | ((path:string)=>JSX.Element);
     // token?: string;
     //dispatch?: Dispatch<{}>;
+    logo: any;
     view: JSX.Element | (()=>JSX.Element);
 };
 export interface StackItem {
@@ -54,7 +55,7 @@ export class NavView extends React.Component<Props, State> {
 
     async componentDidMount()
     {
-        nav.set(this);
+        nav.set(this.props.logo, this);
 
         let hash = document.location.hash;
         if (hash !== undefined && hash.startsWith('#tv')) {
@@ -251,11 +252,13 @@ export class NavView extends React.Component<Props, State> {
 
 export class Nav {
     private nav:NavView;
+    private logo: any;
     private loginView: JSX.Element;
     local: LocalData = new LocalData();
     @observable user: User = undefined; // = {id:undefined, name:undefined, token:undefined};
     
-    set(nav:NavView) {
+    set(logo:any, nav:NavView) {
+        this.logo = logo;
         this.nav = nav;
     }
 
@@ -269,7 +272,7 @@ export class Nav {
     async showLogin() {
         if (this.loginView === undefined) {
             let lv = await import('../entry/login');
-            this.loginView = <lv.default />;
+            this.loginView = <lv.default logo={this.logo} />;
         }
         this.nav.show(this.loginView);
     }

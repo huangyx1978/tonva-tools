@@ -11,8 +11,6 @@ import { nav, Page, FormSchema, ValidForm } from '../ui';
 import LoginView from './login';
 import userApi from './userApi';
 import RegSuccess from './regSuccess';
-//import '../css/va-form.css';
-const logo = require('../img/logo.svg');
 export default class Register extends React.Component {
     constructor() {
         super(...arguments);
@@ -242,7 +240,7 @@ export default class Register extends React.Component {
         });
     }
     click() {
-        nav.replace(React.createElement(LoginView, null));
+        nav.replace(React.createElement(LoginView, { logo: this.props.logo }));
         //nav.replace(<RegisterView />);
     }
     render() {
@@ -253,7 +251,7 @@ export default class Register extends React.Component {
                     padding: '0 30px',
                 } },
                 React.createElement("div", { className: 'container', style: { display: 'flex', position: 'relative' } },
-                    React.createElement("img", { className: 'App-logo', src: logo, style: { height: '60px', position: 'absolute' } }),
+                    React.createElement("img", { className: 'App-logo', src: this.props.logo, style: { height: '60px', position: 'absolute' } }),
                     React.createElement("span", { style: { flex: 1,
                             fontSize: 'x-large',
                             alignSelf: 'center',

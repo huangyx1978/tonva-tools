@@ -7,7 +7,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 import * as React from 'react';
 import * as classNames from 'classnames';
 import { observer } from 'mobx-react';
-import '../css/va-row.css';
 let ListRow = class ListRow extends React.Component {
     constructor(props) {
         super(props);

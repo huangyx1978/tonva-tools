@@ -1,6 +1,6 @@
 import {nav} from '../ui';
 import {uid} from '../uid';
-import {apiTokenApi, callCenterapi} from './centerApi';
+import {apiTokenApi, callCenterapi, CenterAppApi, AppApi} from './centerApi';
 
 const debugAppId = Number(process.env.REACT_APP_DEBUG_APPID);
 const debugUnitId = Number(process.env.REACT_APP_DEBUG_UNITID);
@@ -111,6 +111,11 @@ export function appUrl(url: string, unitId: number, appId: number):{url:string; 
         }
     }
     return {url: url + '#tv' + u + '-' + unitId + '-' + appId, hash: u};
+}
+
+export async function loadAppApis(appOwner:string, appName): Promise<AppApi[]> {
+    let centerAppApi = new CenterAppApi('tv/');
+    return await centerAppApi.apis(debugUnitId, appOwner, appName);
 }
 
 export async function appApi(api:string, apiOwner:string, apiName:string): Promise<ApiToken> {

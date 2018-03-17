@@ -1,3 +1,4 @@
+import { AppApi } from './centerApi';
 export interface ApiToken {
     name: string;
     url: string;
@@ -14,5 +15,6 @@ export declare function appUrl(url: string, unitId: number, appId: number): {
     url: string;
     hash: string;
 };
+export declare function loadAppApis(appOwner: string, appName: any): Promise<AppApi[]>;
 export declare function appApi(api: string, apiOwner: string, apiName: string): Promise<ApiToken>;
 export declare function bridgeCenterApi(url: string, method: string, body: any): Promise<any>;

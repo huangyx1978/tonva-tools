@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { nav } from '../ui';
 import { uid } from '../uid';
-import { apiTokenApi, callCenterapi } from './centerApi';
+import { apiTokenApi, callCenterapi, CenterAppApi } from './centerApi';
 const debugAppId = Number(process.env.REACT_APP_DEBUG_APPID);
 const debugUnitId = Number(process.env.REACT_APP_DEBUG_UNITID);
 const apiTokens = {};
@@ -104,6 +104,12 @@ export function appUrl(url, unitId, appId) {
         }
     }
     return { url: url + '#tv' + u + '-' + unitId + '-' + appId, hash: u };
+}
+export function loadAppApis(appOwner, appName) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let centerAppApi = new CenterAppApi('tv/');
+        return yield centerAppApi.apis(debugUnitId, appOwner, appName);
+    });
 }
 export function appApi(api, apiOwner, apiName) {
     return __awaiter(this, void 0, void 0, function* () {

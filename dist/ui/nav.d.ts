@@ -3,9 +3,8 @@ import * as React from 'react';
 import { User } from '../user';
 import { FetchError } from '../fetchError';
 import { LocalData } from '../local';
-import 'font-awesome/css/font-awesome.min.css';
-import '../css/va.css';
 export interface Props {
+    logo: any;
     view: JSX.Element | (() => JSX.Element);
 }
 export interface StackItem {
@@ -43,10 +42,11 @@ export declare class NavView extends React.Component<Props, State> {
 }
 export declare class Nav {
     private nav;
+    private logo;
     private loginView;
     local: LocalData;
     user: User;
-    set(nav: NavView): void;
+    set(logo: any, nav: NavView): void;
     logined(user: User): Promise<void>;
     showLogin(): Promise<void>;
     logout(): Promise<void>;

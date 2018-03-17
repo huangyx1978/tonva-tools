@@ -6,7 +6,7 @@ import LoginView from './login';
 import userApi from './userApi';
 import RegSuccess from './regSuccess';
 //import '../css/va-form.css';
-const logo = require('../img/logo.svg');
+//const logo = require('../img/logo.svg');
 
 export interface Values {
     user: string;
@@ -17,15 +17,10 @@ export interface Values {
     email?: string;
 }
 export interface Props {
-}
-export interface State {
-    values: Values;
-    disabled: boolean;
-    pwdError: boolean;
-    regError: string;
+    logo: any;
 }
 
-export default class Register extends React.Component<{}, null> {
+export default class Register extends React.Component<Props> {
     private schema:FormSchema = new FormSchema({
         fields: [
             {
@@ -102,7 +97,7 @@ export default class Register extends React.Component<{}, null> {
         return undefined;
     }
     click() {
-        nav.replace(<LoginView />);
+        nav.replace(<LoginView logo={this.props.logo} />);
         //nav.replace(<RegisterView />);
     }
 
@@ -114,7 +109,7 @@ export default class Register extends React.Component<{}, null> {
                 padding: '0 30px',
             }}>
                 <div className='container' style={{display:'flex', position:'relative'}}>
-                    <img className='App-logo' src={logo} style={{height:'60px', position:'absolute'}}/>
+                    <img className='App-logo' src={this.props.logo} style={{height:'60px', position:'absolute'}}/>
                     <span style={{flex:1,
                         fontSize: 'x-large',
                         alignSelf: 'center',

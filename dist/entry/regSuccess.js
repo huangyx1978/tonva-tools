@@ -10,7 +10,6 @@ import * as React from 'react';
 import { Container, Button, Form } from 'reactstrap';
 import { nav, Page } from '../ui';
 import userApi from './userApi';
-import '../css/va-form.css';
 export default class RegSuccess extends React.Component {
     failed() {
         return;

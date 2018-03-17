@@ -19,9 +19,6 @@ import FetchErrorView from './fetchErrorView';
 import { appUrl, setMeInFrame } from '../net/appBridge';
 import { LocalData } from '../local';
 import { logoutApis, setCenterToken } from '../net';
-//import {ws} from '../net';
-import 'font-awesome/css/font-awesome.min.css';
-import '../css/va.css';
 ;
 export class NavView extends React.Component {
     constructor(props) {
@@ -38,7 +35,7 @@ export class NavView extends React.Component {
     }
     componentDidMount() {
         return __awaiter(this, void 0, void 0, function* () {
-            nav.set(this);
+            nav.set(this.props.logo, this);
             let hash = document.location.hash;
             if (hash !== undefined && hash.startsWith('#tv')) {
                 let mif = setMeInFrame(hash);
@@ -223,7 +220,8 @@ export class Nav {
         this.local = new LocalData();
         this.user = undefined; // = {id:undefined, name:undefined, token:undefined};
     }
-    set(nav) {
+    set(logo, nav) {
+        this.logo = logo;
         this.nav = nav;
     }
     logined(user) {
@@ -238,7 +236,7 @@ export class Nav {
         return __awaiter(this, void 0, void 0, function* () {
             if (this.loginView === undefined) {
                 let lv = yield import('../entry/login');
-                this.loginView = React.createElement(lv.default, null);
+                this.loginView = React.createElement(lv.default, { logo: this.logo });
             }
             this.nav.show(this.loginView);
         });

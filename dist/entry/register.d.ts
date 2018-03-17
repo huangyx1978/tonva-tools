@@ -10,14 +10,9 @@ export interface Values {
     email?: string;
 }
 export interface Props {
+    logo: any;
 }
-export interface State {
-    values: Values;
-    disabled: boolean;
-    pwdError: boolean;
-    regError: string;
-}
-export default class Register extends React.Component<{}, null> {
+export default class Register extends React.Component<Props> {
     private schema;
     onLoginSubmit(values: any): Promise<SubmitReturn | undefined>;
     click(): void;

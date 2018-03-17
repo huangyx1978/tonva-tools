@@ -17,3 +17,13 @@ export declare class CallCenterApi extends CenterApi {
     directCall(url: string, method: string, body: any): Promise<any>;
 }
 export declare const callCenterapi: CallCenterApi;
+export interface AppApi {
+    apiOwner: string;
+    apiName: string;
+    url: string;
+    access: string;
+    token: string;
+}
+export declare class CenterAppApi extends CenterApi {
+    apis(unit: number, appOwner: string, appName: string): Promise<AppApi[]>;
+}
