@@ -1,6 +1,7 @@
 /// <reference types="react" />
 import * as React from 'react';
 import { SubmitReturn } from '../ui';
+import '../css/va-form.css';
 export interface Values {
     user: string;
     pwd: string;
@@ -9,10 +10,7 @@ export interface Values {
     mobile?: string;
     email?: string;
 }
-export interface Props {
-    logo: any;
-}
-export default class Register extends React.Component<Props> {
+export default class Register extends React.Component {
     private schema;
     onLoginSubmit(values: any): Promise<SubmitReturn | undefined>;
     click(): void;

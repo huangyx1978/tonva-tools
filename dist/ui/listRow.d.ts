@@ -1,6 +1,7 @@
 /// <reference types="react" />
 import * as React from 'react';
 import { IComputedValue } from 'mobx';
+import '../css/va-row.css';
 export interface ListItem {
     key?: string | number;
     date?: Date;

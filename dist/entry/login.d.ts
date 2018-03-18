@@ -1,10 +1,7 @@
 /// <reference types="react" />
 import * as React from 'react';
 import { SubmitReturn } from '../ui';
-export interface Props {
-    logo: any;
-}
-export default class Login extends React.Component<Props> {
+export default class Login extends React.Component {
     private schema;
     onLoginSubmit(values: any): Promise<SubmitReturn | undefined>;
     click(): void;

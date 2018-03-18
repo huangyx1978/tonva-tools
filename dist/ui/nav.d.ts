@@ -3,8 +3,9 @@ import * as React from 'react';
 import { User } from '../user';
 import { FetchError } from '../fetchError';
 import { LocalData } from '../local';
+import 'font-awesome/css/font-awesome.min.css';
+import '../css/va.css';
 export interface Props {
-    logo: any;
     view: JSX.Element | (() => JSX.Element);
 }
 export interface StackItem {
@@ -22,6 +23,7 @@ export declare class NavView extends React.Component<Props, State> {
     private waitCount;
     private waitTimeHandler?;
     constructor(props: any);
+    componentWillMount(): Promise<void>;
     componentDidMount(): Promise<void>;
     readonly level: Number;
     showAppView(): void;
@@ -42,11 +44,10 @@ export declare class NavView extends React.Component<Props, State> {
 }
 export declare class Nav {
     private nav;
-    private logo;
     private loginView;
     local: LocalData;
     user: User;
-    set(logo: any, nav: NavView): void;
+    set(nav: NavView): void;
     logined(user: User): Promise<void>;
     showLogin(): Promise<void>;
     logout(): Promise<void>;

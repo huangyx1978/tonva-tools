@@ -9,8 +9,7 @@ import Forget from './forget';
 import userApi from './userApi';
 import { ValidForm } from '../index';
 
-//const logo = require('../img/logo.svg');
-//import logo from '../img/logo.svg';
+const logo = require('../img/logo.svg');
 
 /*
 export interface Values {
@@ -23,11 +22,7 @@ export interface State {
     hasError: boolean;
     disabled: boolean;
 }*/
-export interface Props {
-    logo: any;
-}
-
-export default class Login extends React.Component<Props> {
+export default class Login extends React.Component {
     private schema:FormSchema = new FormSchema({
         fields: [
             {
@@ -61,12 +56,12 @@ export default class Login extends React.Component<Props> {
         return undefined;
     }
     click() {
-        nav.replace(<RegisterView logo={this.props.logo} />);
+        nav.replace(<RegisterView />);
     }
     render() {
         let footer = <div className='text-center'>
             <Button color="link" style={{margin:'0px auto'}}
-                onClick={() => nav.push(<RegisterView logo={this.props.logo} />)}>
+                onClick={() => nav.push(<RegisterView />)}>
                 如果没有账号，请注册
             </Button>
         </div>;
@@ -77,7 +72,7 @@ export default class Login extends React.Component<Props> {
                 padding: '0 30px',
             }}>
                 <div className='container' style={{display:'flex', position:'relative'}}>
-                    <img className='App-logo' src={this.props.logo} style={{height:'60px', position:'absolute'}}/>
+                    <img className='App-logo' src={logo} style={{height:'60px', position:'absolute'}}/>
                     <span style={{flex:1,
                         fontSize: 'x-large',
                         alignSelf: 'center',

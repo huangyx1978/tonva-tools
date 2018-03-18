@@ -8,10 +8,11 @@ import {FetchError} from '../fetchError';
 import {appUrl, appApi, setMeInFrame} from '../net/appBridge';
 import {LocalData} from '../local';
 import {logoutApis, setCenterToken} from '../net';
+import 'font-awesome/css/font-awesome.min.css';
+import '../css/va.css';
 
+const logo = require('../img/logo.svg');
 //import {ws} from '../net';
-//import 'font-awesome/css/font-awesome.min.css';
-//import '../css/va.css';
 
 export interface Props //extends React.Props<Nav>
 {
@@ -20,7 +21,7 @@ export interface Props //extends React.Props<Nav>
     //view: JSX.Element | ((path:string)=>JSX.Element);
     // token?: string;
     //dispatch?: Dispatch<{}>;
-    logo: any;
+    //logo: any;
     view: JSX.Element | (()=>JSX.Element);
 };
 export interface StackItem {
@@ -53,9 +54,29 @@ export class NavView extends React.Component<Props, State> {
         };
     }
 
+    async componentWillMount() {
+        // 监听android手机的实体back键
+        if(window.history && window.history.pushState) {  
+            window.addEventListener('popstate', function() {
+                var hashLocation = location.hash;  
+                var hashSplit = hashLocation.split("#!/");  
+                var hashName = hashSplit[1];  
+                if(hashName !== '') {  
+                    var hash = window.location.hash;  
+                    if(hash === '') {  
+                        //alert("你点击了返回键");  
+                        nav.back(true);
+                    }
+                }  
+            });  
+            //window.history.pushState('forward', null, './#forward');  
+        }  
+    }
+
     async componentDidMount()
     {
-        nav.set(this.props.logo, this);
+        //nav.set(this.props.logo, this);
+        nav.set(this);
 
         let hash = document.location.hash;
         if (hash !== undefined && hash.startsWith('#tv')) {
@@ -252,13 +273,13 @@ export class NavView extends React.Component<Props, State> {
 
 export class Nav {
     private nav:NavView;
-    private logo: any;
+    //private logo: any;
     private loginView: JSX.Element;
     local: LocalData = new LocalData();
     @observable user: User = undefined; // = {id:undefined, name:undefined, token:undefined};
     
-    set(logo:any, nav:NavView) {
-        this.logo = logo;
+    set(nav:NavView) {
+        //this.logo = logo;
         this.nav = nav;
     }
 
@@ -272,7 +293,8 @@ export class Nav {
     async showLogin() {
         if (this.loginView === undefined) {
             let lv = await import('../entry/login');
-            this.loginView = <lv.default logo={this.logo} />;
+            //this.loginView = <lv.default logo={logo} />;
+            this.loginView = <lv.default />;
         }
         this.nav.show(this.loginView);
     }

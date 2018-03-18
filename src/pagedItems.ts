@@ -2,7 +2,7 @@ import {observable, IObservableArray, computed} from 'mobx';
 
 export abstract class PagedItems<T> {
     @observable private loaded: boolean = false;
-    private _items:IObservableArray<T> = observable.shallowArray<T>();
+    private _items:IObservableArray<T> = observable.array<T>([], {deep:false});
     @observable allLoaded: boolean = false;
     @computed get items():IObservableArray<T> {
         if (this.loaded === false) return undefined;

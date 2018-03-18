@@ -4,5 +4,7 @@
         "mobx-react": "^4.3.5"
     },
     "target": "es5",
-    "lib": ["es6", "dom"]
+    "lib": ["es6", "dom"],
+    "mobx": "^4.1.0",
+    "mobx-react": "^5.0.0"
 }

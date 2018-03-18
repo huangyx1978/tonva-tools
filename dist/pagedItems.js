@@ -16,7 +16,7 @@ import { observable, computed } from 'mobx';
 export class PagedItems {
     constructor() {
         this.loaded = false;
-        this._items = observable.shallowArray();
+        this._items = observable.array([], { deep: false });
         this.allLoaded = false;
         this.pageStart = undefined;
         this.pageSize = 30;

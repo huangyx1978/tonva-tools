@@ -2,7 +2,8 @@
   "name": "tonva-tools",
   "version": "1.0.0",
   "description": "tonva tools",
-  "main": "dist/index.js",
+  "private": true,
+  "main": "dist/index.js",  
   "types": "dist/index.d.ts",
   "scripts": {
     "start": "set PORT=3200 && react-scripts-ts start",
@@ -15,13 +16,15 @@
     "font-awesome": "^4.7.0",
     "jwt-decode": "^2.2.0",
     "lodash": "^4.17.4",
-    "mobx": "^4.1.0",
-    "mobx-react": "^5.0.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-popper": "^0.7.4",
     "react-transition-group": "^2.2.1",
     "reactstrap": "^5.0.0-alpha.4"
+  },
+  "peerDependencies": {
+    "mobx": "^4.1.0",
+    "mobx-react": "^5.0.0"
   },
   "devDependencies": {
     "@types/classnames": "^2.2.3",

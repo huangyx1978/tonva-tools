@@ -19,6 +19,9 @@ import FetchErrorView from './fetchErrorView';
 import { appUrl, setMeInFrame } from '../net/appBridge';
 import { LocalData } from '../local';
 import { logoutApis, setCenterToken } from '../net';
+import 'font-awesome/css/font-awesome.min.css';
+import '../css/va.css';
+const logo = require('../img/logo.svg');
 ;
 export class NavView extends React.Component {
     constructor(props) {
@@ -33,9 +36,30 @@ export class NavView extends React.Component {
             fetchError: undefined
         };
     }
+    componentWillMount() {
+        return __awaiter(this, void 0, void 0, function* () {
+            // 监听android手机的实体back键
+            if (window.history && window.history.pushState) {
+                window.addEventListener('popstate', function () {
+                    var hashLocation = location.hash;
+                    var hashSplit = hashLocation.split("#!/");
+                    var hashName = hashSplit[1];
+                    if (hashName !== '') {
+                        var hash = window.location.hash;
+                        if (hash === '') {
+                            //alert("你点击了返回键");  
+                            nav.back(true);
+                        }
+                    }
+                });
+                //window.history.pushState('forward', null, './#forward');  
+            }
+        });
+    }
     componentDidMount() {
         return __awaiter(this, void 0, void 0, function* () {
-            nav.set(this.props.logo, this);
+            //nav.set(this.props.logo, this);
+            nav.set(this);
             let hash = document.location.hash;
             if (hash !== undefined && hash.startsWith('#tv')) {
                 let mif = setMeInFrame(hash);
@@ -220,8 +244,8 @@ export class Nav {
         this.local = new LocalData();
         this.user = undefined; // = {id:undefined, name:undefined, token:undefined};
     }
-    set(logo, nav) {
-        this.logo = logo;
+    set(nav) {
+        //this.logo = logo;
         this.nav = nav;
     }
     logined(user) {
@@ -236,7 +260,8 @@ export class Nav {
         return __awaiter(this, void 0, void 0, function* () {
             if (this.loginView === undefined) {
                 let lv = yield import('../entry/login');
-                this.loginView = React.createElement(lv.default, { logo: this.logo });
+                //this.loginView = <lv.default logo={logo} />;
+                this.loginView = React.createElement(lv.default, null);
             }
             this.nav.show(this.loginView);
         });

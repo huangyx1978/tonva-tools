@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as classNames from 'classnames';
 import {IObservableValue, IComputedValue} from 'mobx';
 import {observer} from 'mobx-react';
-//import '../css/va-row.css';
+import '../css/va-row.css';
 
 export interface ListItem {
     key?: string|number;

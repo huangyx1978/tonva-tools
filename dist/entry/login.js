@@ -13,6 +13,18 @@ import RegisterView from './register';
 import Forget from './forget';
 import userApi from './userApi';
 import { ValidForm } from '../index';
+const logo = require('../img/logo.svg');
+/*
+export interface Values {
+    username: string;
+    password: string;
+}
+
+export interface State {
+    values: Values;
+    hasError: boolean;
+    disabled: boolean;
+}*/
 export default class Login extends React.Component {
     constructor() {
         super(...arguments);
@@ -52,11 +64,11 @@ export default class Login extends React.Component {
         });
     }
     click() {
-        nav.replace(React.createElement(RegisterView, { logo: this.props.logo }));
+        nav.replace(React.createElement(RegisterView, null));
     }
     render() {
         let footer = React.createElement("div", { className: 'text-center' },
-            React.createElement(Button, { color: "link", style: { margin: '0px auto' }, onClick: () => nav.push(React.createElement(RegisterView, { logo: this.props.logo })) }, "\u5982\u679C\u6CA1\u6709\u8D26\u53F7\uFF0C\u8BF7\u6CE8\u518C"));
+            React.createElement(Button, { color: "link", style: { margin: '0px auto' }, onClick: () => nav.push(React.createElement(RegisterView, null)) }, "\u5982\u679C\u6CA1\u6709\u8D26\u53F7\uFF0C\u8BF7\u6CE8\u518C"));
         return React.createElement(Page, { header: false, footer: footer },
             React.createElement("div", { style: {
                     maxWidth: '400px',
@@ -64,7 +76,7 @@ export default class Login extends React.Component {
                     padding: '0 30px',
                 } },
                 React.createElement("div", { className: 'container', style: { display: 'flex', position: 'relative' } },
-                    React.createElement("img", { className: 'App-logo', src: this.props.logo, style: { height: '60px', position: 'absolute' } }),
+                    React.createElement("img", { className: 'App-logo', src: logo, style: { height: '60px', position: 'absolute' } }),
                     React.createElement("span", { style: { flex: 1,
                             fontSize: 'x-large',
                             alignSelf: 'center',
