@@ -1,24 +1,26 @@
-const wsHost = process.env.REACT_APP_WSHOST;
+//const wsHost = process.env.REACT_APP_WSHOST;
 export class WSChannel {
-    constructor() {
+    constructor(wsHost, token) {
         this.handlerSeed = 1;
         this.anyHandlers = {};
         this.msgHandlers = {};
-    }
-    setToken(token) {
+        this.wsHost = wsHost;
         this.token = token;
     }
+    static setCenterToken(token) {
+        WSChannel.centerToken = token;
+    }
     connect() {
+        //this.wsHost = wsHost;
+        //this.token = token || WSChannel.centerToken;
+        if (this.ws !== undefined)
+            return;
         let netThis = this;
         return new Promise((resolve, reject) => {
-            if (netThis.ws !== undefined) {
-                resolve();
-                return;
-            }
-            let ws = new WebSocket(wsHost, this.token);
-            console.log('connect webSocket %s', wsHost);
+            let ws = new WebSocket(this.wsHost, this.token || WSChannel.centerToken);
+            console.log('connect webSocket %s', this.wsHost);
             ws.onopen = (ev) => {
-                console.log('webSocket connected %s', wsHost);
+                console.log('webSocket connected %s', this.wsHost);
                 netThis.ws = ws;
                 resolve();
             };
@@ -33,8 +35,10 @@ export class WSChannel {
         });
     }
     close() {
-        if (this.ws !== undefined)
+        if (this.ws !== undefined) {
             this.ws.close();
+            this.ws = undefined;
+        }
     }
     wsMessage(event) {
         /*
@@ -95,6 +99,6 @@ export class WSChannel {
         });
     }
 }
-const wsChannel = new WSChannel();
-export default wsChannel;
+//const wsChannel = new WSChannel();
+//export default wsChannel;
 //# sourceMappingURL=wsChannel.js.map

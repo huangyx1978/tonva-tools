@@ -1,25 +1,31 @@
 
-const wsHost = process.env.REACT_APP_WSHOST;
+//const wsHost = process.env.REACT_APP_WSHOST;
 
 export class WSChannel {
-    private token?: string;
-    private ws?: WebSocket;
+    static centerToken:string;
+    private wsHost: string;
+    private token: string;
+    private ws: WebSocket;
 
-    setToken(token?: string) {
+    constructor(wsHost: string, token: string) {
+        this.wsHost = wsHost;
         this.token = token;
+    }
+
+    static setCenterToken(token?: string) {
+        WSChannel.centerToken = token;
     }
     
     connect():Promise<void> {
+        //this.wsHost = wsHost;
+        //this.token = token || WSChannel.centerToken;
+        if (this.ws !== undefined) return;
         let netThis = this;
         return new Promise((resolve, reject) => {
-            if (netThis.ws !== undefined) {
-                resolve();
-                return;
-            }
-            let ws = new WebSocket(wsHost, this.token);
-            console.log('connect webSocket %s', wsHost);
+            let ws = new WebSocket(this.wsHost, this.token || WSChannel.centerToken);
+            console.log('connect webSocket %s', this.wsHost);
             ws.onopen = (ev) => {
-                console.log('webSocket connected %s', wsHost);
+                console.log('webSocket connected %s', this.wsHost);
                 netThis.ws = ws;
                 resolve();
             };
@@ -34,7 +40,10 @@ export class WSChannel {
         });
     }
     close() {
-        if (this.ws !== undefined) this.ws.close();
+        if (this.ws !== undefined) {
+            this.ws.close();
+            this.ws = undefined;
+        }
     }
     private wsMessage(event:any) {
         /*
@@ -98,5 +107,5 @@ export class WSChannel {
     }
 }
 
-const wsChannel = new WSChannel();
-export default wsChannel;
+//const wsChannel = new WSChannel();
+//export default wsChannel;

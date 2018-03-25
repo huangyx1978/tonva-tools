@@ -58,6 +58,7 @@ export interface AppApi {
     apiOwner: string;
     apiName: string;
     url: string;
+    ws: string;
     access: string;
     token: string;
 }

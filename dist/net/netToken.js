@@ -1,13 +1,13 @@
 import { setCenterToken } from './centerApi';
-import wsChannel from './wsChannel';
+import { WSChannel } from './wsChannel';
 export const netToken = {
     set(token) {
         setCenterToken(token);
-        wsChannel.setToken(token);
+        WSChannel.setCenterToken(token);
     },
     clear() {
         setCenterToken(undefined);
-        wsChannel.setToken(undefined);
+        WSChannel.setCenterToken(undefined);
     }
 };
 //# sourceMappingURL=netToken.js.map

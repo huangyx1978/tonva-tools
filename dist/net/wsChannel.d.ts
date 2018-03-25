@@ -1,7 +1,10 @@
 export declare class WSChannel {
-    private token?;
-    private ws?;
-    setToken(token?: string): void;
+    static centerToken: string;
+    private wsHost;
+    private token;
+    private ws;
+    constructor(wsHost: string, token: string);
+    static setCenterToken(token?: string): void;
     connect(): Promise<void>;
     close(): void;
     private wsMessage(event);
@@ -13,5 +16,3 @@ export declare class WSChannel {
     endWsReceive(handlerId: number): void;
     sendWs(msg: any): void;
 }
-declare const wsChannel: WSChannel;
-export default wsChannel;
