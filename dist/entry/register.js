@@ -98,7 +98,7 @@ export default class Register extends React.Component {
         //nav.replace(<RegisterView />);
     }
     render() {
-        return React.createElement(Page, { header: '注册' },
+        return React.createElement(Page, { header: '\u6CE8\u518C' },
             React.createElement("div", { style: {
                     maxWidth: '400px',
                     margin: '20px auto',

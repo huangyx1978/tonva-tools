@@ -156,6 +156,7 @@ export function appApi(api, apiOwner, apiName) {
 }
 const brideCenterApis = {};
 export function bridgeCenterApi(url, method, body) {
+    console.log('bridgeCenterApi: url=%s, method=%s', url, method);
     return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
         let callId;
         for (;;) {

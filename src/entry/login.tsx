@@ -46,6 +46,7 @@ export default class Login extends React.Component {
             user: values['username'], 
             pwd: values['password']
         });
+        console.log("onLoginSubmit: user=%s pwd:%s", user.name, user.token);
         if (user === undefined) {
             //this.failed();
             this.schema.clear();

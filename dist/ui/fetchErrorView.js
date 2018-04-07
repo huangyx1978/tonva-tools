@@ -7,7 +7,7 @@ export default class FetchErrorView extends React.Component {
         refetchApi(channel, url, options, resolve, reject);
     }
     render() {
-        let { error } = this.props;
+        let { error, url } = this.props;
         //let errMsg = fetchError.errorMsg;
         let errContent;
         if (typeof error === 'object') {
@@ -28,6 +28,9 @@ export default class FetchErrorView extends React.Component {
                     React.createElement("div", { className: "va-error" },
                         React.createElement("div", null, "\u7F51\u7EDC\u51FA\u73B0\u95EE\u9898"),
                         React.createElement("div", null, "\u70B9\u51FB\u91CD\u65B0\u8BBF\u95EE"),
+                        React.createElement("div", null,
+                            "url: ",
+                            url),
                         errContent))));
     }
 }

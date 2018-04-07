@@ -25,8 +25,8 @@ const appsInFrame:{[key:string]:AppInFrame} = {};
 
 export let meInFrame:AppInFrame = {
     hash: undefined,
-    unit: Number(process.env.REACT_APP_DEBUG_UNITID),
-    app: Number(process.env.REACT_APP_DEBUG_APPID)
+    unit: debugUnitId,
+    app: debugAppId
 }
 
 window.addEventListener('message', async function(evt) {
@@ -166,6 +166,7 @@ interface BridgeCenterApi {
 }
 const brideCenterApis:{[id:string]: BridgeCenterApi} = {};
 export function bridgeCenterApi(url:string, method:string, body:any):Promise<any> {
+    console.log('bridgeCenterApi: url=%s, method=%s', url, method);
     return new Promise<any>(async (resolve, reject) => {
         let callId:string;
         for (;;) {

@@ -284,6 +284,7 @@ export class Nav {
     }
 
     async logined(user: User) {
+        console.log("logined: %s", JSON.stringify(user));
         this.local.user.set(user);
         netToken.set(user.token);
         this.user = user;

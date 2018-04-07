@@ -13,7 +13,7 @@ export default class FetchErrorView extends React.Component<FetchErrorProps, nul
         refetchApi(channel, url, options, resolve, reject);
     }
     render() {
-        let {error} = this.props;
+        let {error, url} = this.props;
             //let errMsg = fetchError.errorMsg;
         let errContent;
         if (typeof error === 'object') {
@@ -33,6 +33,7 @@ export default class FetchErrorView extends React.Component<FetchErrorProps, nul
                     <div  className="va-error">
                         <div>网络出现问题</div>
                         <div>点击重新访问</div>
+                        <div>url: {url}</div>
                         {errContent}
                     </div>
                 </section>

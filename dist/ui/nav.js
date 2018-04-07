@@ -250,6 +250,7 @@ export class Nav {
     }
     logined(user) {
         return __awaiter(this, void 0, void 0, function* () {
+            console.log("logined: %s", JSON.stringify(user));
             this.local.user.set(user);
             netToken.set(user.token);
             this.user = user;
