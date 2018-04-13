@@ -15,8 +15,8 @@ const apiTokens = {};
 const appsInFrame = {};
 export let meInFrame = {
     hash: undefined,
-    unit: Number(process.env.REACT_APP_DEBUG_UNITID),
-    app: Number(process.env.REACT_APP_DEBUG_APPID)
+    unit: debugUnitId,
+    app: debugAppId
 };
 window.addEventListener('message', function (evt) {
     return __awaiter(this, void 0, void 0, function* () {

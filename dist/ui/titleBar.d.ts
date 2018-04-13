@@ -4,7 +4,7 @@ export interface TitleBarProps {
     back?: 'back' | 'close' | 'none';
     center: string | JSX.Element;
     right?: JSX.Element;
-    debugLogout?: boolean;
+    logout?: () => void;
 }
 export interface TitleBarState {
     hasBack: boolean;

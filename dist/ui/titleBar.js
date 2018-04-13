@@ -25,11 +25,12 @@ export class TitleBar extends React.Component {
     }
     render() {
         let b = this.state.hasBack || self != top;
-        let r = this.props.right;
-        let c = this.props.center;
+        let { right, center, logout } = this.props;
+        //let r = this.props.right;
+        //let c = this.props.center;
         let back, pop, debugLogout;
-        if (this.props.debugLogout === true && self === top) {
-            debugLogout = React.createElement("a", { className: "dropdown-toggle btn btn-secondary btn-sm", role: "button", onClick: () => nav.logout() },
+        if (logout !== undefined && self === top) {
+            debugLogout = React.createElement("a", { className: "dropdown-toggle btn btn-secondary btn-sm", role: "button", onClick: () => { logout(); nav.logout(); } },
                 React.createElement("i", { className: "fa fa-sign-out" }));
         }
         if (b) {
@@ -52,17 +53,17 @@ export class TitleBar extends React.Component {
             console.log(document.location.href);
             pop = React.createElement("header", { onClick: () => window.open(document.location.href) });
         }
-        let right;
-        if (r || debugLogout)
-            right = React.createElement("aside", null,
-                r,
+        let rightView;
+        if (right || debugLogout)
+            rightView = React.createElement("aside", null,
+                right,
                 " ",
                 debugLogout);
         return (React.createElement("header", null,
             pop,
             back,
-            React.createElement("div", null, c),
-            right));
+            React.createElement("div", null, center),
+            rightView));
     }
 }
 //# sourceMappingURL=titleBar.js.map

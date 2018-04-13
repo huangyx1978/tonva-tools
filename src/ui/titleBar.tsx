@@ -10,7 +10,7 @@ export interface TitleBarProps {
     back?: 'back' | 'close' | 'none';
     center: string | JSX.Element;
     right?: JSX.Element;
-    debugLogout?: boolean;
+    logout?: ()=>void;
 }
 export interface TitleBarState {
     hasBack: boolean;
@@ -41,13 +41,14 @@ export class TitleBar extends React.Component<TitleBarProps, TitleBarState> {
     }
     render() {
         let b = this.state.hasBack || self != top;
-        let r = this.props.right;
-        let c = this.props.center;
+        let {right, center, logout} = this.props;
+        //let r = this.props.right;
+        //let c = this.props.center;
         let back, pop, debugLogout;
-        if (this.props.debugLogout === true && self === top) {
+        if (logout !== undefined && self === top) {
             debugLogout = <a className="dropdown-toggle btn btn-secondary btn-sm"
                 role="button"
-                onClick={()=>nav.logout()}>
+                onClick={()=>{logout(); nav.logout();}}>
                 <i className="fa fa-sign-out" />
             </a>
         }
@@ -63,14 +64,14 @@ export class TitleBar extends React.Component<TitleBarProps, TitleBarState> {
             console.log(document.location.href);
             pop = <header onClick={()=>window.open(document.location.href)} />;
         }
-        let right;
-        if (r || debugLogout) right = <aside>{r} {debugLogout}</aside>;
+        let rightView;
+        if (right || debugLogout) rightView = <aside>{right} {debugLogout}</aside>;
         return (
         <header>
             {pop}
             {back}
-            <div>{c}</div>
-            {right}
+            <div>{center}</div>
+            {rightView}
         </header>
         );
     }
