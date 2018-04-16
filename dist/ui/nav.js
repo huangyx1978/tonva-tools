@@ -61,6 +61,7 @@ export class NavView extends React.Component {
             //nav.set(this.props.logo, this);
             nav.set(this);
             let hash = document.location.hash;
+            console.log("hash=%s", hash);
             if (hash !== undefined && hash.startsWith('#tv')) {
                 let mif = setMeInFrame(hash);
                 nav.user = { id: 0 };
