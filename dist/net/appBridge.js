@@ -9,14 +9,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import { nav } from '../ui';
 import { uid } from '../uid';
 import { apiTokenApi, callCenterapi, CenterAppApi } from './centerApi';
-const debugAppId = Number(process.env.REACT_APP_DEBUG_APPID);
 const debugUnitId = Number(process.env.REACT_APP_DEBUG_UNITID);
 const apiTokens = {};
 const appsInFrame = {};
 export let meInFrame = {
     hash: undefined,
     unit: debugUnitId,
-    app: debugAppId
 };
 window.addEventListener('message', function (evt) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -65,7 +63,7 @@ function onReceiveAppApiMessage(hash, apiOwner, apiName) {
         let appInFrame = appsInFrame[hash];
         if (appInFrame === undefined)
             return { name: apiName, url: undefined, token: undefined };
-        let { unit, app } = appInFrame;
+        let { unit } = appInFrame;
         let ret = yield apiTokenApi.api({ unit: unit, apiOwner: apiOwner, apiName: apiName });
         return { name: apiName, url: ret.url, token: ret.token };
     });
@@ -85,25 +83,24 @@ export function setMeInFrame(appHash) {
     let p1 = appHash.indexOf('-', p0);
     if (p1 < p0)
         return;
-    let p2 = appHash.indexOf('-', p1 + 1);
-    if (p2 < p1)
-        return;
+    //let p2 = appHash.indexOf('-', p1+1);
+    //if (p2<p1) return;
     meInFrame.hash = appHash.substring(p0, p1);
-    meInFrame.unit = Number(appHash.substring(p1 + 1, p2));
-    meInFrame.app = Number(appHash.substring(p2 + 1));
+    meInFrame.unit = Number(appHash.substring(p1 + 1));
+    //meInFrame.app = Number(appHash.substring(p2+1));
     return meInFrame;
 }
-export function appUrl(url, unitId, appId) {
+export function appUrl(url, unitId) {
     let u;
     for (;;) {
         u = uid();
         let a = appsInFrame[u];
         if (a === undefined) {
-            appsInFrame[u] = { hash: u, unit: unitId, app: appId };
+            appsInFrame[u] = { hash: u, unit: unitId };
             break;
         }
     }
-    return { url: url + '#tv' + u + '-' + unitId + '-' + appId, hash: u };
+    return { url: url + '#tv' + u + '-' + unitId, hash: u };
 }
 export function loadAppApis(appOwner, appName) {
     return __awaiter(this, void 0, void 0, function* () {

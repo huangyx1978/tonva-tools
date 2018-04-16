@@ -7,11 +7,10 @@ export interface ApiToken {
 export interface AppInFrame {
     hash: string;
     unit: number;
-    app: number;
 }
 export declare let meInFrame: AppInFrame;
 export declare function setMeInFrame(appHash: string): AppInFrame;
-export declare function appUrl(url: string, unitId: number, appId: number): {
+export declare function appUrl(url: string, unitId: number): {
     url: string;
     hash: string;
 };

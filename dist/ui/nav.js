@@ -314,8 +314,8 @@ export class Nav {
     confirmBox(message) {
         return this.nav.confirmBox(message);
     }
-    navToApp(url, unitId, appId) {
-        let uh = appUrl(url, unitId, appId);
+    navToApp(url, unitId) {
+        let uh = appUrl(url, unitId);
         nav.push(React.createElement("article", { className: 'app-container' },
             React.createElement("span", { id: uh.hash, onClick: () => this.back() },
                 React.createElement("i", { className: "fa fa-arrow-left" })),

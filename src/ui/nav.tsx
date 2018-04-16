@@ -344,8 +344,8 @@ export class Nav {
     confirmBox(message?:string): boolean {
         return this.nav.confirmBox(message);
     }
-    navToApp(url: string, unitId: number, appId: number) {
-        let uh = appUrl(url, unitId, appId);
+    navToApp(url: string, unitId: number) {
+        let uh = appUrl(url, unitId);
         nav.push(<article className='app-container'>
             <span id={uh.hash} onClick={()=>this.back()}>
                 <i className="fa fa-arrow-left" />

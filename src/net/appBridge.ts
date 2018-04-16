@@ -2,7 +2,6 @@ import {nav} from '../ui';
 import {uid} from '../uid';
 import {apiTokenApi, callCenterapi, CenterAppApi, AppApi} from './centerApi';
 
-const debugAppId = Number(process.env.REACT_APP_DEBUG_APPID);
 const debugUnitId = Number(process.env.REACT_APP_DEBUG_UNITID);
 
 export interface ApiToken {
@@ -19,14 +18,12 @@ const apiTokens:{[apiName:string]: ApiTokenAction}  = {};
 export interface AppInFrame {
     hash: string;
     unit: number;       // unit id
-    app: number;        // app id
 }
 const appsInFrame:{[key:string]:AppInFrame} = {};
 
 export let meInFrame:AppInFrame = {
     hash: undefined,
     unit: debugUnitId,
-    app: debugAppId
 }
 
 window.addEventListener('message', async function(evt) {
@@ -72,7 +69,7 @@ function hideFrameBack(hash:string) {
 async function onReceiveAppApiMessage(hash: string, apiOwner:string, apiName: string): Promise<ApiToken> {
     let appInFrame = appsInFrame[hash];
     if (appInFrame === undefined) return {name:apiName, url:undefined, token:undefined};
-    let {unit, app} = appInFrame;
+    let {unit} = appInFrame;
     let ret = await apiTokenApi.api({unit: unit, apiOwner: apiOwner, apiName: apiName});
     return {name: apiName, url: ret.url, token: ret.token};
 }
@@ -92,25 +89,25 @@ export function setMeInFrame(appHash: string):AppInFrame {
     let p0 = 3;
     let p1 = appHash.indexOf('-', p0);
     if (p1<p0) return;
-    let p2 = appHash.indexOf('-', p1+1);
-    if (p2<p1) return;
+    //let p2 = appHash.indexOf('-', p1+1);
+    //if (p2<p1) return;
     meInFrame.hash = appHash.substring(p0, p1);
-    meInFrame.unit = Number(appHash.substring(p1+1, p2));
-    meInFrame.app = Number(appHash.substring(p2+1));
+    meInFrame.unit = Number(appHash.substring(p1+1));
+    //meInFrame.app = Number(appHash.substring(p2+1));
     return meInFrame;
 }
 
-export function appUrl(url: string, unitId: number, appId: number):{url:string; hash:string} {
+export function appUrl(url: string, unitId: number):{url:string; hash:string} {
     let u:string;
     for (;;) {
         u = uid();
         let a = appsInFrame[u];
         if (a === undefined) {
-            appsInFrame[u] = {hash:u, unit:unitId, app:appId};
+            appsInFrame[u] = {hash:u, unit:unitId};
             break;
         }
     }
-    return {url: url + '#tv' + u + '-' + unitId + '-' + appId, hash: u};
+    return {url: url + '#tv' + u + '-' + unitId, hash: u};
 }
 
 export async function loadAppApis(appOwner:string, appName): Promise<AppApi[]> {
