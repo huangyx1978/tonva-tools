@@ -347,6 +347,7 @@ export class Nav {
     }
     navToApp(url: string, unitId: number) {
         let uh = appUrl(url, unitId);
+        console.log('navToApp: %s', JSON.stringify(uh));
         nav.push(<article className='app-container'>
             <span id={uh.hash} onClick={()=>this.back()}>
                 <i className="fa fa-arrow-left" />

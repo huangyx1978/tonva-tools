@@ -317,6 +317,7 @@ export class Nav {
     }
     navToApp(url, unitId) {
         let uh = appUrl(url, unitId);
+        console.log('navToApp: %s', JSON.stringify(uh));
         nav.push(React.createElement("article", { className: 'app-container' },
             React.createElement("span", { id: uh.hash, onClick: () => this.back() },
                 React.createElement("i", { className: "fa fa-arrow-left" })),
