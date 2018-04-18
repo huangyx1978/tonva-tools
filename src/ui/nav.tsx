@@ -79,15 +79,18 @@ export class NavView extends React.Component<Props, State> {
         nav.set(this);
 
         let hash = document.location.hash;
+        document.title = document.location.origin;
         console.log("url=%s hash=%s", document.location.origin, hash);
         if (hash !== undefined && hash !== '' && hash.startsWith('#tv')) {
             let mif = setMeInFrame(hash);
-            nav.user = {id:0} as User;
-            if (self !== window.parent) {
-                window.parent.postMessage({type:'hide-frame-back', hash: mif.hash}, '*');
+            if (mif !== undefined) {
+                nav.user = {id:0} as User;
+                if (self !== window.parent) {
+                    window.parent.postMessage({type:'hide-frame-back', hash: mif.hash}, '*');
+                }
+                this.showAppView();
+                return;
             }
-            this.showAppView();
-            return;
         }
         let user: User = nav.local.user.get();
         if (user !== undefined) {
