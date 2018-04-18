@@ -37,6 +37,7 @@ window.addEventListener('message', function (evt) {
             case 'app-api':
                 console.log("receive PostMessage: %s", JSON.stringify(message));
                 let ret = yield onReceiveAppApiMessage(message.hash, message.apiName);
+                console.log("onReceiveAppApiMessage: %s", JSON.stringify(ret));
                 e.source.postMessage({
                     type: 'app-api-return',
                     apiName: message.apiName,
@@ -68,11 +69,11 @@ function onReceiveAppApiMessage(hash, apiName) {
         return { name: apiName, url: ret.url, token: ret.token };
     });
 }
-function onAppApiReturn(apiName, url, token) {
-    let action = apiTokens[apiName];
+function onAppApiReturn(api, url, token) {
+    let action = apiTokens[api];
     if (action === undefined) {
-        action.reject('error app api return');
-        return;
+        throw 'error app api return';
+        //return;
     }
     action.url = url;
     action.token = token;

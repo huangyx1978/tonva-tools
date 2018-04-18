@@ -46,10 +46,11 @@ window.addEventListener('message', async function(evt) {
         case 'app-api':
             console.log("receive PostMessage: %s", JSON.stringify(message));
             let ret = await onReceiveAppApiMessage(message.hash, message.apiName);
+            console.log("onReceiveAppApiMessage: %s", JSON.stringify(ret));
             e.source.postMessage({
                 type: 'app-api-return', 
-                apiName: message.apiName, 
-                url: ret.url, 
+                apiName: message.apiName,
+                url: ret.url,
                 token: ret.token}, "*");
             break;
         case 'app-api-return':
@@ -74,11 +75,11 @@ async function onReceiveAppApiMessage(hash: string, apiName: string): Promise<Ap
     return {name: apiName, url: ret.url, token: ret.token};
 }
 
-function onAppApiReturn(apiName: string, url: string, token: string) {
-    let action = apiTokens[apiName];
+function onAppApiReturn(api: string, url: string, token: string) {
+    let action = apiTokens[api];
     if (action === undefined) {
-        action.reject('error app api return');
-        return;
+        throw 'error app api return';
+        //return;
     }
     action.url = url;
     action.token = token;
