@@ -36,10 +36,9 @@ window.addEventListener('message', function (evt) {
                 break;
             case 'app-api':
                 console.log("receive PostMessage: %s", JSON.stringify(message));
-                let ret = yield onReceiveAppApiMessage(message.hash, message.apiOwner, message.apiName);
+                let ret = yield onReceiveAppApiMessage(message.hash, message.apiName);
                 e.source.postMessage({
                     type: 'app-api-return',
-                    apiOwner: message.apiOwner,
                     apiName: message.apiName,
                     url: ret.url,
                     token: ret.token
@@ -58,13 +57,14 @@ function hideFrameBack(hash) {
     if (el !== undefined)
         el.hidden = true;
 }
-function onReceiveAppApiMessage(hash, apiOwner, apiName) {
+function onReceiveAppApiMessage(hash, apiName) {
     return __awaiter(this, void 0, void 0, function* () {
         let appInFrame = appsInFrame[hash];
         if (appInFrame === undefined)
             return { name: apiName, url: undefined, token: undefined };
         let { unit } = appInFrame;
-        let ret = yield apiTokenApi.api({ unit: unit, apiOwner: apiOwner, apiName: apiName });
+        let parts = apiName.split('/');
+        let ret = yield apiTokenApi.api({ unit: unit, apiOwner: parts[0], apiName: parts[1] });
         return { name: apiName, url: ret.url, token: ret.token };
     });
 }
