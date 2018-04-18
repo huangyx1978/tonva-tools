@@ -80,7 +80,7 @@ export class NavView extends React.Component<Props, State> {
 
         let hash = document.location.hash;
         console.log("url=%s hash=%s", document.location.origin, hash);
-        if (hash !== undefined && hash.startsWith('#tv')) {
+        if (hash !== undefined && hash !== '' && hash.startsWith('#tv')) {
             let mif = setMeInFrame(hash);
             nav.user = {id:0} as User;
             if (self !== window.parent) {
