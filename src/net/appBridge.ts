@@ -26,6 +26,11 @@ export let meInFrame:AppInFrame = {
     unit: debugUnitId,
 }
 
+export function isBridged():boolean {
+    return window.opener !== undefined || self !== window.parent;
+    //if (sourceWin === undefined && window === window.parent) {
+}
+
 window.addEventListener('message', async function(evt) {
     let e:any = evt;
     var message = e.data;
@@ -119,7 +124,7 @@ export async function loadAppApis(appOwner:string, appName): Promise<AppApi[]> {
 export async function appApi(api:string, apiOwner:string, apiName:string): Promise<ApiToken> {
     let apiToken = apiTokens[api];
     if (apiToken !== undefined) return apiToken;
-    if (window === window.parent) {
+    if (!isBridged()) {
         apiToken = await apiTokenApi.api({unit: debugUnitId, apiOwner:apiOwner, apiName:apiName});
         apiTokens[api] = apiToken;
         if (apiToken === undefined) {
@@ -147,7 +152,7 @@ export async function appApi(api:string, apiOwner:string, apiName:string): Promi
             resolve(apiToken);
         }
         apiToken.reject = reject;
-        window.parent.postMessage({
+        (window.opener || window.parent).postMessage({
             type: 'app-api',
             apiName: api,
             hash: meInFrame.hash,
@@ -179,7 +184,7 @@ export function bridgeCenterApi(url:string, method:string, body:any):Promise<any
                 break;
             }
         }
-        window.parent.postMessage({
+        (window.opener || window.parent).postMessage({
             type: 'center-api',
             callId: callId,
             url: url,

@@ -16,6 +16,10 @@ export let meInFrame = {
     hash: undefined,
     unit: debugUnitId,
 };
+export function isBridged() {
+    return window.opener !== undefined || self !== window.parent;
+    //if (sourceWin === undefined && window === window.parent) {
+}
 window.addEventListener('message', function (evt) {
     return __awaiter(this, void 0, void 0, function* () {
         let e = evt;
@@ -114,7 +118,7 @@ export function appApi(api, apiOwner, apiName) {
         let apiToken = apiTokens[api];
         if (apiToken !== undefined)
             return apiToken;
-        if (window === window.parent) {
+        if (!isBridged()) {
             apiToken = yield apiTokenApi.api({ unit: debugUnitId, apiOwner: apiOwner, apiName: apiName });
             apiTokens[api] = apiToken;
             if (apiToken === undefined) {
@@ -142,7 +146,7 @@ export function appApi(api, apiOwner, apiName) {
                 resolve(apiToken);
             });
             apiToken.reject = reject;
-            window.parent.postMessage({
+            (window.opener || window.parent).postMessage({
                 type: 'app-api',
                 apiName: api,
                 hash: meInFrame.hash,
@@ -169,7 +173,7 @@ export function bridgeCenterApi(url, method, body) {
                 break;
             }
         }
-        window.parent.postMessage({
+        (window.opener || window.parent).postMessage({
             type: 'center-api',
             callId: callId,
             url: url,

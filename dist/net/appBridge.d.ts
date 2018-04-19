@@ -9,6 +9,7 @@ export interface AppInFrame {
     unit: number;
 }
 export declare let meInFrame: AppInFrame;
+export declare function isBridged(): boolean;
 export declare function setMeInFrame(appHash: string): AppInFrame;
 export declare function appUrl(url: string, unitId: number): {
     url: string;

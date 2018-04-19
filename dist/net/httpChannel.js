@@ -7,7 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 //import nav from './nav';
-import { bridgeCenterApi } from './appBridge';
+import { bridgeCenterApi, isBridged } from './appBridge';
 export class HttpChannel {
     constructor(isCenter, hostUrl, apiToken, ui) {
         this.isCenter = isCenter;
@@ -123,7 +123,7 @@ export class HttpChannel {
     }
     innerFetch(url, options) {
         let u = this.hostUrl + url;
-        if (this.isCenter === true && this.apiToken === undefined && self !== window.parent)
+        if (this.isCenter === true && this.apiToken === undefined && isBridged())
             return bridgeCenterApi(u, options.method, options.body);
         return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
             yield this.fetch(u, options, resolve, reject);

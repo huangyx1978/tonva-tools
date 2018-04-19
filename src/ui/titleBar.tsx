@@ -39,6 +39,9 @@ export class TitleBar extends React.Component<TitleBarProps, TitleBarState> {
     back() {
         nav.back(); // 这个才会显示confirm box，在dataForm里面，如果输入了数据的话
     }
+    openWindow() {
+        window.open(document.location.href);
+    }
     render() {
         let b = this.state.hasBack || self != top;
         let {right, center, logout} = this.props;
@@ -62,7 +65,7 @@ export class TitleBar extends React.Component<TitleBarProps, TitleBarState> {
         }
         if (self != top) {
             console.log(document.location.href);
-            pop = <header onClick={()=>window.open(document.location.href)} />;
+            pop = <header onClick={this.openWindow} />;
         }
         let rightView;
         if (right || debugLogout) rightView = <aside>{right} {debugLogout}</aside>;
