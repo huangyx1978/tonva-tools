@@ -45,7 +45,7 @@ export class NavView extends React.Component<Props, State> {
     constructor(props) {
         super(props);
         this.back = this.back.bind(this);
-        this.htmlTitle = document.title;
+        //this.htmlTitle = document.title;
         this.stack = [];
         this.state = {
             stack: this.stack,
@@ -79,7 +79,7 @@ export class NavView extends React.Component<Props, State> {
         nav.set(this);
 
         let hash = document.location.hash;
-        document.title = document.location.origin;
+        // document.title = document.location.origin;
         console.log("url=%s hash=%s", document.location.origin, hash);
         if (hash !== undefined && hash !== '' && hash.startsWith('#tv')) {
             let mif = setMeInFrame(hash);
