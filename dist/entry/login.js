@@ -48,9 +48,15 @@ export default class Login extends React.Component {
     }
     onLoginSubmit(values) {
         return __awaiter(this, void 0, void 0, function* () {
+            let un = values['username'];
+            let pwd = values['password'];
+            if (pwd === undefined) {
+                alert('something wrong, pwd is undefined');
+                return;
+            }
             let user = yield userApi.login({
-                user: values['username'],
-                pwd: values['password']
+                user: un,
+                pwd: pwd
             });
             console.log("onLoginSubmit: user=%s pwd:%s", user.name, user.token);
             if (user === undefined) {

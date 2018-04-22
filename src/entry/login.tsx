@@ -40,11 +40,17 @@ export default class Login extends React.Component {
         ],
         onSumit: this.onLoginSubmit.bind(this),
     });
-   
+
     async onLoginSubmit(values:any):Promise<SubmitReturn|undefined> {
+        let un = values['username'];
+        let pwd = values['password'];
+        if (pwd === undefined) {
+            alert('something wrong, pwd is undefined');
+            return;
+        }
         let user = await userApi.login({
-            user: values['username'], 
-            pwd: values['password']
+            user: un, 
+            pwd: pwd
         });
         console.log("onLoginSubmit: user=%s pwd:%s", user.name, user.token);
         if (user === undefined) {

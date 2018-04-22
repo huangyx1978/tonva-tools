@@ -118,6 +118,12 @@ export class FormSchema {
                 alert('no submit funciton defined');
                 return;
             }
+            for (let input of this.inputs) {
+                let blur = input.props.onBlur;
+                if (blur === undefined)
+                    continue;
+                blur();
+            }
             let ret = yield this.submit(this.values());
             if (ret === undefined)
                 return;
