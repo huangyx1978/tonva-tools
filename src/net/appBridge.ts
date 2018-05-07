@@ -77,6 +77,10 @@ async function onReceiveAppApiMessage(hash: string, apiName: string): Promise<Ap
     let {unit} = appInFrame;
     let parts = apiName.split('/');
     let ret = await apiTokenApi.api({unit: unit, apiOwner: parts[0], apiName: parts[1]});
+    if (ret === undefined) {
+        console.log('apiTokenApi.api return undefined. api=%s, unit=%s', apiName, unit);
+        throw 'api not found';
+    }
     return {name: apiName, url: ret.url, token: ret.token};
 }
 

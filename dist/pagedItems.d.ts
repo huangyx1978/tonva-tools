@@ -1,5 +1,6 @@
 import { IObservableArray } from 'mobx';
 export declare abstract class PagedItems<T> {
+    private beforeLoad;
     private loaded;
     private _items;
     allLoaded: boolean;

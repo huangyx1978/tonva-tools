@@ -15,6 +15,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import { observable, computed } from 'mobx';
 export class PagedItems {
     constructor() {
+        this.beforeLoad = true;
         this.loaded = false;
         this._items = observable.array([], { deep: false });
         this.allLoaded = false;
@@ -23,6 +24,8 @@ export class PagedItems {
         this.appendPosition = 'tail';
     }
     get items() {
+        if (this.beforeLoad === true)
+            return null;
         if (this.loaded === false)
             return undefined;
         return this._items;
@@ -35,6 +38,7 @@ export class PagedItems {
     }
     first(param) {
         return __awaiter(this, void 0, void 0, function* () {
+            this.beforeLoad = false;
             this.loaded = false;
             this.param = param;
             this._items.clear();
@@ -47,8 +51,8 @@ export class PagedItems {
         return __awaiter(this, void 0, void 0, function* () {
             if (this.allLoaded === true)
                 return;
-            this.loaded = true;
             let ret = yield this.load();
+            this.loaded = true;
             let len = ret.length;
             if (len > this.pageSize) {
                 this.allLoaded = false;
@@ -70,6 +74,9 @@ export class PagedItems {
         });
     }
 }
+__decorate([
+    observable
+], PagedItems.prototype, "beforeLoad", void 0);
 __decorate([
     observable
 ], PagedItems.prototype, "loaded", void 0);
