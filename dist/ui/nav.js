@@ -304,8 +304,10 @@ export class NavView extends React.Component {
         // this.forceUpdate();
     }
     renderAndPush(view) {
+        if (this.stack.length > 0) {
+            window.history.pushState('forward', null, null); //'./#forward');
+        }
         this.stack.push({ view: view });
-        window.history.pushState('forward', null, null); //'./#forward');
     }
 }
 export class Nav {
