@@ -242,6 +242,7 @@ export class NavView extends React.Component {
     navBack() {
         if (this.stopPopstateEvent === true)
             return;
+        nav.log('backbutton pressed - nav level: ' + this.stack.length);
         this.isHistoryBack = true;
         this.back(true);
         this.isHistoryBack = false;
