@@ -252,8 +252,10 @@ export class NavView extends React.Component {
         let len = stack.length;
         if (len === 0)
             return;
-        if (len === 1 && self != window.top) {
-            window.top.postMessage({ type: 'pop-app' }, '*');
+        if (len === 1) {
+            if (self != window.top) {
+                window.top.postMessage({ type: 'pop-app' }, '*');
+            }
             return;
         }
         let top = stack[len - 1];
