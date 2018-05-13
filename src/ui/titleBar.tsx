@@ -4,7 +4,7 @@ import * as className from 'classnames';
 import {ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem,
     Row, Col, Button, Form, FormGroup, Label, Input, 
     FormText, FormFeedback} from 'reactstrap';
-import {nav} from './nav';
+import {nav, mobileHeaderStyle} from './nav';
 
 export interface TitleBarProps {
     back?: 'back' | 'close' | 'none';
@@ -70,7 +70,7 @@ export class TitleBar extends React.Component<TitleBarProps, TitleBarState> {
         let rightView;
         if (right || debugLogout) rightView = <aside>{right} {debugLogout}</aside>;
         return (
-        <header>
+        <header style={mobileHeaderStyle}>
             {pop}
             {back}
             <div>{center}</div>

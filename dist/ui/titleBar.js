@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { nav } from './nav';
+import { nav, mobileHeaderStyle } from './nav';
 export class TitleBar extends React.Component {
     constructor(props) {
         super(props);
@@ -62,7 +62,7 @@ export class TitleBar extends React.Component {
                 right,
                 " ",
                 debugLogout);
-        return (React.createElement("header", null,
+        return (React.createElement("header", { style: mobileHeaderStyle },
             pop,
             back,
             React.createElement("div", null, center),

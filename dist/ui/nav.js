@@ -21,13 +21,42 @@ import { LocalData } from '../local';
 import { logoutApis, setCenterToken } from '../net';
 import 'font-awesome/css/font-awesome.min.css';
 import '../css/va.css';
+const regEx = new RegExp('Android|webOS|iPhone|iPad|' +
+    'BlackBerry|Windows Phone|' +
+    'Opera Mini|IEMobile|Mobile', 'i');
+const isMobile = regEx.test(navigator.userAgent);
+export const mobileHeaderStyle = isMobile ? {
+    minHeight: '3em'
+} : undefined;
 const logo = require('../img/logo.svg');
+/*
+document.onload = (evt:Event) => {
+    nav.log('onload');
+    document.addEventListener('deviceready', function() {
+        nav.log('device ready');
+        document.addEventListener('backbutton', function() {
+            nav.log('outside back button');
+        }, false);
+    }, false);
+};
+*/
+/*
+document.addEventListener('click', function() {
+    nav.log('click');
+}, false);
+*/
+const logs = [];
 ;
 export class NavView extends React.Component {
     constructor(props) {
         super(props);
         this.waitCount = 0;
+        this.isHistoryBack = false;
+        this.stopPopstateEvent = false;
         this.back = this.back.bind(this);
+        this.navBack = this.navBack.bind(this);
+        //this.onDeviceReady = this.onDeviceReady.bind(this);
+        //this.onAndroidBackButton = this.onAndroidBackButton.bind(this);
         //this.htmlTitle = document.title;
         this.stack = [];
         this.state = {
@@ -36,24 +65,37 @@ export class NavView extends React.Component {
             fetchError: undefined
         };
     }
+    /*
+        private onDeviceReady() {
+            nav.log('device ready');
+            window.addEventListener("backbutton", this.onAndroidBackButton, false);
+        }
+        private onAndroidBackButton() {
+            nav.log("按下了Android返回键");
+        }
+    */
     componentWillMount() {
         return __awaiter(this, void 0, void 0, function* () {
+            //window.addEventListener("deviceready", this.onDeviceReady, false);
+            //window.addEventListener("backbutton", this.onAndroidBackButton, false);
             // 监听android手机的实体back键
-            if (window.history && window.history.pushState) {
-                window.addEventListener('popstate', function () {
-                    var hashLocation = location.hash;
-                    var hashSplit = hashLocation.split("#!/");
-                    var hashName = hashSplit[1];
-                    if (hashName !== '') {
-                        var hash = window.location.hash;
-                        if (hash === '') {
-                            //alert("你点击了返回键");  
-                            nav.back(true);
-                        }
-                    }
-                });
-                //window.history.pushState('forward', null, './#forward');  
-            }
+            //if(!(window.history && window.history.pushState)) return;
+            //console.log('监听android手机的实体back键');
+            window.addEventListener('popstate', this.navBack);
+            /*
+            nav.log("你点击了Android返回键");
+            var hashLocation = location.hash;
+            var hashSplit = hashLocation.split("#!/");
+            var hashName = hashSplit[1];
+            if(hashName !== '') {
+                var hash = window.location.hash;
+                if(hash === '') {
+                    alert("你点击了返回键");
+                    nav.back(true);
+                }
+            }*/
+            //});
+            //window.history.pushState('forward', null, './#forward');  
         });
     }
     componentDidMount() {
@@ -160,22 +202,32 @@ export class NavView extends React.Component {
     }
     pop(level = 1) {
         let stack = this.stack;
-        let changed = false;
-        for (let i = 0; i < level; i++) {
-            if (stack.length === 0) {
-                break;
+        let len = stack.length;
+        if (len >= level && level > 0) {
+            let changed = false;
+            for (let i = 0; i < level; i++) {
+                if (len === 0) {
+                    break;
+                }
+                stack.pop();
+                this.refresh();
+                changed = true;
             }
-            stack.pop();
-            this.refresh();
-            changed = true;
+            //if (changed) { this.events.emit('changed'); }
+            if (this.isHistoryBack !== true) {
+                this.stopPopstateEvent = true;
+                window.history.back(len);
+                this.stopPopstateEvent = false;
+            }
         }
-        //if (changed) { this.events.emit('changed'); }
     }
     clear() {
-        if (this.stack.length === 0) {
+        let len = this.stack.length;
+        if (len === 0) {
             return;
         }
-        this.stack.splice(0, this.stack.length);
+        for (let i = 0; i < len - 1; i++)
+            this.pop();
         this.refresh();
         //this.events.emit('changed');
     }
@@ -186,6 +238,13 @@ export class NavView extends React.Component {
             return;
         let top = stack[len - 1];
         top.confirmClose = confirmClose;
+    }
+    navBack() {
+        if (this.stopPopstateEvent === true)
+            return;
+        this.isHistoryBack = true;
+        this.back(true);
+        this.isHistoryBack = false;
     }
     back(confirm = true) {
         let stack = this.stack;
@@ -241,6 +300,7 @@ export class NavView extends React.Component {
     }
     renderAndPush(view) {
         this.stack.push({ view: view });
+        window.history.pushState('forward', null, null); //'./#forward');
     }
 }
 export class Nav {
@@ -322,17 +382,18 @@ export class Nav {
         let uh = appUrl(url, unitId);
         console.log('navToApp: %s', JSON.stringify(uh));
         nav.push(React.createElement("article", { className: 'app-container' },
-            React.createElement("span", { id: uh.hash, onClick: () => this.back() },
+            React.createElement("span", { id: uh.hash, onClick: () => this.back(), style: mobileHeaderStyle },
                 React.createElement("i", { className: "fa fa-arrow-left" })),
             React.createElement("iframe", { src: uh.url })));
     }
-    /*
-    async getAppApi(apiName: string): Promise<{url:string, token:string}> {
-        return await appApi(apiName);
-    }*/
     navToSite(url) {
         // show in new window
         window.open(url);
+    }
+    get logs() { return logs; }
+    ;
+    log(msg) {
+        logs.push(msg);
     }
 }
 __decorate([

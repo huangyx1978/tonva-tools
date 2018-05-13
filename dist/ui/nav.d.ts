@@ -5,6 +5,9 @@ import { FetchError } from '../fetchError';
 import { LocalData } from '../local';
 import 'font-awesome/css/font-awesome.min.css';
 import '../css/va.css';
+export declare const mobileHeaderStyle: {
+    minHeight: string;
+};
 export interface Props {
     view: JSX.Element | (() => JSX.Element);
 }
@@ -36,6 +39,9 @@ export declare class NavView extends React.Component<Props, State> {
     pop(level?: Number): void;
     clear(): void;
     regConfirmClose(confirmClose: () => boolean): void;
+    private isHistoryBack;
+    private stopPopstateEvent;
+    navBack(): void;
     back(confirm?: boolean): void;
     confirmBox(message?: string): boolean;
     render(): JSX.Element;
@@ -65,5 +71,7 @@ export declare class Nav {
     confirmBox(message?: string): boolean;
     navToApp(url: string, unitId: number): void;
     navToSite(url: string): void;
+    readonly logs: string[];
+    log(msg: string): void;
 }
 export declare const nav: Nav;
