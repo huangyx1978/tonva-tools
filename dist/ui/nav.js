@@ -52,7 +52,6 @@ export class NavView extends React.Component {
         super(props);
         this.waitCount = 0;
         this.isHistoryBack = false;
-        this.stopPopstateEvent = false;
         this.back = this.back.bind(this);
         this.navBack = this.navBack.bind(this);
         //this.onDeviceReady = this.onDeviceReady.bind(this);
@@ -218,9 +217,11 @@ export class NavView extends React.Component {
         }
         //if (changed) { this.events.emit('changed'); }
         if (this.isHistoryBack !== true) {
-            this.stopPopstateEvent = true;
+            //this.stopPopstateEvent = true;
+            window.removeEventListener('popstate', this.navBack);
             window.history.back(len);
-            this.stopPopstateEvent = false;
+            window.removeEventListener('popstate', this.navBack);
+            //this.stopPopstateEvent = false;
         }
     }
     clear() {
@@ -241,9 +242,9 @@ export class NavView extends React.Component {
         let top = stack[len - 1];
         top.confirmClose = confirmClose;
     }
+    //private stopPopstateEvent:boolean = false;
     navBack() {
-        if (this.stopPopstateEvent === true)
-            return;
+        //if (this.stopPopstateEvent === true) return;
         nav.log('backbutton pressed - nav level: ' + this.stack.length);
         this.isHistoryBack = true;
         this.back(true);

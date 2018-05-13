@@ -40,7 +40,6 @@ export declare class NavView extends React.Component<Props, State> {
     clear(): void;
     regConfirmClose(confirmClose: () => boolean): void;
     private isHistoryBack;
-    private stopPopstateEvent;
     navBack(): void;
     back(confirm?: boolean): void;
     confirmBox(message?: string): boolean;
