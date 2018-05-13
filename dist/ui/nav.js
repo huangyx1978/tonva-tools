@@ -201,24 +201,26 @@ export class NavView extends React.Component {
         //this.events.emit('changed');
     }
     pop(level = 1) {
+        if (level <= 0)
+            return;
         let stack = this.stack;
         let len = stack.length;
-        if (level > 0 && len >= level) {
-            let changed = false;
-            for (let i = 0; i < level; i++) {
-                if (len === 0) {
-                    break;
-                }
-                stack.pop();
-                this.refresh();
-                changed = true;
+        if (len <= 1)
+            return;
+        let changed = false;
+        for (let i = 0; i < level; i++) {
+            if (len === 0) {
+                break;
             }
-            //if (changed) { this.events.emit('changed'); }
-            if (this.isHistoryBack !== true) {
-                this.stopPopstateEvent = true;
-                window.history.back(len);
-                this.stopPopstateEvent = false;
-            }
+            stack.pop();
+            this.refresh();
+            changed = true;
+        }
+        //if (changed) { this.events.emit('changed'); }
+        if (this.isHistoryBack !== true) {
+            this.stopPopstateEvent = true;
+            window.history.back(len);
+            this.stopPopstateEvent = false;
         }
     }
     clear() {
