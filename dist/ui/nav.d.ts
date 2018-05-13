@@ -66,6 +66,7 @@ export declare class Nav {
     replace(view: JSX.Element): void;
     pop(level?: Number): void;
     clear(): void;
+    navBack(): void;
     back(confirm?: boolean): void;
     regConfirmClose(confirmClose: () => boolean): void;
     confirmBox(message?: string): boolean;

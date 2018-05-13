@@ -30,7 +30,7 @@ window.addEventListener('message', function (evt) {
                 hideFrameBack(message.hash);
                 break;
             case 'pop-app':
-                nav.back();
+                nav.navBack();
                 break;
             case 'center-api':
                 yield callCenterApiFromMessage(e.source, message);

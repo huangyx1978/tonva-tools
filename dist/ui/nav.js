@@ -203,7 +203,7 @@ export class NavView extends React.Component {
     pop(level = 1) {
         let stack = this.stack;
         let len = stack.length;
-        if (len >= level && level > 0) {
+        if (level > 0 && len >= level) {
             let changed = false;
             for (let i = 0; i < level; i++) {
                 if (len === 0) {
@@ -369,6 +369,9 @@ export class Nav {
     }
     clear() {
         this.nav.clear();
+    }
+    navBack() {
+        this.nav.navBack();
     }
     back(confirm = true) {
         this.nav.back(confirm);

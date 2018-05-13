@@ -40,7 +40,7 @@ window.addEventListener('message', async function(evt) {
             hideFrameBack(message.hash);
             break;
         case 'pop-app':
-            nav.back();
+            nav.navBack();
             break;
         case 'center-api':
             await callCenterApiFromMessage(e.source, message);
