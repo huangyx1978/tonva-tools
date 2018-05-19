@@ -55,7 +55,7 @@ export interface StackItem {
 }
 export interface State {
     stack: StackItem[];
-    wait: boolean;
+    wait: 0|1|2;
     fetchError: FetchError
 }
 
@@ -77,7 +77,7 @@ export class NavView extends React.Component<Props, State> {
         this.stack = [];
         this.state = {
             stack: this.stack,
-            wait: false,
+            wait: 0,
             fetchError: undefined
         };
     }
@@ -152,10 +152,11 @@ export class NavView extends React.Component<Props, State> {
 
     startWait() {
         if (this.waitCount === 0) {
+            this.setState({wait: 1});
             this.waitTimeHandler = global.setTimeout(
                 () => {
                     this.waitTimeHandler = undefined;
-                    this.setState({wait: true});
+                    this.setState({wait: 2});
                 },
                 1000) as NodeJS.Timer;
         }
@@ -175,7 +176,7 @@ export class NavView extends React.Component<Props, State> {
                 clearTimeout(this.waitTimeHandler);
                 this.waitTimeHandler = undefined;
             }
-            this.setState({wait: false});
+            this.setState({wait: 0});
         }
     }
 
@@ -300,12 +301,17 @@ export class NavView extends React.Component<Props, State> {
         let stack = this.state.stack;
         let top = stack.length - 1;
         let elWait = null, elError = null;
-        if (wait === true) {
-            // <Spinner name="circle" color="blue" />
-            elWait = <li className='va-wait'>
-                <i className="fa fa-spinner fa-spin fa-3x fa-fw"></i>
-                <span className="sr-only">Loading...</span>
-            </li>;
+        switch (wait) {
+            case 1:
+                elWait = <li className="va-wait va-wait1">
+                </li>;
+                break;
+            case 2:
+                elWait = <li className="va-wait va-wait2">
+                    <i className="fa fa-spinner fa-spin fa-3x fa-fw"></i>
+                    <span className="sr-only">Loading...</span>
+                </li>;
+                break;
         }
         if (fetchError)
             elError = <FetchErrorView 

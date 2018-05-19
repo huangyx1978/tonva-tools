@@ -17,7 +17,7 @@ export interface StackItem {
 }
 export interface State {
     stack: StackItem[];
-    wait: boolean;
+    wait: 0 | 1 | 2;
     fetchError: FetchError;
 }
 export declare class NavView extends React.Component<Props, State> {

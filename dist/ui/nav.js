@@ -60,7 +60,7 @@ export class NavView extends React.Component {
         this.stack = [];
         this.state = {
             stack: this.stack,
-            wait: false,
+            wait: 0,
             fetchError: undefined
         };
     }
@@ -136,9 +136,10 @@ export class NavView extends React.Component {
     }
     startWait() {
         if (this.waitCount === 0) {
+            this.setState({ wait: 1 });
             this.waitTimeHandler = global.setTimeout(() => {
                 this.waitTimeHandler = undefined;
-                this.setState({ wait: true });
+                this.setState({ wait: 2 });
             }, 1000);
         }
         ++this.waitCount;
@@ -156,7 +157,7 @@ export class NavView extends React.Component {
                 clearTimeout(this.waitTimeHandler);
                 this.waitTimeHandler = undefined;
             }
-            this.setState({ wait: false });
+            this.setState({ wait: 0 });
         }
     }
     onError(fetchError) {
@@ -279,11 +280,15 @@ export class NavView extends React.Component {
         let stack = this.state.stack;
         let top = stack.length - 1;
         let elWait = null, elError = null;
-        if (wait === true) {
-            // <Spinner name="circle" color="blue" />
-            elWait = React.createElement("li", { className: 'va-wait' },
-                React.createElement("i", { className: "fa fa-spinner fa-spin fa-3x fa-fw" }),
-                React.createElement("span", { className: "sr-only" }, "Loading..."));
+        switch (wait) {
+            case 1:
+                elWait = React.createElement("li", { className: "va-wait va-wait1" });
+                break;
+            case 2:
+                elWait = React.createElement("li", { className: "va-wait va-wait2" },
+                    React.createElement("i", { className: "fa fa-spinner fa-spin fa-3x fa-fw" }),
+                    React.createElement("span", { className: "sr-only" }, "Loading..."));
+                break;
         }
         if (fetchError)
             elError = React.createElement(FetchErrorView, Object.assign({ clearError: () => this.setState({ fetchError: undefined }) }, fetchError));
