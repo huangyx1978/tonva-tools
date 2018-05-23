@@ -125,6 +125,12 @@ export async function loadAppApis(appOwner:string, appName): Promise<AppApi[]> {
     return await centerAppApi.apis(debugUnitId, appOwner, appName);
 }
 
+export async function chatApi(unitId:number): Promise<AppApi> {
+    let centerAppApi = new CenterAppApi('tv/');
+    //return await centerAppApi.chatApi(debugUnitId);
+    return await centerAppApi.chatApi(unitId);
+}
+
 export async function appApi(api:string, apiOwner:string, apiName:string): Promise<ApiToken> {
     let apiToken = apiTokens[api];
     if (apiToken !== undefined) return apiToken;

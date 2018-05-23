@@ -117,6 +117,13 @@ export function loadAppApis(appOwner, appName) {
         return yield centerAppApi.apis(debugUnitId, appOwner, appName);
     });
 }
+export function chatApi(unitId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let centerAppApi = new CenterAppApi('tv/');
+        //return await centerAppApi.chatApi(debugUnitId);
+        return yield centerAppApi.chatApi(unitId);
+    });
+}
 export function appApi(api, apiOwner, apiName) {
     return __awaiter(this, void 0, void 0, function* () {
         let apiToken = apiTokens[api];

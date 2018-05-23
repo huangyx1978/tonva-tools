@@ -16,5 +16,6 @@ export declare function appUrl(url: string, unitId: number): {
     hash: string;
 };
 export declare function loadAppApis(appOwner: string, appName: any): Promise<AppApi[]>;
+export declare function chatApi(unitId: number): Promise<AppApi>;
 export declare function appApi(api: string, apiOwner: string, apiName: string): Promise<ApiToken>;
 export declare function bridgeCenterApi(url: string, method: string, body: any): Promise<any>;

@@ -64,5 +64,10 @@ export class CenterAppApi extends CenterApi {
             return yield this.get('tie/app-apis', { unit: unit, appOwner: appOwner, appName: appName });
         });
     }
+    chatApi(unit) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.get('tie/chat-api', { unit: unit });
+        });
+    }
 }
 //# sourceMappingURL=centerApi.js.map

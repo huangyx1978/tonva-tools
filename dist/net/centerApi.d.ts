@@ -27,4 +27,5 @@ export interface AppApi {
 }
 export declare class CenterAppApi extends CenterApi {
     apis(unit: number, appOwner: string, appName: string): Promise<AppApi[]>;
+    chatApi(unit: number): Promise<AppApi>;
 }

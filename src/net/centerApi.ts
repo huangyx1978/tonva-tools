@@ -68,4 +68,7 @@ export class CenterAppApi extends CenterApi {
     async apis(unit:number, appOwner:string, appName:string):Promise<AppApi[]> {
         return await this.get('tie/app-apis', {unit:unit, appOwner:appOwner, appName:appName});
     }
+    async chatApi(unit:number):Promise<AppApi> {
+        return await this.get('tie/chat-api', {unit:unit});
+    }
 }
