@@ -12,7 +12,7 @@
   "author": "Henry",
   "license": "ISC",
   "dependencies": {
-    "bootstrap": "^4.0.0",
+    "bootstrap": "^4.1.1",
     "font-awesome": "^4.7.0",
     "jwt-decode": "^2.2.0",
     "lodash": "^4.17.4",
@@ -20,7 +20,7 @@
     "react-dom": "^16.4.0",
     "react-popper": "^0.7.4",
     "react-transition-group": "^2.2.1",
-    "reactstrap": "^5.0.0-alpha.4"
+    "reactstrap": "^5.0.0"
   },
   "peerDependencies": {
     "mobx": "^4.1.0",
