@@ -2,7 +2,7 @@ import { HttpChannel } from './httpChannel';
 import { ApiBase } from './apiBase';
 export declare function setCenterToken(t?: string): void;
 export declare abstract class CenterApi extends ApiBase {
-    constructor(path: string, showWaiting?: boolean);
+    constructor(path: string, ws: string, showWaiting?: boolean);
     protected getHttpChannel(): Promise<HttpChannel>;
 }
 export declare class ApiTokenApi extends CenterApi {
@@ -21,7 +21,9 @@ export interface AppApi {
     apiOwner: string;
     apiName: string;
     url: string;
+    urlDebug: string;
     ws: string;
+    wsDebug: string;
     access: string;
     token: string;
 }

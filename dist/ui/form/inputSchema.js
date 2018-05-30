@@ -115,12 +115,14 @@ class SingleInputSchema extends InputSchema {
         };
     }
     setInitValue(value) {
+        if (value === undefined)
+            value = '';
         this.element.value = value;
         this.value = this.parseValue(value);
     }
     clear() {
         super.clear();
-        this.element.value = this.field.defaultValue;
+        this.element.value = this.field.defaultValue || '';
     }
     required(values) {
         if (this.element === undefined)
@@ -233,6 +235,8 @@ class TextInputSchema extends InputSchema {
         };
     }
     setInitValue(value) {
+        if (value === undefined)
+            value = '';
         this.element.value = value;
         this.value = this.parseValue(value);
     }

@@ -27,8 +27,8 @@ function getCenterChannel():HttpChannel {
 export abstract class CenterApi extends ApiBase {
     //private channel: HttpChannel;
 
-    constructor(path: string, showWaiting?: boolean) {
-        super(path, showWaiting);
+    constructor(path: string, ws:string, showWaiting?: boolean) {
+        super(path, ws, showWaiting);
     }
 
     protected async getHttpChannel(): Promise<HttpChannel> {
@@ -44,7 +44,7 @@ export class ApiTokenApi extends CenterApi {
     }
 }
 
-export const apiTokenApi = new ApiTokenApi('tv/tie/');
+export const apiTokenApi = new ApiTokenApi('tv/tie/', undefined);
 
 
 export class CallCenterApi extends CenterApi {
@@ -52,13 +52,15 @@ export class CallCenterApi extends CenterApi {
         return this.call(url, method, body);
     }
 }
-export const callCenterapi = new CallCenterApi('');
+export const callCenterapi = new CallCenterApi('', undefined);
 
 export interface AppApi {
     apiOwner: string;
     apiName: string;
     url: string;
+    urlDebug: string;
     ws: string;
+    wsDebug: string;
     access: string;
     token: string;
 }

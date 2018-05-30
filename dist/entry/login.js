@@ -58,13 +58,13 @@ export default class Login extends React.Component {
                 user: un,
                 pwd: pwd
             });
-            console.log("onLoginSubmit: user=%s pwd:%s", user.name, user.token);
             if (user === undefined) {
                 //this.failed();
                 this.schema.clear();
                 this.schema.errors.push('用户名或密码错！');
             }
             else {
+                console.log("onLoginSubmit: user=%s pwd:%s", user.name, user.token);
                 yield nav.logined(user);
             }
             return undefined;

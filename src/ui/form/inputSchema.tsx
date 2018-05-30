@@ -120,12 +120,13 @@ abstract class SingleInputSchema extends InputSchema {
         }
     }
     setInitValue(value:any) {
+        if (value === undefined) value = '';
         this.element.value = value;
         this.value=this.parseValue(value);
     }
     clear() {
         super.clear();
-        this.element.value = this.field.defaultValue;
+        this.element.value = this.field.defaultValue || '';
     }
     protected required(values?:any):string|undefined {
         if (this.element === undefined) return undefined;
@@ -238,6 +239,7 @@ class TextInputSchema extends InputSchema {
         }
     }
     setInitValue(value:any) {
+        if (value === undefined) value = '';
         this.element.value = value;
         this.value = this.parseValue(value);
     }

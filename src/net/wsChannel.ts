@@ -20,21 +20,21 @@ export class WSChannel {
         //this.wsHost = wsHost;
         //this.token = token || WSChannel.centerToken;
         if (this.ws !== undefined) return;
-        let netThis = this;
+        let that = this;
         return new Promise((resolve, reject) => {
             let ws = new WebSocket(this.wsHost, this.token || WSChannel.centerToken);
             console.log('connect webSocket %s', this.wsHost);
             ws.onopen = (ev) => {
                 console.log('webSocket connected %s', this.wsHost);
-                netThis.ws = ws;
+                that.ws = ws;
                 resolve();
             };
             ws.onerror = (ev) => {
                 reject('webSocket can\'t open!');
             };
-            ws.onmessage = (msg) => netThis.wsMessage(msg);
+            ws.onmessage = (msg) => that.wsMessage(msg);
             ws.onclose = (ev) => {
-                netThis.ws = undefined;
+                that.ws = undefined;
                 console.log('webSocket closed!');
             }
         });

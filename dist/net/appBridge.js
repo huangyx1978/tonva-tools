@@ -15,6 +15,8 @@ const appsInFrame = {};
 export let meInFrame = {
     hash: undefined,
     unit: debugUnitId,
+    page: undefined,
+    param: undefined,
 };
 export function isBridged() {
     return window.opener !== undefined || self !== window.parent;
@@ -25,7 +27,9 @@ window.addEventListener('message', function (evt) {
         let e = evt;
         var message = e.data;
         switch (message.type) {
-            default: break;
+            default:
+                this.console.log('message: %s', JSON.stringify(message));
+                break;
             case 'hide-frame-back':
                 hideFrameBack(message.hash);
                 break;
@@ -66,7 +70,7 @@ function onReceiveAppApiMessage(hash, apiName) {
     return __awaiter(this, void 0, void 0, function* () {
         let appInFrame = appsInFrame[hash];
         if (appInFrame === undefined)
-            return { name: apiName, url: undefined, token: undefined };
+            return { name: apiName, url: undefined, debugUrl: undefined, token: undefined };
         let { unit } = appInFrame;
         let parts = apiName.split('/');
         let ret = yield apiTokenApi.api({ unit: unit, apiOwner: parts[0], apiName: parts[1] });
@@ -74,7 +78,7 @@ function onReceiveAppApiMessage(hash, apiName) {
             console.log('apiTokenApi.api return undefined. api=%s, unit=%s', apiName, unit);
             throw 'api not found';
         }
-        return { name: apiName, url: ret.url, token: ret.token };
+        return { name: apiName, url: ret.url, debugUrl: ret.debugUrl, token: ret.token };
     });
 }
 function onAppApiReturn(api, url, token) {
@@ -88,18 +92,26 @@ function onAppApiReturn(api, url, token) {
     action.resolve(action);
 }
 export function setMeInFrame(appHash) {
-    let p0 = 3;
-    let p1 = appHash.indexOf('-', p0);
-    if (p1 < p0)
-        return;
+    let parts = appHash.split('-');
+    let len = parts.length;
+    meInFrame.hash = parts[0].substr(3);
+    if (len > 0)
+        meInFrame.unit = Number(parts[1]);
+    if (len > 1)
+        meInFrame.page = parts[2];
+    if (len > 2)
+        meInFrame.param = parts.slice(3);
+    //let p0 = 3;
+    //let p1 = appHash.indexOf('-', p0);
+    //if (p1<p0) return;
     //let p2 = appHash.indexOf('-', p1+1);
     //if (p2<p1) return;
-    meInFrame.hash = appHash.substring(p0, p1);
-    meInFrame.unit = Number(appHash.substring(p1 + 1));
+    //meInFrame.hash = appHash.substring(p0, p1);
+    //meInFrame.unit = Number(appHash.substring(p1+1));
     //meInFrame.app = Number(appHash.substring(p2+1));
     return meInFrame;
 }
-export function appUrl(url, unitId) {
+export function appUrl(url, unitId, page, param) {
     let u;
     for (;;) {
         u = uid();
@@ -109,19 +121,21 @@ export function appUrl(url, unitId) {
             break;
         }
     }
-    return { url: url + '#tv' + u + '-' + unitId, hash: u };
+    url += '#tv' + u + '-' + unitId;
+    if (page !== undefined) {
+        url += '-' + page;
+        if (param !== undefined) {
+            for (let i = 0; i < param.length; i++) {
+                url += '-' + param[i];
+            }
+        }
+    }
+    return { url: url, hash: u };
 }
 export function loadAppApis(appOwner, appName) {
     return __awaiter(this, void 0, void 0, function* () {
-        let centerAppApi = new CenterAppApi('tv/');
+        let centerAppApi = new CenterAppApi('tv/', undefined);
         return yield centerAppApi.apis(debugUnitId, appOwner, appName);
-    });
-}
-export function chatApi(unitId) {
-    return __awaiter(this, void 0, void 0, function* () {
-        let centerAppApi = new CenterAppApi('tv/');
-        //return await centerAppApi.chatApi(debugUnitId);
-        return yield centerAppApi.chatApi(unitId);
     });
 }
 export function appApi(api, apiOwner, apiName) {
@@ -143,6 +157,7 @@ export function appApi(api, apiOwner, apiName) {
         apiToken = {
             name: api,
             url: undefined,
+            debugUrl: undefined,
             token: undefined,
             resolve: undefined,
             reject: undefined,
@@ -153,6 +168,7 @@ export function appApi(api, apiOwner, apiName) {
                 let a = yield at;
                 console.log('return from parent window: %s', JSON.stringify(a));
                 apiToken.url = a.url;
+                apiToken.debugUrl = a.debugUrl;
                 apiToken.token = a.token;
                 resolve(apiToken);
             });
@@ -163,8 +179,6 @@ export function appApi(api, apiOwner, apiName) {
                 hash: meInFrame.hash,
             }, "*");
         });
-        //apiToken = await apiTokenApi.api({dd: 'd'});
-        //return apiToken;
     });
 }
 const brideCenterApis = {};

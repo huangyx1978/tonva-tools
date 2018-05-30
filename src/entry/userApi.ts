@@ -21,6 +21,6 @@ export class UserApi extends CenterApi {
     }
 }
 
-const userApi = new UserApi('tv/user/');
+const userApi = new UserApi('tv/user/', undefined);
 
 export default userApi;

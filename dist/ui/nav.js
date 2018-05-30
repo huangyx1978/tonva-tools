@@ -29,22 +29,6 @@ export const mobileHeaderStyle = isMobile ? {
     minHeight: '3em'
 } : undefined;
 const logo = require('../img/logo.svg');
-/*
-document.onload = (evt:Event) => {
-    nav.log('onload');
-    document.addEventListener('deviceready', function() {
-        nav.log('device ready');
-        document.addEventListener('backbutton', function() {
-            nav.log('outside back button');
-        }, false);
-    }, false);
-};
-*/
-/*
-document.addEventListener('click', function() {
-    nav.log('click');
-}, false);
-*/
 const logs = [];
 ;
 export class NavView extends React.Component {
@@ -54,9 +38,6 @@ export class NavView extends React.Component {
         this.isHistoryBack = false;
         this.back = this.back.bind(this);
         this.navBack = this.navBack.bind(this);
-        //this.onDeviceReady = this.onDeviceReady.bind(this);
-        //this.onAndroidBackButton = this.onAndroidBackButton.bind(this);
-        //this.htmlTitle = document.title;
         this.stack = [];
         this.state = {
             stack: this.stack,
@@ -64,37 +45,9 @@ export class NavView extends React.Component {
             fetchError: undefined
         };
     }
-    /*
-        private onDeviceReady() {
-            nav.log('device ready');
-            window.addEventListener("backbutton", this.onAndroidBackButton, false);
-        }
-        private onAndroidBackButton() {
-            nav.log("按下了Android返回键");
-        }
-    */
     componentWillMount() {
         return __awaiter(this, void 0, void 0, function* () {
-            //window.addEventListener("deviceready", this.onDeviceReady, false);
-            //window.addEventListener("backbutton", this.onAndroidBackButton, false);
-            // 监听android手机的实体back键
-            //if(!(window.history && window.history.pushState)) return;
-            //console.log('监听android手机的实体back键');
             window.addEventListener('popstate', this.navBack);
-            /*
-            nav.log("你点击了Android返回键");
-            var hashLocation = location.hash;
-            var hashSplit = hashLocation.split("#!/");
-            var hashName = hashSplit[1];
-            if(hashName !== '') {
-                var hash = window.location.hash;
-                if(hash === '') {
-                    alert("你点击了返回键");
-                    nav.back(true);
-                }
-            }*/
-            //});
-            //window.history.pushState('forward', null, './#forward');  
         });
     }
     componentDidMount() {
@@ -187,18 +140,19 @@ export class NavView extends React.Component {
         this.push(view);
     }
     push(view) {
-        this.renderAndPush(view);
+        if (this.stack.length > 0) {
+            window.history.pushState('forward', null, null);
+        }
+        this.stack.push({ view: view });
         this.refresh();
-        //this.events.emit('changed');
     }
     replace(view) {
         let stack = this.stack;
         if (stack.length > 0) {
             stack.pop();
         }
-        this.renderAndPush(view);
+        this.stack.push({ view: view });
         this.refresh();
-        //this.events.emit('changed');
     }
     pop(level = 1) {
         if (level <= 0)
@@ -207,33 +161,37 @@ export class NavView extends React.Component {
         let len = stack.length;
         if (len <= 1)
             return;
-        let changed = false;
+        if (len < level)
+            level = len;
+        let backLevel = 0;
         for (let i = 0; i < level; i++) {
-            if (len === 0) {
+            if (stack.length === 0) {
                 break;
             }
             stack.pop();
-            this.refresh();
-            changed = true;
+            ++backLevel;
         }
-        //if (changed) { this.events.emit('changed'); }
+        if (backLevel >= len)
+            backLevel--;
+        this.refresh();
         if (this.isHistoryBack !== true) {
-            //this.stopPopstateEvent = true;
             window.removeEventListener('popstate', this.navBack);
-            window.history.back(len);
+            window.history.back(backLevel);
             window.removeEventListener('popstate', this.navBack);
-            //this.stopPopstateEvent = false;
         }
     }
     clear() {
         let len = this.stack.length;
-        if (len === 0) {
-            return;
-        }
-        for (let i = 0; i < len - 1; i++)
-            this.pop();
+        this.stack = [];
+        //let len = this.stack.length;
+        //if (len === 0) { return; }
+        //for (let i=0; i<len; i++) this.pop();
         this.refresh();
-        //this.events.emit('changed');
+        if (len > 1) {
+            window.removeEventListener('popstate', this.navBack);
+            window.history.back(len - 1);
+            window.removeEventListener('popstate', this.navBack);
+        }
     }
     regConfirmClose(confirmClose) {
         let stack = this.stack;
@@ -293,14 +251,7 @@ export class NavView extends React.Component {
         if (fetchError)
             elError = React.createElement(FetchErrorView, Object.assign({ clearError: () => this.setState({ fetchError: undefined }) }, fetchError));
         return (React.createElement("ul", { className: 'va' },
-            stack.map((view, index) => {
-                let p = {
-                    key: index,
-                };
-                if (index !== top)
-                    p.style = { visibility: 'hidden' };
-                return React.createElement("li", Object.assign({}, p), view.view);
-            }),
+            stack.map((view, index) => React.createElement("li", { key: index, style: index < top ? { visibility: 'hidden' } : undefined }, view.view)),
             elWait,
             elError));
     }
@@ -308,12 +259,6 @@ export class NavView extends React.Component {
         // this.setState({flag: !this.state.flag});
         this.setState({ stack: this.stack });
         // this.forceUpdate();
-    }
-    renderAndPush(view) {
-        if (this.stack.length > 0) {
-            window.history.pushState('forward', null, null); //'./#forward');
-        }
-        this.stack.push({ view: view });
     }
 }
 export class Nav {
@@ -324,6 +269,8 @@ export class Nav {
     set(nav) {
         //this.logo = logo;
         this.nav = nav;
+    }
+    debug() {
     }
     logined(user) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -341,6 +288,8 @@ export class Nav {
                 //this.loginView = <lv.default logo={logo} />;
                 this.loginView = React.createElement(lv.default, null);
             }
+            this.nav.clear();
+            this.pop();
             this.nav.show(this.loginView);
         });
     }

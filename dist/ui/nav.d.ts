@@ -45,7 +45,6 @@ export declare class NavView extends React.Component<Props, State> {
     confirmBox(message?: string): boolean;
     render(): JSX.Element;
     private refresh();
-    private renderAndPush(view);
 }
 export declare class Nav {
     private nav;
@@ -53,6 +52,7 @@ export declare class Nav {
     local: LocalData;
     user: User;
     set(nav: NavView): void;
+    debug(): void;
     logined(user: User): Promise<void>;
     showLogin(): Promise<void>;
     logout(): Promise<void>;

@@ -10,15 +10,17 @@ import { ApiBase } from './apiBase';
 import { HttpChannel } from './httpChannel';
 import { HttpChannelNavUI } from './httpChannelUI';
 import { appApi } from './appBridge';
+import { logoutChatApis } from './chatApi';
 let channelUIs = {};
 let channelNoUIs = {};
 export function logoutApis() {
     channelUIs = {};
     channelNoUIs = {};
+    logoutChatApis();
 }
 export class Api extends ApiBase {
-    constructor(path, url, apiOwner, apiName, showWaiting) {
-        super(path, showWaiting);
+    constructor(baseUrl, url, ws, apiOwner, apiName, showWaiting) {
+        super(baseUrl, ws, showWaiting);
         this.url = url;
         if (apiName) {
             this.apiOwner = apiOwner;
@@ -62,6 +64,7 @@ export class Api extends ApiBase {
             }
             else {
                 let apiToken = yield appApi(this.api, this.apiOwner, this.apiName);
+                this.token = apiToken.token;
                 channel = new HttpChannel(false, apiToken.url, apiToken.token, channelUI);
             }
             return channels[this.api] = channel;

@@ -7,6 +7,7 @@ const debugUnitId = Number(process.env.REACT_APP_DEBUG_UNITID);
 export interface ApiToken {
     name: string;
     url: string;
+    debugUrl: string;
     token: string;
 }
 interface ApiTokenAction extends ApiToken {
@@ -18,12 +19,16 @@ const apiTokens:{[apiName:string]: ApiTokenAction}  = {};
 export interface AppInFrame {
     hash: string;
     unit: number;       // unit id
+    page?: string;
+    param?: string[];
 }
 const appsInFrame:{[key:string]:AppInFrame} = {};
 
 export let meInFrame:AppInFrame = {
     hash: undefined,
     unit: debugUnitId,
+    page: undefined,
+    param: undefined,
 }
 
 export function isBridged():boolean {
@@ -35,7 +40,9 @@ window.addEventListener('message', async function(evt) {
     let e:any = evt;
     var message = e.data;
     switch (message.type) {
-        default: break;
+        default:
+            this.console.log('message: %s', JSON.stringify(message));
+            break;
         case 'hide-frame-back':
             hideFrameBack(message.hash);
             break;
@@ -73,7 +80,7 @@ function hideFrameBack(hash:string) {
 
 async function onReceiveAppApiMessage(hash: string, apiName: string): Promise<ApiToken> {
     let appInFrame = appsInFrame[hash];
-    if (appInFrame === undefined) return {name:apiName, url:undefined, token:undefined};
+    if (appInFrame === undefined) return {name:apiName, url:undefined, debugUrl:undefined, token:undefined};
     let {unit} = appInFrame;
     let parts = apiName.split('/');
     let ret = await apiTokenApi.api({unit: unit, apiOwner: parts[0], apiName: parts[1]});
@@ -81,7 +88,7 @@ async function onReceiveAppApiMessage(hash: string, apiName: string): Promise<Ap
         console.log('apiTokenApi.api return undefined. api=%s, unit=%s', apiName, unit);
         throw 'api not found';
     }
-    return {name: apiName, url: ret.url, token: ret.token};
+    return {name: apiName, url: ret.url, debugUrl:ret.debugUrl, token: ret.token};
 }
 
 function onAppApiReturn(api: string, url: string, token: string) {
@@ -96,18 +103,24 @@ function onAppApiReturn(api: string, url: string, token: string) {
 }
 
 export function setMeInFrame(appHash: string):AppInFrame {
-    let p0 = 3;
-    let p1 = appHash.indexOf('-', p0);
-    if (p1<p0) return;
+    let parts = appHash.split('-');
+    let len = parts.length;
+    meInFrame.hash = parts[0].substr(3);
+    if (len>0) meInFrame.unit = Number(parts[1]);
+    if (len>1) meInFrame.page = parts[2];
+    if (len>2) meInFrame.param = parts.slice(3);
+    //let p0 = 3;
+    //let p1 = appHash.indexOf('-', p0);
+    //if (p1<p0) return;
     //let p2 = appHash.indexOf('-', p1+1);
     //if (p2<p1) return;
-    meInFrame.hash = appHash.substring(p0, p1);
-    meInFrame.unit = Number(appHash.substring(p1+1));
+    //meInFrame.hash = appHash.substring(p0, p1);
+    //meInFrame.unit = Number(appHash.substring(p1+1));
     //meInFrame.app = Number(appHash.substring(p2+1));
     return meInFrame;
 }
 
-export function appUrl(url: string, unitId: number):{url:string; hash:string} {
+export function appUrl(url: string, unitId: number, page?:string, param?:string[]):{url:string; hash:string} {
     let u:string;
     for (;;) {
         u = uid();
@@ -117,18 +130,21 @@ export function appUrl(url: string, unitId: number):{url:string; hash:string} {
             break;
         }
     }
-    return {url: url + '#tv' + u + '-' + unitId, hash: u};
+    url += '#tv' + u + '-' + unitId;
+    if (page !== undefined) {
+        url += '-' + page;
+        if (param !== undefined) {
+            for (let i=0; i<param.length; i++) {
+                url += '-' + param[i];
+            }
+        }
+    }
+    return {url: url, hash: u};
 }
 
 export async function loadAppApis(appOwner:string, appName): Promise<AppApi[]> {
-    let centerAppApi = new CenterAppApi('tv/');
+    let centerAppApi = new CenterAppApi('tv/', undefined);
     return await centerAppApi.apis(debugUnitId, appOwner, appName);
-}
-
-export async function chatApi(unitId:number): Promise<AppApi> {
-    let centerAppApi = new CenterAppApi('tv/');
-    //return await centerAppApi.chatApi(debugUnitId);
-    return await centerAppApi.chatApi(unitId);
 }
 
 export async function appApi(api:string, apiOwner:string, apiName:string): Promise<ApiToken> {
@@ -148,6 +164,7 @@ export async function appApi(api:string, apiOwner:string, apiName:string): Promi
     apiToken = {
         name: api,
         url: undefined,
+        debugUrl: undefined,
         token: undefined,
         resolve: undefined,
         reject: undefined,
@@ -158,6 +175,7 @@ export async function appApi(api:string, apiOwner:string, apiName:string): Promi
             let a = await at;
             console.log('return from parent window: %s', JSON.stringify(a));
             apiToken.url = a.url;
+            apiToken.debugUrl = a.debugUrl;
             apiToken.token = a.token;
             resolve(apiToken);
         }
@@ -168,8 +186,6 @@ export async function appApi(api:string, apiOwner:string, apiName:string): Promi
             hash: meInFrame.hash,
         }, "*");
     });
-    //apiToken = await apiTokenApi.api({dd: 'd'});
-    //return apiToken;
 }
 
 interface BridgeCenterApi {

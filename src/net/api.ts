@@ -2,6 +2,7 @@ import {ApiBase} from './apiBase';
 import {HttpChannel} from './httpChannel';
 import {HttpChannelUI, HttpChannelNavUI} from './httpChannelUI';
 import {appApi} from './appBridge';
+import {logoutChatApis} from './chatApi';
 
 let channelUIs:{[name:string]: HttpChannel} = {};
 let channelNoUIs:{[name:string]: HttpChannel} = {};
@@ -9,6 +10,7 @@ let channelNoUIs:{[name:string]: HttpChannel} = {};
 export function logoutApis() {
     channelUIs = {};
     channelNoUIs = {};
+    logoutChatApis();
 }
 
 export class Api extends ApiBase {
@@ -17,8 +19,8 @@ export class Api extends ApiBase {
     apiName: string;
     api: string;
 
-    constructor(path: string, url:string, apiOwner, apiName: string, showWaiting?: boolean) {
-        super(path, showWaiting);
+    constructor(baseUrl: string, url:string, ws, apiOwner, apiName: string, showWaiting?: boolean) {
+        super(baseUrl, ws, showWaiting);
         this.url = url;
         if (apiName) {
             this.apiOwner = apiOwner;
@@ -61,6 +63,7 @@ export class Api extends ApiBase {
         }
         else {
             let apiToken = await appApi(this.api, this.apiOwner, this.apiName);
+            this.token = apiToken.token;
             channel = new HttpChannel(false, apiToken.url, apiToken.token, channelUI);
         }
         return channels[this.api] = channel;

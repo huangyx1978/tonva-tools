@@ -12,6 +12,6 @@ export class UserApi extends CenterApi {
         return this.post('register', params);
     }
 }
-const userApi = new UserApi('tv/user/');
+const userApi = new UserApi('tv/user/', undefined);
 export default userApi;
 //# sourceMappingURL=userApi.js.map

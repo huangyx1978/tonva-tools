@@ -6,6 +6,6 @@ export declare class Api extends ApiBase {
     apiOwner: string;
     apiName: string;
     api: string;
-    constructor(path: string, url: string, apiOwner: any, apiName: string, showWaiting?: boolean);
+    constructor(baseUrl: string, url: string, ws: any, apiOwner: any, apiName: string, showWaiting?: boolean);
     protected getHttpChannel(): Promise<HttpChannel>;
 }

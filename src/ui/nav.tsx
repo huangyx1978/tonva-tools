@@ -21,32 +21,10 @@ export const mobileHeaderStyle = isMobile? {
 } : undefined;
 
 const logo = require('../img/logo.svg');
-/*
-document.onload = (evt:Event) => {
-    nav.log('onload');
-    document.addEventListener('deviceready', function() {
-        nav.log('device ready');
-        document.addEventListener('backbutton', function() {
-            nav.log('outside back button');
-        }, false);
-    }, false);
-};
-*/
-/*
-document.addEventListener('click', function() {
-    nav.log('click');
-}, false);
-*/
 const logs:string[] = [];
 
 export interface Props //extends React.Props<Nav>
 {
-    //showLogin: () => void;
-    //login: JSX.Element;
-    //view: JSX.Element | ((path:string)=>JSX.Element);
-    // token?: string;
-    //dispatch?: Dispatch<{}>;
-    //logo: any;
     view: JSX.Element | (()=>JSX.Element);
 };
 export interface StackItem {
@@ -71,9 +49,6 @@ export class NavView extends React.Component<Props, State> {
         super(props);
         this.back = this.back.bind(this);
         this.navBack = this.navBack.bind(this);
-        //this.onDeviceReady = this.onDeviceReady.bind(this);
-        //this.onAndroidBackButton = this.onAndroidBackButton.bind(this);
-        //this.htmlTitle = document.title;
         this.stack = [];
         this.state = {
             stack: this.stack,
@@ -81,36 +56,8 @@ export class NavView extends React.Component<Props, State> {
             fetchError: undefined
         };
     }
-/*
-    private onDeviceReady() {
-        nav.log('device ready');
-        window.addEventListener("backbutton", this.onAndroidBackButton, false);
-    }
-    private onAndroidBackButton() {
-        nav.log("按下了Android返回键");
-    }
-*/
     async componentWillMount() {
-        //window.addEventListener("deviceready", this.onDeviceReady, false);
-        //window.addEventListener("backbutton", this.onAndroidBackButton, false);
-        // 监听android手机的实体back键
-        //if(!(window.history && window.history.pushState)) return;
-        //console.log('监听android手机的实体back键');
         window.addEventListener('popstate', this.navBack);
-            /*
-            nav.log("你点击了Android返回键");
-            var hashLocation = location.hash;  
-            var hashSplit = hashLocation.split("#!/");  
-            var hashName = hashSplit[1];  
-            if(hashName !== '') {  
-                var hash = window.location.hash;  
-                if(hash === '') {  
-                    alert("你点击了返回键");
-                    nav.back(true);
-                }
-            }*/
-        //});
-        //window.history.pushState('forward', null, './#forward');  
     }
 
     async componentDidMount()
@@ -208,9 +155,11 @@ export class NavView extends React.Component<Props, State> {
     }
 
     push(view: JSX.Element): void {
-        this.renderAndPush(view);
+        if (this.stack.length > 0) {
+            window.history.pushState('forward', null, null);
+        }
+        this.stack.push({view: view});
         this.refresh();
-        //this.events.emit('changed');
     }
 
     replace(view: JSX.Element): void {
@@ -218,9 +167,8 @@ export class NavView extends React.Component<Props, State> {
         if (stack.length > 0) {
             stack.pop();
         }
-        this.renderAndPush(view);
+        this.stack.push({view: view});
         this.refresh();
-        //this.events.emit('changed');
     }
 
     pop(level: Number = 1) {
@@ -228,30 +176,35 @@ export class NavView extends React.Component<Props, State> {
         let stack = this.stack;
         let len = stack.length;
         if (len <= 1) return;
+        if (len < level) level = len;
 
-        let changed = false;
+        let backLevel = 0;
         for (let i = 0; i < level; i++) {
-            if (len === 0) { break; }
+            if (stack.length === 0) { break; }
             stack.pop();
-            this.refresh();
-            changed = true;
+            ++backLevel;
         }
-        //if (changed) { this.events.emit('changed'); }
+        if (backLevel >= len) backLevel--;
+        this.refresh();
         if (this.isHistoryBack !== true) {
-            //this.stopPopstateEvent = true;
             window.removeEventListener('popstate', this.navBack);
-            window.history.back(len);
+            window.history.back(backLevel);
             window.removeEventListener('popstate', this.navBack);
-            //this.stopPopstateEvent = false;
         }
     }
 
     clear() {
         let len = this.stack.length;
-        if (len === 0) { return; }
-        for (let i=0; i<len-1; i++) this.pop();
+        this.stack = [];
+        //let len = this.stack.length;
+        //if (len === 0) { return; }
+        //for (let i=0; i<len; i++) this.pop();
         this.refresh();
-        //this.events.emit('changed');
+        if (len > 1) {
+            window.removeEventListener('popstate', this.navBack);
+            window.history.back(len-1);
+            window.removeEventListener('popstate', this.navBack);
+        }
     }
 
     regConfirmClose(confirmClose:()=>boolean) {
@@ -320,13 +273,10 @@ export class NavView extends React.Component<Props, State> {
         return (
         <ul className='va'>
             {
-                stack.map((view, index) => {
-                    let p:any = {
-                        key: index,
-                    };
-                    if (index !== top) p.style = {visibility: 'hidden'};
-                    return <li {...p}>{view.view}</li>;
-                })
+                stack.map((view, index) =>
+                    <li key={index} style={index<top? {visibility: 'hidden'}:undefined}>
+                        {view.view}
+                    </li>)
             }
             {elWait}
             {elError}
@@ -338,13 +288,6 @@ export class NavView extends React.Component<Props, State> {
         // this.setState({flag: !this.state.flag});
         this.setState({stack: this.stack });
         // this.forceUpdate();
-    }
-
-    private renderAndPush(view: JSX.Element) {
-        if (this.stack.length > 0) {
-            window.history.pushState('forward', null, null);//'./#forward');
-        }
-        this.stack.push({view: view});
     }
 }
 
@@ -358,6 +301,9 @@ export class Nav {
     set(nav:NavView) {
         //this.logo = logo;
         this.nav = nav;
+    }
+
+    debug() {        
     }
 
     async logined(user: User) {
@@ -374,6 +320,8 @@ export class Nav {
             //this.loginView = <lv.default logo={logo} />;
             this.loginView = <lv.default />;
         }
+        this.nav.clear();
+        this.pop();
         this.nav.show(this.loginView);
     }
 

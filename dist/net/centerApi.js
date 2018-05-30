@@ -31,8 +31,8 @@ function getCenterChannel() {
 }
 export class CenterApi extends ApiBase {
     //private channel: HttpChannel;
-    constructor(path, showWaiting) {
-        super(path, showWaiting);
+    constructor(path, ws, showWaiting) {
+        super(path, ws, showWaiting);
     }
     getHttpChannel() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -49,13 +49,13 @@ export class ApiTokenApi extends CenterApi {
         });
     }
 }
-export const apiTokenApi = new ApiTokenApi('tv/tie/');
+export const apiTokenApi = new ApiTokenApi('tv/tie/', undefined);
 export class CallCenterApi extends CenterApi {
     directCall(url, method, body) {
         return this.call(url, method, body);
     }
 }
-export const callCenterapi = new CallCenterApi('');
+export const callCenterapi = new CallCenterApi('', undefined);
 console.log('CenterApi');
 console.log(CenterApi);
 export class CenterAppApi extends CenterApi {
