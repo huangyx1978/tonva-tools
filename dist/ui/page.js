@@ -94,7 +94,7 @@ let Page = class Page extends React.Component {
         });
     }
     renderTabs(footer) {
-        const { header, back, right } = this.props;
+        const { header, back, right, keepHeader } = this.props;
         let cur = this.state.cur;
         let tabs = React.createElement("div", null, this.state.tabs.map((tab, index) => {
             const { icon, isSelected, title, redDot } = tab;
@@ -119,8 +119,9 @@ let Page = class Page extends React.Component {
                     redDotView));
         }));
         let titleBar;
-        if (header !== false)
-            titleBar = React.createElement(TitleBar, { back: back, center: cur.header || cur.title, right: right });
+        if (header !== false) {
+            titleBar = React.createElement(TitleBar, { back: back, center: keepHeader === true ? header : (cur.header || cur.title), right: right });
+        }
         return React.createElement("article", { className: 'page-container' },
             titleBar,
             React.createElement("section", null, this.state.tabs.map((tab, index) => {

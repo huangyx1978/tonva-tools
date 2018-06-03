@@ -66,6 +66,7 @@ export interface TabState extends Tab {
 export interface PageProps extends ScrollProps {
     back?: 'close' | 'back' | 'none';
     header?: boolean | string | JSX.Element;
+    keepHeader?: boolean;
     right?: JSX.Element;
     footer?: JSX.Element;
     tabs?: Tab[];
@@ -128,7 +129,7 @@ export class Page extends React.Component<PageProps, PageState> {
     }
 
     private renderTabs(footer: JSX.Element) {
-        const {header, back, right} = this.props;
+        const {header, back, right, keepHeader} = this.props;
         let cur = this.state.cur;
         let tabs = <div>{
                 this.state.tabs.map((tab, index) => {
@@ -154,12 +155,13 @@ export class Page extends React.Component<PageProps, PageState> {
                 })
             }</div>;
         let titleBar;
-        if (header !== false)
+        if (header !== false) {
             titleBar = <TitleBar 
                 back={back} 
-                center={cur.header || cur.title}
+                center={keepHeader===true? (header as string) : (cur.header || cur.title)}
                 right={right} 
             />;
+        }
 
         return <article className='page-container'>
             {titleBar}

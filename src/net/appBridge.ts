@@ -1,6 +1,7 @@
 import {nav} from '../ui';
 import {uid} from '../uid';
 import {apiTokenApi, callCenterapi, CenterAppApi, AppApi} from './centerApi';
+import {setSubAppWindow, wsBridge} from './wsChannel';
 
 const debugUnitId = Number(process.env.REACT_APP_DEBUG_UNITID);
 
@@ -37,20 +38,23 @@ export function isBridged():boolean {
 }
 
 window.addEventListener('message', async function(evt) {
-    let e:any = evt;
-    var message = e.data;
+    var message = evt.data;
     switch (message.type) {
         default:
             this.console.log('message: %s', JSON.stringify(message));
             break;
+        case 'ws':
+            wsBridge.receive(message.msg);
+            break;
         case 'hide-frame-back':
+            setSubAppWindow(evt.source);
             hideFrameBack(message.hash);
             break;
         case 'pop-app':
             nav.navBack();
             break;
         case 'center-api':
-            await callCenterApiFromMessage(e.source, message);
+            await callCenterApiFromMessage(evt.source, message);
             break;
         case 'center-api-return':
             bridgeCenterApiReturn(message);
@@ -59,7 +63,7 @@ window.addEventListener('message', async function(evt) {
             console.log("receive PostMessage: %s", JSON.stringify(message));
             let ret = await onReceiveAppApiMessage(message.hash, message.apiName);
             console.log("onReceiveAppApiMessage: %s", JSON.stringify(ret));
-            e.source.postMessage({
+            evt.source.postMessage({
                 type: 'app-api-return', 
                 apiName: message.apiName,
                 url: ret.url,

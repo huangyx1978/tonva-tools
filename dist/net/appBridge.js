@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import { nav } from '../ui';
 import { uid } from '../uid';
 import { apiTokenApi, callCenterapi, CenterAppApi } from './centerApi';
+import { setSubAppWindow, wsBridge } from './wsChannel';
 const debugUnitId = Number(process.env.REACT_APP_DEBUG_UNITID);
 const apiTokens = {};
 const appsInFrame = {};
@@ -24,20 +25,23 @@ export function isBridged() {
 }
 window.addEventListener('message', function (evt) {
     return __awaiter(this, void 0, void 0, function* () {
-        let e = evt;
-        var message = e.data;
+        var message = evt.data;
         switch (message.type) {
             default:
                 this.console.log('message: %s', JSON.stringify(message));
                 break;
+            case 'ws':
+                wsBridge.receive(message.msg);
+                break;
             case 'hide-frame-back':
+                setSubAppWindow(evt.source);
                 hideFrameBack(message.hash);
                 break;
             case 'pop-app':
                 nav.navBack();
                 break;
             case 'center-api':
-                yield callCenterApiFromMessage(e.source, message);
+                yield callCenterApiFromMessage(evt.source, message);
                 break;
             case 'center-api-return':
                 bridgeCenterApiReturn(message);
@@ -46,7 +50,7 @@ window.addEventListener('message', function (evt) {
                 console.log("receive PostMessage: %s", JSON.stringify(message));
                 let ret = yield onReceiveAppApiMessage(message.hash, message.apiName);
                 console.log("onReceiveAppApiMessage: %s", JSON.stringify(ret));
-                e.source.postMessage({
+                evt.source.postMessage({
                     type: 'app-api-return',
                     apiName: message.apiName,
                     url: ret.url,

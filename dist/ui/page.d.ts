@@ -20,6 +20,7 @@ export interface TabState extends Tab {
 export interface PageProps extends ScrollProps {
     back?: 'close' | 'back' | 'none';
     header?: boolean | string | JSX.Element;
+    keepHeader?: boolean;
     right?: JSX.Element;
     footer?: JSX.Element;
     tabs?: Tab[];
