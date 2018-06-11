@@ -19,31 +19,57 @@ export class CacheIds {
         this.dict = new Map();
         this.maxCount = maxCount;
     }
+    loadIds(ids) {
+        let arr = [];
+        for (let id of ids) {
+            let item = this.dict.get(id);
+            if (item === undefined) {
+                arr.push(id);
+                item = { id: id };
+                this.dict.set(id, item);
+            }
+        }
+        this.loadId(arr);
+    }
     get(id) {
         if (id === undefined)
             return null;
-        let unit = this.dict.get(id);
-        if (unit === undefined) {
-            unit = { id: id };
-            this.dict.set(id, unit);
-            this.loadId(id);
+        let item = this.dict.get(id);
+        if (item === undefined) {
+            item = { id: id };
+            this.dict.set(id, item);
+            this.loadId([id]);
         }
-        return unit;
+        return item;
     }
-    loadId(id) {
+    setItem(id, item) {
+        if (item === undefined) {
+            this.dict.set(id, null);
+            this.arr.push({ id: id });
+        }
+        else {
+            this.dict.set(id, item);
+            this.arr.push(item);
+        }
+        if (this.arr.length > this.maxCount) {
+            item = this.arr.shift();
+            this.dict.delete(item.id);
+        }
+    }
+    loadId(ids) {
         return __awaiter(this, void 0, void 0, function* () {
-            let item = yield this._load(id);
-            if (item === undefined) {
-                this.dict.set(id, null);
-                this.arr.push({ id: id });
+            let items = yield this._loadIds(ids);
+            if (items === undefined) {
+                for (let id of ids) {
+                    let item = yield this._loadId(id);
+                    this.setItem(id, item);
+                }
             }
             else {
-                this.dict.set(id, item);
-                this.arr.push(item);
-            }
-            if (this.arr.length > this.maxCount) {
-                item = this.arr.shift();
-                this.dict.delete(item.id);
+                for (let id of ids) {
+                    let item = items.find(v => v.id === id);
+                    this.setItem(id, item);
+                }
             }
         });
     }

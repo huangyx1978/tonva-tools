@@ -13,15 +13,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { observable, computed } from 'mobx';
+import { uid } from './uid';
 export class PagedItems {
-    constructor() {
+    constructor(itemObservable = false) {
         this.beforeLoad = true;
         this.loaded = false;
-        this._items = observable.array([], { deep: false });
         this.allLoaded = false;
         this.pageStart = undefined;
         this.pageSize = 30;
         this.appendPosition = 'tail';
+        this._items = observable.array([], { deep: itemObservable });
     }
     get items() {
         if (this.beforeLoad === true)
@@ -30,14 +31,22 @@ export class PagedItems {
             return undefined;
         return this._items;
     }
+    scrollToTop() {
+        this.topDiv = '$$' + uid();
+    }
+    scrollToBottom() {
+        this.bottomDiv = '$$' + uid();
+    }
     append(item) {
         if (this.appendPosition === 'tail')
-            this._items.push(item);
-        else
             this._items.unshift(item);
+        else
+            this._items.push(item);
     }
     first(param) {
         return __awaiter(this, void 0, void 0, function* () {
+            if (this.loaded === true)
+                return;
             this.beforeLoad = false;
             this.loaded = false;
             this.param = param;
@@ -86,4 +95,10 @@ __decorate([
 __decorate([
     computed
 ], PagedItems.prototype, "items", null);
+__decorate([
+    observable
+], PagedItems.prototype, "topDiv", void 0);
+__decorate([
+    observable
+], PagedItems.prototype, "bottomDiv", void 0);
 //# sourceMappingURL=pagedItems.js.map

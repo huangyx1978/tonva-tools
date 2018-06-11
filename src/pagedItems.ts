@@ -1,14 +1,27 @@
 import {observable, IObservableArray, computed} from 'mobx';
+import {uid} from './uid';
 
 export abstract class PagedItems<T> {
+    constructor(itemObservable:boolean = false) {
+        this._items = observable.array<T>([], {deep:itemObservable});
+    }
     @observable private beforeLoad: boolean = true;
-    @observable private loaded: boolean = false;
-    private _items:IObservableArray<T> = observable.array<T>([], {deep:false});
+    @observable protected loaded: boolean = false;
+    private _items:IObservableArray<T>;
     @observable allLoaded: boolean = false;
     @computed get items():IObservableArray<T> {
         if (this.beforeLoad === true) return null;
         if (this.loaded === false) return undefined;
         return this._items;
+    }
+
+    @observable topDiv:string;
+    @observable bottomDiv:string;
+    scrollToTop() {
+        this.topDiv = '$$'+uid();
+    }
+    scrollToBottom() {
+        this.bottomDiv = '$$'+uid();
     }
 
     protected param: any;
@@ -21,12 +34,13 @@ export abstract class PagedItems<T> {
 
     append(item:T) {
         if (this.appendPosition === 'tail')
-            this._items.push(item);
-        else
             this._items.unshift(item);
+        else
+            this._items.push(item);
     }
 
     async first(param:any):Promise<void> {
+        if (this.loaded === true) return;
         this.beforeLoad = false;
         this.loaded = false;
         this.param = param;

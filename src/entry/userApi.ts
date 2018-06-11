@@ -2,22 +2,36 @@ import {CenterApi} from '../net';
 import {User, decodeToken} from '../user';
 
 export class UserApi extends CenterApi {
-    login(params: {user: string, pwd: string}) {
-        return this.get('login', params)
-            .then((token?:string) => {
+    async login(params: {user: string, pwd: string}): Promise<any> {
+        let ret = await this.get('login', params);
+        /*
+        .then((token?:string) => {
                 if (token !== undefined) return decodeToken(token);
             });
+        */
+        switch (typeof ret) {
+            default: return;
+            case 'string': return decodeToken(ret);
+            case 'object':
+                let token = ret.token;
+                let user = decodeToken(ret);
+                let {nick, icon} = ret;
+                user.nick = nick;
+                user.icon = icon;
+                return user;
+        }
+        // !== undefined) return decodeToken(token);
     }
-    register(params: {
+    async register(params: {
         nick:string, 
         user:string, 
         pwd:string, 
         country:number, 
         mobile:number, 
         email:string
-    })
+    }): Promise<any>
     {
-        return this.post('register', params);
+        return await this.post('register', params);
     }
 }
 

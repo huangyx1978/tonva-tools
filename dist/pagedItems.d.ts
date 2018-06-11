@@ -1,10 +1,15 @@
 import { IObservableArray } from 'mobx';
 export declare abstract class PagedItems<T> {
+    constructor(itemObservable?: boolean);
     private beforeLoad;
-    private loaded;
+    protected loaded: boolean;
     private _items;
     allLoaded: boolean;
     readonly items: IObservableArray<T>;
+    topDiv: string;
+    bottomDiv: string;
+    scrollToTop(): void;
+    scrollToBottom(): void;
     protected param: any;
     protected pageStart: any;
     protected pageSize: number;

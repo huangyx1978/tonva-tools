@@ -6,7 +6,10 @@ export declare abstract class CacheIds<T extends Id> {
     private maxCount;
     private arr;
     dict: Map<number, T>;
+    loadIds(ids: number[]): void;
     get(id: number): T;
-    private loadId(id);
-    protected abstract _load(id: number): Promise<T>;
+    private setItem(id, item);
+    private loadId(ids);
+    protected abstract _loadIds(ids: number[]): Promise<T[]>;
+    protected abstract _loadId(id: number): Promise<T>;
 }

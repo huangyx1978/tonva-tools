@@ -12,18 +12,30 @@ export abstract class CacheIds<T extends Id> {
     private arr:T[] = [];
     @observable dict = new Map<number, T>();
 
+    loadIds(ids:number[]) {
+        let arr:number[] = [];
+        for (let id of ids) {
+            let item = this.dict.get(id);
+            if (item === undefined) {
+                arr.push(id);
+                item = {id:id} as T;
+                this.dict.set(id, item);
+            }
+        }                
+        this.loadId(arr);
+    }
+
     get(id:number):T {
         if (id === undefined) return null;
-        let unit = this.dict.get(id);
-        if (unit === undefined) {
-            unit = {id:id} as T;
-            this.dict.set(id, unit);
-            this.loadId(id);
+        let item = this.dict.get(id);
+        if (item === undefined) {
+            item = {id:id} as T;
+            this.dict.set(id, item);
+            this.loadId([id]);
         }
-        return unit;
+        return item;
     }
-    private async loadId(id:number) {
-        let item = await this._load(id);
+    private setItem(id:number, item:T) {
         if (item === undefined) {
             this.dict.set(id, null);
             this.arr.push({id: id} as T);
@@ -37,6 +49,22 @@ export abstract class CacheIds<T extends Id> {
             this.dict.delete(item.id);
         }
     }
+    private async loadId(ids:number[]) {
+        let items = await this._loadIds(ids);
+        if (items === undefined) {
+            for (let id of ids) {
+                let item = await this._loadId(id);
+                this.setItem(id, item);
+            }
+        }
+        else {
+            for (let id of ids) {
+                let item = items.find(v => v.id === id);
+                this.setItem(id, item);
+            }
+        }
+    }
 
-    protected abstract async _load(id:number):Promise<T>;
+    protected abstract async _loadIds(ids:number[]):Promise<T[]>;
+    protected abstract async _loadId(id:number):Promise<T>;
 }

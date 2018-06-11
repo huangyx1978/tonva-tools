@@ -72,7 +72,7 @@ export default class Register extends React.Component {
             country: undefined,
             mobile: undefined,
             email: undefined,
-        });        
+        });
         let msg;
         switch (ret) {
             default: throw 'unknown return';

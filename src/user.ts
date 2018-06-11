@@ -5,6 +5,8 @@ export interface User {
     name: string;
     //accesses?: string[];
     token: string;
+    nick?: string;
+    icon?: string;
 }
 
 export function decodeToken(token: string): User {

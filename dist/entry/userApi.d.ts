@@ -1,10 +1,9 @@
 import { CenterApi } from '../net';
-import { User } from '../user';
 export declare class UserApi extends CenterApi {
     login(params: {
         user: string;
         pwd: string;
-    }): Promise<User>;
+    }): Promise<any>;
     register(params: {
         nick: string;
         user: string;
