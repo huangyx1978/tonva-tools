@@ -9,15 +9,16 @@ export class UserApi extends CenterApi {
                 if (token !== undefined) return decodeToken(token);
             });
         */
+       debugger;
         switch (typeof ret) {
             default: return;
             case 'string': return decodeToken(ret);
             case 'object':
                 let token = ret.token;
-                let user = decodeToken(ret);
+                let user = decodeToken(token);
                 let {nick, icon} = ret;
-                user.nick = nick;
-                user.icon = icon;
+                if (nick) user.nick = nick;
+                if (icon) user.icon = icon;
                 return user;
         }
         // !== undefined) return decodeToken(token);
