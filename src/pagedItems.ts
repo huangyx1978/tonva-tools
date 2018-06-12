@@ -7,7 +7,7 @@ export abstract class PagedItems<T> {
     }
     @observable private beforeLoad: boolean = true;
     @observable protected loaded: boolean = false;
-    private _items:IObservableArray<T>;
+    protected _items:IObservableArray<T>;
     @observable allLoaded: boolean = false;
     @computed get items():IObservableArray<T> {
         if (this.beforeLoad === true) return null;

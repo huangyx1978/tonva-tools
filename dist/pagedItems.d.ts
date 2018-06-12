@@ -3,7 +3,7 @@ export declare abstract class PagedItems<T> {
     constructor(itemObservable?: boolean);
     private beforeLoad;
     protected loaded: boolean;
-    private _items;
+    protected _items: IObservableArray<T>;
     allLoaded: boolean;
     readonly items: IObservableArray<T>;
     topDiv: string;
