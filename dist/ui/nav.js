@@ -117,22 +117,12 @@ export class NavView extends React.Component {
         return __awaiter(this, void 0, void 0, function* () {
             let err = fetchError.error;
             if (err !== undefined && err.unauthorized === true) {
-                /*
-                let loginView = this.props.login;
-                if (loginView === undefined) {
-                    alert('Not authorized, server refused!');
-                }
-                else {
-                    this.show(loginView);
-                }*/
-                //this.props.showLogin();
                 yield nav.showLogin();
                 return;
             }
             this.setState({
                 fetchError: fetchError,
             });
-            // setTimeout(() => this.setState({error: false}), 3000);
         });
     }
     show(view) {
@@ -201,9 +191,7 @@ export class NavView extends React.Component {
         let top = stack[len - 1];
         top.confirmClose = confirmClose;
     }
-    //private stopPopstateEvent:boolean = false;
     navBack() {
-        //if (this.stopPopstateEvent === true) return;
         nav.log('backbutton pressed - nav level: ' + this.stack.length);
         this.isHistoryBack = true;
         this.back(true);

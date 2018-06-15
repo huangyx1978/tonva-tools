@@ -9,7 +9,6 @@ export class UserApi extends CenterApi {
                 if (token !== undefined) return decodeToken(token);
             });
         */
-       debugger;
         switch (typeof ret) {
             default: return;
             case 'string': return decodeToken(ret);

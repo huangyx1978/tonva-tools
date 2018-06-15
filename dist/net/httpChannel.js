@@ -76,7 +76,6 @@ export class HttpChannel {
             let that = this;
             this.startWait();
             let path = url;
-            console.log('%s %s', options.method, path);
             function buildError(err) {
                 return {
                     channel: that,
@@ -87,9 +86,11 @@ export class HttpChannel {
                     error: err,
                 };
             }
-            return fetch(path, options)
-                .then((res) => __awaiter(this, void 0, void 0, function* () {
-                that.endWait();
+            try {
+                console.log('%s %s', options.method, path);
+                let res = yield fetch(path, options);
+                //.then(async res => {
+                setTimeout(() => that.endWait(), 100);
                 if (res.ok === false) {
                     console.log('call error %s', res.statusText);
                     throw res.statusText;
@@ -113,12 +114,12 @@ export class HttpChannel {
                 }
                 else {
                     return res.text().then(text => resolve(text));
-                    //.then(text => text);
                 }
-            }))
-                .catch((error) => __awaiter(this, void 0, void 0, function* () {
+            }
+            catch (error) {
                 yield this.showError(buildError(error.message));
-            }));
+            }
+            ;
         });
     }
     innerFetch(url, options) {
