@@ -29,7 +29,7 @@ export interface Props //extends React.Props<Nav>
 };
 export interface StackItem {
     view: JSX.Element;
-    confirmClose?: ()=>boolean;
+    confirmClose?: ()=>Promise<boolean>;
 }
 export interface State {
     stack: StackItem[];
@@ -114,17 +114,19 @@ export class NavView extends React.Component<Props, State> {
     }
 
     endWait() {
-        this.setState({
-            fetchError: undefined,
-        });
-        --this.waitCount;
-        if (this.waitCount === 0) {
-            if (this.waitTimeHandler !== undefined) {
-                clearTimeout(this.waitTimeHandler);
-                this.waitTimeHandler = undefined;
+        setTimeout(() => {
+            this.setState({
+                fetchError: undefined,
+            });
+            --this.waitCount;
+            if (this.waitCount === 0) {
+                if (this.waitTimeHandler !== undefined) {
+                    clearTimeout(this.waitTimeHandler);
+                    this.waitTimeHandler = undefined;
+                }
+                this.setState({wait: 0});
             }
-            this.setState({wait: 0});
-        }
+        },100);
     }
 
     async onError(fetchError: FetchError)
@@ -197,7 +199,7 @@ export class NavView extends React.Component<Props, State> {
         }
     }
 
-    regConfirmClose(confirmClose:()=>boolean) {
+    regConfirmClose(confirmClose:()=>Promise<boolean>) {
         let stack = this.stack;
         let len = stack.length;
         if (len === 0) return;
@@ -213,7 +215,7 @@ export class NavView extends React.Component<Props, State> {
         this.isHistoryBack = false;
     }
 
-    back(confirm:boolean = true) {
+    async back(confirm:boolean = true) {
         let stack = this.stack;
         let len = stack.length;
         if (len === 0) return;
@@ -225,7 +227,7 @@ export class NavView extends React.Component<Props, State> {
         }
         let top = stack[len-1];
         if (confirm===true && top.confirmClose) {
-            if (top.confirmClose()===true) this.pop();
+            if (await top.confirmClose()===true) this.pop();
         }
         else {
             this.pop();
@@ -351,10 +353,10 @@ export class Nav {
     navBack() {
         this.nav.navBack();
     }
-    back(confirm:boolean = true) {
-        this.nav.back(confirm);
+    async back(confirm:boolean = true) {
+        await this.nav.back(confirm);
     }
-    regConfirmClose(confirmClose: ()=>boolean) {
+    regConfirmClose(confirmClose: ()=>Promise<boolean>) {
         this.nav.regConfirmClose(confirmClose);
     }
     confirmBox(message?:string): boolean {

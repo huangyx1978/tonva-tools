@@ -13,7 +13,7 @@ export interface Props {
 }
 export interface StackItem {
     view: JSX.Element;
-    confirmClose?: () => boolean;
+    confirmClose?: () => Promise<boolean>;
 }
 export interface State {
     stack: StackItem[];
@@ -38,10 +38,10 @@ export declare class NavView extends React.Component<Props, State> {
     replace(view: JSX.Element): void;
     pop(level?: Number): void;
     clear(): void;
-    regConfirmClose(confirmClose: () => boolean): void;
+    regConfirmClose(confirmClose: () => Promise<boolean>): void;
     private isHistoryBack;
     navBack(): void;
-    back(confirm?: boolean): void;
+    back(confirm?: boolean): Promise<void>;
     confirmBox(message?: string): boolean;
     render(): JSX.Element;
     private refresh();
@@ -66,8 +66,8 @@ export declare class Nav {
     pop(level?: Number): void;
     clear(): void;
     navBack(): void;
-    back(confirm?: boolean): void;
-    regConfirmClose(confirmClose: () => boolean): void;
+    back(confirm?: boolean): Promise<void>;
+    regConfirmClose(confirmClose: () => Promise<boolean>): void;
     confirmBox(message?: string): boolean;
     navToApp(url: string, unitId: number): void;
     navToSite(url: string): void;

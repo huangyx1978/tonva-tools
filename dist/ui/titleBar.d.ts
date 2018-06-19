@@ -15,7 +15,7 @@ export declare class TitleBar extends React.Component<TitleBarProps, TitleBarSta
     navChange(): void;
     componentWillMount(): void;
     componentWillUnmount(): void;
-    back(): void;
+    back(): Promise<void>;
     openWindow(): void;
     render(): JSX.Element;
 }

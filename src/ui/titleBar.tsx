@@ -36,8 +36,8 @@ export class TitleBar extends React.Component<TitleBarProps, TitleBarState> {
     componentWillUnmount() {
         //nav.events.remove('change', this.navChangeHandler);
     }
-    back() {
-        nav.back(); // 这个才会显示confirm box，在dataForm里面，如果输入了数据的话
+    async back() {
+        await nav.back(); // 这个才会显示confirm box，在dataForm里面，如果输入了数据的话
     }
     openWindow() {
         window.open(document.location.href);

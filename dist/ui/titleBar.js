@@ -1,3 +1,11 @@
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 import * as React from 'react';
 import { nav, mobileHeaderStyle } from './nav';
 export class TitleBar extends React.Component {
@@ -21,7 +29,9 @@ export class TitleBar extends React.Component {
         //nav.events.remove('change', this.navChangeHandler);
     }
     back() {
-        nav.back(); // 这个才会显示confirm box，在dataForm里面，如果输入了数据的话
+        return __awaiter(this, void 0, void 0, function* () {
+            yield nav.back(); // 这个才会显示confirm box，在dataForm里面，如果输入了数据的话
+        });
     }
     openWindow() {
         window.open(document.location.href);

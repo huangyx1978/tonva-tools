@@ -101,17 +101,19 @@ export class NavView extends React.Component {
         });
     }
     endWait() {
-        this.setState({
-            fetchError: undefined,
-        });
-        --this.waitCount;
-        if (this.waitCount === 0) {
-            if (this.waitTimeHandler !== undefined) {
-                clearTimeout(this.waitTimeHandler);
-                this.waitTimeHandler = undefined;
+        setTimeout(() => {
+            this.setState({
+                fetchError: undefined,
+            });
+            --this.waitCount;
+            if (this.waitCount === 0) {
+                if (this.waitTimeHandler !== undefined) {
+                    clearTimeout(this.waitTimeHandler);
+                    this.waitTimeHandler = undefined;
+                }
+                this.setState({ wait: 0 });
             }
-            this.setState({ wait: 0 });
-        }
+        }, 100);
     }
     onError(fetchError) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -198,25 +200,27 @@ export class NavView extends React.Component {
         this.isHistoryBack = false;
     }
     back(confirm = true) {
-        let stack = this.stack;
-        let len = stack.length;
-        if (len === 0)
-            return;
-        if (len === 1) {
-            if (self != window.top) {
-                window.top.postMessage({ type: 'pop-app' }, '*');
+        return __awaiter(this, void 0, void 0, function* () {
+            let stack = this.stack;
+            let len = stack.length;
+            if (len === 0)
+                return;
+            if (len === 1) {
+                if (self != window.top) {
+                    window.top.postMessage({ type: 'pop-app' }, '*');
+                }
+                return;
             }
-            return;
-        }
-        let top = stack[len - 1];
-        if (confirm === true && top.confirmClose) {
-            if (top.confirmClose() === true)
+            let top = stack[len - 1];
+            if (confirm === true && top.confirmClose) {
+                if ((yield top.confirmClose()) === true)
+                    this.pop();
+            }
+            else {
                 this.pop();
-        }
-        else {
-            this.pop();
-        }
-        console.log('pages: %s', stack.length);
+            }
+            console.log('pages: %s', stack.length);
+        });
     }
     confirmBox(message) {
         return window.confirm(message);
@@ -323,7 +327,9 @@ export class Nav {
         this.nav.navBack();
     }
     back(confirm = true) {
-        this.nav.back(confirm);
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.nav.back(confirm);
+        });
     }
     regConfirmClose(confirmClose) {
         this.nav.regConfirmClose(confirmClose);
