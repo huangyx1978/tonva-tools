@@ -40,7 +40,7 @@ export abstract class PagedItems<T> {
     }
 
     async first(param:any):Promise<void> {
-        if (this.loaded === true) return;
+        //if (this.loaded === true) return;
         this.beforeLoad = false;
         this.loaded = false;
         this.param = param;

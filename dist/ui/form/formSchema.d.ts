@@ -1,4 +1,3 @@
-/// <reference types="react" />
 import { FormFields } from './field';
 import { InputSchema } from './inputSchema';
 import { FormEvent } from 'react';
@@ -27,9 +26,9 @@ export declare class FormSchema {
     onReset(): void;
     onClear(): void;
     onSubmit(event: FormEvent<HTMLFormElement>): Promise<void>;
-    private onFinish();
-    private onNext();
-    private fieldContainerClassNames();
+    private onFinish;
+    private onNext;
+    private fieldContainerClassNames;
     setInputValues(): void;
     renderInput(vInput: InputSchema): JSX.Element;
     renderString(vInput: InputSchema): JSX.Element;

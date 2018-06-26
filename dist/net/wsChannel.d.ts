@@ -20,6 +20,6 @@ export declare class WSChannel extends WsBase {
     static setCenterToken(token?: string): void;
     connect(): Promise<void>;
     close(): void;
-    private wsMessage(event);
+    private wsMessage;
     sendWs(msg: any): void;
 }

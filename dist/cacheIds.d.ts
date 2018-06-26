@@ -8,8 +8,8 @@ export declare abstract class CacheIds<T extends Id> {
     dict: Map<number, T>;
     loadIds(ids: number[]): void;
     get(id: number): T;
-    private setItem(id, item);
-    private loadId(ids);
+    private setItem;
+    private loadId;
     protected abstract _loadIds(ids: number[]): Promise<T[]>;
     protected abstract _loadId(id: number): Promise<T>;
 }

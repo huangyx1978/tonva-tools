@@ -1,4 +1,3 @@
-/// <reference types="react" />
 import * as React from 'react';
 import { SubmitReturn } from '../ui';
 import '../css/va-form.css';

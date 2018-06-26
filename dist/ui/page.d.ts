@@ -1,4 +1,3 @@
-/// <reference types="react" />
 import * as React from 'react';
 import { IComputedValue } from 'mobx';
 export interface ScrollProps {
@@ -33,8 +32,8 @@ export interface PageState {
 export declare class Page extends React.Component<PageProps, PageState> {
     private tabs;
     constructor(props: PageProps);
-    private onTabClick(tab);
-    private renderTabs(footer);
-    private renderSingle(footer);
+    private onTabClick;
+    private renderTabs;
+    private renderSingle;
     render(): JSX.Element;
 }

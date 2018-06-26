@@ -45,8 +45,7 @@ export class PagedItems {
     }
     first(param) {
         return __awaiter(this, void 0, void 0, function* () {
-            if (this.loaded === true)
-                return;
+            //if (this.loaded === true) return;
             this.beforeLoad = false;
             this.loaded = false;
             this.param = param;

@@ -1,4 +1,3 @@
-/// <reference types="react" />
 import * as React from 'react';
 import { Field } from './field';
 import { FormSchema } from './formSchema';
@@ -28,7 +27,7 @@ export declare abstract class InputSchema {
     setInitValue(value: any): void;
     readonly filled: boolean;
     protected buildValidators(): void;
-    private buildValidator(rule);
+    private buildValidator;
     protected stringValidator(rule: string, param?: string): Validator | undefined;
     protected required(values?: any): string | undefined;
 }

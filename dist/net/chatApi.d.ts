@@ -5,5 +5,5 @@ export declare class ChatApi extends ApiBase {
     private unitId;
     constructor(unitId: number);
     protected getHttpChannel(): Promise<HttpChannel>;
-    private buildChannel();
+    private buildChannel;
 }

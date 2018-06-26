@@ -1,4 +1,3 @@
-/// <reference types="react" />
 import * as React from 'react';
 import { User } from '../user';
 import { FetchError } from '../fetchError';
@@ -44,7 +43,7 @@ export declare class NavView extends React.Component<Props, State> {
     back(confirm?: boolean): Promise<void>;
     confirmBox(message?: string): boolean;
     render(): JSX.Element;
-    private refresh();
+    private refresh;
 }
 export declare class Nav {
     private nav;
