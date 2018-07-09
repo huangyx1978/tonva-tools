@@ -31,6 +31,7 @@ export const mobileHeaderStyle = isMobile ? {
 const logo = require('../img/logo.svg');
 const logs = [];
 ;
+let stackKey = 1;
 export class NavView extends React.Component {
     constructor(props) {
         super(props);
@@ -135,31 +136,31 @@ export class NavView extends React.Component {
         if (this.stack.length > 0) {
             window.history.pushState('forward', null, null);
         }
-        this.stack.push({ view: view });
+        this.stack.push({ key: stackKey++, view: view });
         this.refresh();
+        console.log('push: %s pages', this.stack.length);
     }
     replace(view) {
         let stack = this.stack;
         if (stack.length > 0) {
             stack.pop();
         }
-        this.stack.push({ view: view });
+        this.stack.push({ key: stackKey++, view: view });
         this.refresh();
+        console.log('replace: %s pages', this.stack.length);
     }
     pop(level = 1) {
-        if (level <= 0)
-            return;
         let stack = this.stack;
         let len = stack.length;
-        if (len <= 1)
+        console.log('pop start: %s pages level=%s', len, level);
+        if (level <= 0 || len <= 1)
             return;
         if (len < level)
             level = len;
         let backLevel = 0;
         for (let i = 0; i < level; i++) {
-            if (stack.length === 0) {
+            if (stack.length === 0)
                 break;
-            }
             stack.pop();
             ++backLevel;
         }
@@ -167,10 +168,11 @@ export class NavView extends React.Component {
             backLevel--;
         this.refresh();
         if (this.isHistoryBack !== true) {
-            window.removeEventListener('popstate', this.navBack);
-            window.history.back(backLevel);
-            window.removeEventListener('popstate', this.navBack);
+            //window.removeEventListener('popstate', this.navBack);
+            //window.history.back(backLevel);
+            //window.addEventListener('popstate', this.navBack);
         }
+        console.log('pop: %s pages', stack.length);
     }
     clear() {
         let len = this.stack.length;
@@ -180,9 +182,9 @@ export class NavView extends React.Component {
         //for (let i=0; i<len; i++) this.pop();
         this.refresh();
         if (len > 1) {
-            window.removeEventListener('popstate', this.navBack);
-            window.history.back(len - 1);
-            window.removeEventListener('popstate', this.navBack);
+            //window.removeEventListener('popstate', this.navBack);
+            //window.history.back(len-1);
+            //window.addEventListener('popstate', this.navBack);
         }
     }
     regConfirmClose(confirmClose) {
@@ -219,7 +221,6 @@ export class NavView extends React.Component {
             else {
                 this.pop();
             }
-            console.log('pages: %s', stack.length);
         });
     }
     confirmBox(message) {
@@ -243,7 +244,10 @@ export class NavView extends React.Component {
         if (fetchError)
             elError = React.createElement(FetchErrorView, Object.assign({ clearError: () => this.setState({ fetchError: undefined }) }, fetchError));
         return (React.createElement("ul", { className: 'va' },
-            stack.map((view, index) => React.createElement("li", { key: index, style: index < top ? { visibility: 'hidden' } : undefined }, view.view)),
+            stack.map((item, index) => {
+                let { key, view } = item;
+                return React.createElement("li", { key: key, style: index < top ? { visibility: 'hidden' } : undefined }, view);
+            }),
             elWait,
             elError));
     }

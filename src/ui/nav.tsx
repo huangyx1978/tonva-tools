@@ -27,7 +27,9 @@ export interface Props //extends React.Props<Nav>
 {
     view: JSX.Element | (()=>JSX.Element);
 };
+let stackKey = 1;
 export interface StackItem {
+    key: number;
     view: JSX.Element;
     confirmClose?: ()=>Promise<boolean>;
 }
@@ -38,8 +40,6 @@ export interface State {
 }
 
 export class NavView extends React.Component<Props, State> {
-    //events = new EventEmitter();
-
     private stack: StackItem[];
     private htmlTitle: string;
     private waitCount: number = 0;
@@ -150,8 +150,9 @@ export class NavView extends React.Component<Props, State> {
         if (this.stack.length > 0) {
             window.history.pushState('forward', null, null);
         }
-        this.stack.push({view: view});
+        this.stack.push({key: stackKey++, view: view});
         this.refresh();
+        console.log('push: %s pages', this.stack.length);
     }
 
     replace(view: JSX.Element): void {
@@ -159,43 +160,41 @@ export class NavView extends React.Component<Props, State> {
         if (stack.length > 0) {
             stack.pop();
         }
-        this.stack.push({view: view});
+        this.stack.push({key: stackKey++, view: view});
         this.refresh();
+        console.log('replace: %s pages', this.stack.length);
     }
 
     pop(level: Number = 1) {
-        if (level <= 0) return;
         let stack = this.stack;
         let len = stack.length;
-        if (len <= 1) return;
+        console.log('pop start: %s pages level=%s', len, level);
+        if (level <= 0 || len <= 1) return;
         if (len < level) level = len;
-
         let backLevel = 0;
         for (let i = 0; i < level; i++) {
-            if (stack.length === 0) { break; }
+            if (stack.length === 0) break;
             stack.pop();
             ++backLevel;
         }
         if (backLevel >= len) backLevel--;
         this.refresh();
         if (this.isHistoryBack !== true) {
-            window.removeEventListener('popstate', this.navBack);
-            window.history.back(backLevel);
-            window.removeEventListener('popstate', this.navBack);
+            //window.removeEventListener('popstate', this.navBack);
+            //window.history.back(backLevel);
+            //window.addEventListener('popstate', this.navBack);
         }
+        console.log('pop: %s pages', stack.length);
     }
 
     clear() {
         let len = this.stack.length;
         this.stack = [];
-        //let len = this.stack.length;
-        //if (len === 0) { return; }
-        //for (let i=0; i<len; i++) this.pop();
         this.refresh();
         if (len > 1) {
-            window.removeEventListener('popstate', this.navBack);
-            window.history.back(len-1);
-            window.removeEventListener('popstate', this.navBack);
+            //window.removeEventListener('popstate', this.navBack);
+            //window.history.back(len-1);
+            //window.addEventListener('popstate', this.navBack);
         }
     }
 
@@ -232,13 +231,11 @@ export class NavView extends React.Component<Props, State> {
         else {
             this.pop();
         }
-        console.log('pages: %s', stack.length);
     }
 
     confirmBox(message?:string): boolean {
         return window.confirm(message);
     }
-
     render() {
         const {wait, fetchError} = this.state;
         let stack = this.state.stack;
@@ -263,10 +260,12 @@ export class NavView extends React.Component<Props, State> {
         return (
         <ul className='va'>
             {
-                stack.map((view, index) =>
-                    <li key={index} style={index<top? {visibility: 'hidden'}:undefined}>
-                        {view.view}
-                    </li>)
+                stack.map((item, index) => {
+                    let {key, view} = item;
+                    return <li key={key} style={index<top? {visibility: 'hidden'}:undefined}>
+                        {view}
+                    </li>
+                })
             }
             {elWait}
             {elError}

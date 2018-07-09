@@ -11,6 +11,7 @@ export interface Props {
     view: JSX.Element | (() => JSX.Element);
 }
 export interface StackItem {
+    key: number;
     view: JSX.Element;
     confirmClose?: () => Promise<boolean>;
 }
