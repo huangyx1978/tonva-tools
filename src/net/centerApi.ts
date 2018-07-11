@@ -4,7 +4,7 @@ import {HttpChannel} from './httpChannel';
 import {ApiBase} from './apiBase';
 
 const centerHost = process.env.REACT_APP_CENTER_URL; //APIHOST_CENTER;
-let centerToken:string|undefined = undefined;
+export let centerToken:string|undefined = undefined;
 
 export function setCenterToken(t?:string) {
     centerToken = t;

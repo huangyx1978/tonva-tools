@@ -1,8 +1,8 @@
 import { HttpChannel } from './httpChannel';
 export declare function refetchApi(channel: HttpChannel, url: any, options: any, resolve: any, reject: any): Promise<void>;
 export declare abstract class ApiBase {
-    token: string;
     ws: string;
+    protected token: string;
     protected path: string;
     protected showWaiting: boolean;
     constructor(path: string, ws: string, showWaiting: boolean);

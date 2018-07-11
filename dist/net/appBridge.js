@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { nav } from '../ui';
 import { uid } from '../uid';
-import { apiTokenApi, callCenterapi, CenterAppApi } from './centerApi';
+import { apiTokenApi, callCenterapi, CenterAppApi, centerToken } from './centerApi';
 import { setSubAppWindow, wsBridge } from './wsChannel';
 const debugUnitId = Number(process.env.REACT_APP_DEBUG_UNITID);
 const apiTokens = {};
@@ -20,7 +20,7 @@ export let meInFrame = {
     param: undefined,
 };
 export function isBridged() {
-    return window.opener !== undefined || self !== window.parent;
+    return self !== window.parent;
     //if (sourceWin === undefined && window === window.parent) {
 }
 window.addEventListener('message', function (evt) {
@@ -74,7 +74,7 @@ function onReceiveAppApiMessage(hash, apiName) {
     return __awaiter(this, void 0, void 0, function* () {
         let appInFrame = appsInFrame[hash];
         if (appInFrame === undefined)
-            return { name: apiName, url: undefined, debugUrl: undefined, token: undefined };
+            return { name: apiName, url: undefined, urlDebug: undefined, token: undefined };
         let { unit } = appInFrame;
         let parts = apiName.split('/');
         let ret = yield apiTokenApi.api({ unit: unit, apiOwner: parts[0], apiName: parts[1] });
@@ -82,7 +82,7 @@ function onReceiveAppApiMessage(hash, apiName) {
             console.log('apiTokenApi.api return undefined. api=%s, unit=%s', apiName, unit);
             throw 'api not found';
         }
-        return { name: apiName, url: ret.url, debugUrl: ret.debugUrl, token: ret.token };
+        return { name: apiName, url: ret.url, urlDebug: ret.UrlDebug, token: ret.token };
     });
 }
 function onAppApiReturn(api, url, token) {
@@ -149,19 +149,26 @@ export function appApi(api, apiOwner, apiName) {
             return apiToken;
         if (!isBridged()) {
             apiToken = yield apiTokenApi.api({ unit: debugUnitId, apiOwner: apiOwner, apiName: apiName });
-            apiTokens[api] = apiToken;
             if (apiToken === undefined) {
                 let err = 'unauthorized call: apiTokenApi center return undefined!';
                 //console.log(err);
                 throw err;
             }
+            if (apiToken.token === undefined)
+                apiToken.token = centerToken;
+            let { urlDebug } = apiToken;
+            if (document.location.hostname === 'localhost') {
+                if (urlDebug !== undefined)
+                    apiToken.url = urlDebug;
+            }
+            apiTokens[api] = apiToken;
             return apiToken;
         }
         console.log("appApi parent send: %s", meInFrame.hash);
         apiToken = {
             name: api,
             url: undefined,
-            debugUrl: undefined,
+            urlDebug: undefined,
             token: undefined,
             resolve: undefined,
             reject: undefined,
@@ -172,7 +179,7 @@ export function appApi(api, apiOwner, apiName) {
                 let a = yield at;
                 console.log('return from parent window: %s', JSON.stringify(a));
                 apiToken.url = a.url;
-                apiToken.debugUrl = a.debugUrl;
+                apiToken.urlDebug = a.urlDebug;
                 apiToken.token = a.token;
                 resolve(apiToken);
             });

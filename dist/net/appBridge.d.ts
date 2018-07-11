@@ -2,7 +2,7 @@ import { AppApi } from './centerApi';
 export interface ApiToken {
     name: string;
     url: string;
-    debugUrl: string;
+    urlDebug: string;
     token: string;
 }
 export interface AppInFrame {

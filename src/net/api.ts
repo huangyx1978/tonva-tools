@@ -3,6 +3,7 @@ import {HttpChannel} from './httpChannel';
 import {HttpChannelUI, HttpChannelNavUI} from './httpChannelUI';
 import {appApi} from './appBridge';
 import {logoutChatApis} from './chatApi';
+import { debug } from 'util';
 
 let channelUIs:{[name:string]: HttpChannel} = {};
 let channelNoUIs:{[name:string]: HttpChannel} = {};
@@ -43,6 +44,7 @@ export class Api extends ApiBase {
         let channel = channels[this.api];
         if (channel !== undefined) return channel;
         
+        /*
         let usqlApiHost:string;
         if (this.url === undefined) {
             // await center Channel get api
@@ -57,15 +59,17 @@ export class Api extends ApiBase {
             console.log('apiUsql: %s', usqlApiHost);
         }
         let hash = document.location.hash;
+        debugger;
         if (usqlApiHost !== undefined && 
             (hash === undefined || !hash.startsWith('#tv'))) {
             channel = new HttpChannel(false, usqlApiHost, undefined, channelUI);
         }
         else {
+        */
             let apiToken = await appApi(this.api, this.apiOwner, this.apiName);
             this.token = apiToken.token;
             channel = new HttpChannel(false, apiToken.url, apiToken.token, channelUI);
-        }
+        //}
         return channels[this.api] = channel;
     }
 }

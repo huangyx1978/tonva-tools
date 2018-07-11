@@ -10,7 +10,7 @@ import { HttpChannelNavUI } from './httpChannelUI';
 import { HttpChannel } from './httpChannel';
 import { ApiBase } from './apiBase';
 const centerHost = process.env.REACT_APP_CENTER_URL; //APIHOST_CENTER;
-let centerToken = undefined;
+export let centerToken = undefined;
 export function setCenterToken(t) {
     centerToken = t;
     console.log('setCenterToken %s', t);

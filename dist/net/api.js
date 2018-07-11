@@ -43,12 +43,12 @@ export class Api extends ApiBase {
             let channel = channels[this.api];
             if (channel !== undefined)
                 return channel;
-            let usqlApiHost;
+            /*
+            let usqlApiHost:string;
             if (this.url === undefined) {
                 // await center Channel get api
                 let owner = this.apiOwner;
-                if (owner === '$$$')
-                    owner = '___';
+                if (owner === '$$$') owner = '___';
                 let apiUsql = 'REACT_APP_APIHOST_USQL_' + owner + '_' + this.apiName;
                 usqlApiHost = process.env[apiUsql];
                 console.log('name:' + apiUsql + ' value:' + usqlApiHost);
@@ -58,15 +58,17 @@ export class Api extends ApiBase {
                 console.log('apiUsql: %s', usqlApiHost);
             }
             let hash = document.location.hash;
+            debugger;
             if (usqlApiHost !== undefined &&
                 (hash === undefined || !hash.startsWith('#tv'))) {
                 channel = new HttpChannel(false, usqlApiHost, undefined, channelUI);
             }
             else {
-                let apiToken = yield appApi(this.api, this.apiOwner, this.apiName);
-                this.token = apiToken.token;
-                channel = new HttpChannel(false, apiToken.url, apiToken.token, channelUI);
-            }
+            */
+            let apiToken = yield appApi(this.api, this.apiOwner, this.apiName);
+            this.token = apiToken.token;
+            channel = new HttpChannel(false, apiToken.url, apiToken.token, channelUI);
+            //}
             return channels[this.api] = channel;
         });
     }

@@ -7,7 +7,7 @@ import FetchErrorView from './fetchErrorView';
 import {FetchError} from '../fetchError';
 import {appUrl, appApi, setMeInFrame} from '../net/appBridge';
 import {LocalData} from '../local';
-import {logoutApis, setCenterToken} from '../net';
+import {logoutApis, setCenterToken, WSChannel} from '../net';
 import 'font-awesome/css/font-awesome.min.css';
 import '../css/va.css';
 
@@ -32,12 +32,15 @@ export interface StackItem {
     key: number;
     view: JSX.Element;
     confirmClose?: ()=>Promise<boolean>;
+    disposer?: ()=>void;
 }
 export interface State {
     stack: StackItem[];
     wait: 0|1|2;
     fetchError: FetchError
 }
+
+const ws = new WSChannel(process.env.REACT_APP_WSHOST, undefined);
 
 export class NavView extends React.Component<Props, State> {
     private stack: StackItem[];
@@ -60,6 +63,7 @@ export class NavView extends React.Component<Props, State> {
         window.addEventListener('popstate', this.navBack);
     }
 
+    private isInFrame:boolean;
     async componentDidMount()
     {
         //nav.set(this.props.logo, this);
@@ -68,7 +72,8 @@ export class NavView extends React.Component<Props, State> {
         let hash = document.location.hash;
         // document.title = document.location.origin;
         console.log("url=%s hash=%s", document.location.origin, hash);
-        if (hash !== undefined && hash !== '' && hash.startsWith('#tv')) {
+        this.isInFrame = hash !== undefined && hash !== '' && hash.startsWith('#tv');
+        if (this.isInFrame === true) {
             let mif = setMeInFrame(hash);
             if (mif !== undefined) {
                 nav.user = {id:0} as User;
@@ -87,7 +92,7 @@ export class NavView extends React.Component<Props, State> {
         }
     }
 
-    get level(): Number {
+    get level(): number {
         return this.stack.length;
     }
 
@@ -95,6 +100,14 @@ export class NavView extends React.Component<Props, State> {
         let view = this.props.view;
         if (typeof view === 'function') this.show(view());
         else this.show(view);
+        console.log('logined: AppView shown');
+        if (this.isInFrame === true) {
+            // 桥接主页的 websocket
+            // ...
+        }
+        else {
+            ws.connect();
+        }
     }
 
     startWait() {
@@ -141,40 +154,44 @@ export class NavView extends React.Component<Props, State> {
         });
     }
 
-    show(view: JSX.Element): void {
+    show(view: JSX.Element, disposer?: ()=>void): void {
         this.clear();
-        this.push(view);
+        this.push(view, disposer);
     }
 
-    push(view: JSX.Element): void {
+    push(view: JSX.Element, disposer?: ()=>void): void {
         if (this.stack.length > 0) {
             window.history.pushState('forward', null, null);
         }
-        this.stack.push({key: stackKey++, view: view});
+        this.stack.push({key: stackKey++, view: view, disposer: disposer});
         this.refresh();
-        console.log('push: %s pages', this.stack.length);
+        //console.log('push: %s pages', this.stack.length);
     }
 
-    replace(view: JSX.Element): void {
+    replace(view: JSX.Element, disposer?: ()=>void): void {
+        let item:StackItem = undefined;
         let stack = this.stack;
         if (stack.length > 0) {
-            stack.pop();
+            item = stack.pop();
+            //this.popAndDispose();
         }
-        this.stack.push({key: stackKey++, view: view});
+        this.stack.push({key: stackKey++, view: view, disposer: disposer});
+        if (item !== undefined) this.dispose(item.disposer);
         this.refresh();
-        console.log('replace: %s pages', this.stack.length);
+        //console.log('replace: %s pages', this.stack.length);
     }
 
     pop(level: Number = 1) {
         let stack = this.stack;
         let len = stack.length;
-        console.log('pop start: %s pages level=%s', len, level);
+        //console.log('pop start: %s pages level=%s', len, level);
         if (level <= 0 || len <= 1) return;
         if (len < level) level = len;
         let backLevel = 0;
         for (let i = 0; i < level; i++) {
             if (stack.length === 0) break;
-            stack.pop();
+            //stack.pop();
+            this.popAndDispose();
             ++backLevel;
         }
         if (backLevel >= len) backLevel--;
@@ -184,12 +201,25 @@ export class NavView extends React.Component<Props, State> {
             //window.history.back(backLevel);
             //window.addEventListener('popstate', this.navBack);
         }
-        console.log('pop: %s pages', stack.length);
+        //console.log('pop: %s pages', stack.length);
+    }
+
+    private popAndDispose() {
+        let item = this.stack.pop();
+        if (item === undefined) return;
+        let {disposer} = item;
+        this.dispose(disposer);
+    }
+
+    private dispose(disposer:()=>void) {
+        if (disposer === undefined) return;
+        let item = this.stack.find(v => v.disposer === disposer);
+        if (item === undefined) disposer();
     }
 
     clear() {
         let len = this.stack.length;
-        this.stack = [];
+        for (let i=0; i<len; i++) this.popAndDispose();
         this.refresh();
         if (len > 1) {
             //window.removeEventListener('popstate', this.navBack);
@@ -295,6 +325,14 @@ export class Nav {
     debug() {        
     }
 
+    registerReceiveHandler(handler: (message:any)=>Promise<void>):number {
+        return ws.onWsReceiveAny(handler);
+    }
+
+    unregisterReceiveHandler(handlerId:number) {
+        ws.endWsReceive(handlerId);
+    }
+
     async logined(user: User) {
         console.log("logined: %s", JSON.stringify(user));
         this.local.user.set(user);
@@ -322,7 +360,7 @@ export class Nav {
         await this.showLogin();
     }
  
-    get level() {
+    get level(): number {
         return this.nav.level;
     }
     startWait() {
@@ -334,14 +372,14 @@ export class Nav {
     async onError(error: FetchError) {
         await this.nav.onError(error);
     }
-    show (view: JSX.Element): void {
-        this.nav.show(view);
+    show (view: JSX.Element, disposer?: ()=>void): void {
+        this.nav.show(view, disposer);
     }
-    push(view: JSX.Element): void {
-        this.nav.push(view);
+    push(view: JSX.Element, disposer?: ()=>void): void {
+        this.nav.push(view, disposer);
     }
-    replace(view: JSX.Element): void {
-        this.nav.replace(view);
+    replace(view: JSX.Element, disposer?: ()=>void): void {
+        this.nav.replace(view, disposer);
     }
     pop(level: Number = 1) {
         this.nav.pop(level);

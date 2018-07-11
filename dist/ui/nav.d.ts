@@ -14,6 +14,7 @@ export interface StackItem {
     key: number;
     view: JSX.Element;
     confirmClose?: () => Promise<boolean>;
+    disposer?: () => void;
 }
 export interface State {
     stack: StackItem[];
@@ -27,16 +28,19 @@ export declare class NavView extends React.Component<Props, State> {
     private waitTimeHandler?;
     constructor(props: any);
     componentWillMount(): Promise<void>;
+    private isInFrame;
     componentDidMount(): Promise<void>;
-    readonly level: Number;
+    readonly level: number;
     showAppView(): void;
     startWait(): void;
     endWait(): void;
     onError(fetchError: FetchError): Promise<void>;
-    show(view: JSX.Element): void;
-    push(view: JSX.Element): void;
-    replace(view: JSX.Element): void;
+    show(view: JSX.Element, disposer?: () => void): void;
+    push(view: JSX.Element, disposer?: () => void): void;
+    replace(view: JSX.Element, disposer?: () => void): void;
     pop(level?: Number): void;
+    private popAndDispose;
+    private dispose;
     clear(): void;
     regConfirmClose(confirmClose: () => Promise<boolean>): void;
     private isHistoryBack;
@@ -53,16 +57,18 @@ export declare class Nav {
     user: User;
     set(nav: NavView): void;
     debug(): void;
+    registerReceiveHandler(handler: (message: any) => Promise<void>): number;
+    unregisterReceiveHandler(handlerId: number): void;
     logined(user: User): Promise<void>;
     showLogin(): Promise<void>;
     logout(): Promise<void>;
-    readonly level: Number;
+    readonly level: number;
     startWait(): void;
     endWait(): void;
     onError(error: FetchError): Promise<void>;
-    show(view: JSX.Element): void;
-    push(view: JSX.Element): void;
-    replace(view: JSX.Element): void;
+    show(view: JSX.Element, disposer?: () => void): void;
+    push(view: JSX.Element, disposer?: () => void): void;
+    replace(view: JSX.Element, disposer?: () => void): void;
     pop(level?: Number): void;
     clear(): void;
     navBack(): void;

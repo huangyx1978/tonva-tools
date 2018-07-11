@@ -18,7 +18,7 @@ import { netToken } from '../net/netToken';
 import FetchErrorView from './fetchErrorView';
 import { appUrl, setMeInFrame } from '../net/appBridge';
 import { LocalData } from '../local';
-import { logoutApis, setCenterToken } from '../net';
+import { logoutApis, setCenterToken, WSChannel } from '../net';
 import 'font-awesome/css/font-awesome.min.css';
 import '../css/va.css';
 const regEx = new RegExp('Android|webOS|iPhone|iPad|' +
@@ -32,6 +32,7 @@ const logo = require('../img/logo.svg');
 const logs = [];
 ;
 let stackKey = 1;
+const ws = new WSChannel(process.env.REACT_APP_WSHOST, undefined);
 export class NavView extends React.Component {
     constructor(props) {
         super(props);
@@ -58,7 +59,8 @@ export class NavView extends React.Component {
             let hash = document.location.hash;
             // document.title = document.location.origin;
             console.log("url=%s hash=%s", document.location.origin, hash);
-            if (hash !== undefined && hash !== '' && hash.startsWith('#tv')) {
+            this.isInFrame = hash !== undefined && hash !== '' && hash.startsWith('#tv');
+            if (this.isInFrame === true) {
                 let mif = setMeInFrame(hash);
                 if (mif !== undefined) {
                     nav.user = { id: 0 };
@@ -87,6 +89,14 @@ export class NavView extends React.Component {
             this.show(view());
         else
             this.show(view);
+        console.log('logined: AppView shown');
+        if (this.isInFrame === true) {
+            // 桥接主页的 websocket
+            // ...
+        }
+        else {
+            ws.connect();
+        }
     }
     startWait() {
         if (this.waitCount === 0) {
@@ -128,31 +138,35 @@ export class NavView extends React.Component {
             });
         });
     }
-    show(view) {
+    show(view, disposer) {
         this.clear();
-        this.push(view);
+        this.push(view, disposer);
     }
-    push(view) {
+    push(view, disposer) {
         if (this.stack.length > 0) {
             window.history.pushState('forward', null, null);
         }
-        this.stack.push({ key: stackKey++, view: view });
+        this.stack.push({ key: stackKey++, view: view, disposer: disposer });
         this.refresh();
-        console.log('push: %s pages', this.stack.length);
+        //console.log('push: %s pages', this.stack.length);
     }
-    replace(view) {
+    replace(view, disposer) {
+        let item = undefined;
         let stack = this.stack;
         if (stack.length > 0) {
-            stack.pop();
+            item = stack.pop();
+            //this.popAndDispose();
         }
-        this.stack.push({ key: stackKey++, view: view });
+        this.stack.push({ key: stackKey++, view: view, disposer: disposer });
+        if (item !== undefined)
+            this.dispose(item.disposer);
         this.refresh();
-        console.log('replace: %s pages', this.stack.length);
+        //console.log('replace: %s pages', this.stack.length);
     }
     pop(level = 1) {
         let stack = this.stack;
         let len = stack.length;
-        console.log('pop start: %s pages level=%s', len, level);
+        //console.log('pop start: %s pages level=%s', len, level);
         if (level <= 0 || len <= 1)
             return;
         if (len < level)
@@ -161,7 +175,8 @@ export class NavView extends React.Component {
         for (let i = 0; i < level; i++) {
             if (stack.length === 0)
                 break;
-            stack.pop();
+            //stack.pop();
+            this.popAndDispose();
             ++backLevel;
         }
         if (backLevel >= len)
@@ -172,14 +187,26 @@ export class NavView extends React.Component {
             //window.history.back(backLevel);
             //window.addEventListener('popstate', this.navBack);
         }
-        console.log('pop: %s pages', stack.length);
+        //console.log('pop: %s pages', stack.length);
+    }
+    popAndDispose() {
+        let item = this.stack.pop();
+        if (item === undefined)
+            return;
+        let { disposer } = item;
+        this.dispose(disposer);
+    }
+    dispose(disposer) {
+        if (disposer === undefined)
+            return;
+        let item = this.stack.find(v => v.disposer === disposer);
+        if (item === undefined)
+            disposer();
     }
     clear() {
         let len = this.stack.length;
-        this.stack = [];
-        //let len = this.stack.length;
-        //if (len === 0) { return; }
-        //for (let i=0; i<len; i++) this.pop();
+        for (let i = 0; i < len; i++)
+            this.popAndDispose();
         this.refresh();
         if (len > 1) {
             //window.removeEventListener('popstate', this.navBack);
@@ -268,6 +295,12 @@ export class Nav {
     }
     debug() {
     }
+    registerReceiveHandler(handler) {
+        return ws.onWsReceiveAny(handler);
+    }
+    unregisterReceiveHandler(handlerId) {
+        ws.endWsReceive(handlerId);
+    }
     logined(user) {
         return __awaiter(this, void 0, void 0, function* () {
             console.log("logined: %s", JSON.stringify(user));
@@ -312,14 +345,14 @@ export class Nav {
             yield this.nav.onError(error);
         });
     }
-    show(view) {
-        this.nav.show(view);
+    show(view, disposer) {
+        this.nav.show(view, disposer);
     }
-    push(view) {
-        this.nav.push(view);
+    push(view, disposer) {
+        this.nav.push(view, disposer);
     }
-    replace(view) {
-        this.nav.replace(view);
+    replace(view, disposer) {
+        this.nav.replace(view, disposer);
     }
     pop(level = 1) {
         this.nav.pop(level);

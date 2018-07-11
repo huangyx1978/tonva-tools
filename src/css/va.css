@@ -188,7 +188,7 @@ body, body>div, ul.va, ul.va>li, ul.va>li>article {
     top: 0; 
     width: 100%;
     height: 100%;
-    overflow-x: auto;
+    overflow-x: hidden;
     overflow-y: auto;
   } 
   ul.va>li>article>div {

@@ -1,6 +1,6 @@
 import {nav} from '../ui';
 import {uid} from '../uid';
-import {apiTokenApi, callCenterapi, CenterAppApi, AppApi} from './centerApi';
+import {apiTokenApi, callCenterapi, CenterAppApi, AppApi, centerToken} from './centerApi';
 import {setSubAppWindow, wsBridge} from './wsChannel';
 
 const debugUnitId = Number(process.env.REACT_APP_DEBUG_UNITID);
@@ -8,7 +8,7 @@ const debugUnitId = Number(process.env.REACT_APP_DEBUG_UNITID);
 export interface ApiToken {
     name: string;
     url: string;
-    debugUrl: string;
+    urlDebug: string;
     token: string;
 }
 interface ApiTokenAction extends ApiToken {
@@ -33,7 +33,7 @@ export let meInFrame:AppInFrame = {
 }
 
 export function isBridged():boolean {
-    return window.opener !== undefined || self !== window.parent;
+    return self !== window.parent;
     //if (sourceWin === undefined && window === window.parent) {
 }
 
@@ -84,7 +84,7 @@ function hideFrameBack(hash:string) {
 
 async function onReceiveAppApiMessage(hash: string, apiName: string): Promise<ApiToken> {
     let appInFrame = appsInFrame[hash];
-    if (appInFrame === undefined) return {name:apiName, url:undefined, debugUrl:undefined, token:undefined};
+    if (appInFrame === undefined) return {name:apiName, url:undefined, urlDebug:undefined, token:undefined};
     let {unit} = appInFrame;
     let parts = apiName.split('/');
     let ret = await apiTokenApi.api({unit: unit, apiOwner: parts[0], apiName: parts[1]});
@@ -92,7 +92,7 @@ async function onReceiveAppApiMessage(hash: string, apiName: string): Promise<Ap
         console.log('apiTokenApi.api return undefined. api=%s, unit=%s', apiName, unit);
         throw 'api not found';
     }
-    return {name: apiName, url: ret.url, debugUrl:ret.debugUrl, token: ret.token};
+    return {name: apiName, url: ret.url, urlDebug:ret.UrlDebug, token: ret.token};
 }
 
 function onAppApiReturn(api: string, url: string, token: string) {
@@ -156,19 +156,24 @@ export async function appApi(api:string, apiOwner:string, apiName:string): Promi
     if (apiToken !== undefined) return apiToken;
     if (!isBridged()) {
         apiToken = await apiTokenApi.api({unit: debugUnitId, apiOwner:apiOwner, apiName:apiName});
-        apiTokens[api] = apiToken;
         if (apiToken === undefined) {
             let err = 'unauthorized call: apiTokenApi center return undefined!';
             //console.log(err);
             throw err;
         }
+        if (apiToken.token === undefined) apiToken.token = centerToken;
+        let {urlDebug} = apiToken;
+        if (document.location.hostname === 'localhost') {            
+            if (urlDebug !== undefined) apiToken.url = urlDebug;
+        }
+        apiTokens[api] = apiToken;
         return apiToken;
     }
     console.log("appApi parent send: %s", meInFrame.hash);
     apiToken = {
         name: api,
         url: undefined,
-        debugUrl: undefined,
+        urlDebug: undefined,
         token: undefined,
         resolve: undefined,
         reject: undefined,
@@ -179,7 +184,7 @@ export async function appApi(api:string, apiOwner:string, apiName:string): Promi
             let a = await at;
             console.log('return from parent window: %s', JSON.stringify(a));
             apiToken.url = a.url;
-            apiToken.debugUrl = a.debugUrl;
+            apiToken.urlDebug = a.urlDebug;
             apiToken.token = a.token;
             resolve(apiToken);
         }

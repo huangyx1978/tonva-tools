@@ -1,5 +1,6 @@
 import { HttpChannel } from './httpChannel';
 import { ApiBase } from './apiBase';
+export declare let centerToken: string | undefined;
 export declare function setCenterToken(t?: string): void;
 export declare abstract class CenterApi extends ApiBase {
     constructor(path: string, ws: string, showWaiting?: boolean);

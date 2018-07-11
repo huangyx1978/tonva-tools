@@ -5,8 +5,8 @@ export async function refetchApi(channel:HttpChannel, url, options, resolve, rej
 }
 
 export abstract class ApiBase {
-    token: string;
     ws: string;
+    protected token: string;
     protected path: string;
     protected showWaiting: boolean;
 
