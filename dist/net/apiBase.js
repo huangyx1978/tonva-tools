@@ -48,4 +48,33 @@ export class ApiBase {
         });
     }
 }
+export function getUrlOrDebug(url, urlDebug) {
+    return __awaiter(this, void 0, void 0, function* () {
+        if (urlDebug === undefined ||
+            document.location.hostname !== 'localhost') {
+            return url;
+        }
+        try {
+            let ret = yield fetch(urlDebug + 'hello', {
+                method: "GET",
+                mode: "no-cors",
+                headers: {
+                    "Content-Type": "text/plain"
+                },
+            });
+            return urlDebug;
+        }
+        catch (_a) {
+            console.log('cannot connect %s, so use %s', urlDebug, url);
+            return url;
+        }
+        /*
+        if (process.env.NODE_ENV==='development') {
+            if (urlDebug !== undefined) url = urlDebug;
+            //if (wsDebug !== undefined) ws = wsDebug;
+        }
+        //this.ws = ws;
+        */
+    });
+}
 //# sourceMappingURL=apiBase.js.map

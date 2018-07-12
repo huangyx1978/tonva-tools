@@ -44,3 +44,32 @@ export abstract class ApiBase {
     }
 }
 
+export async function getUrlOrDebug(url:string, urlDebug:string):Promise<string> {
+    if (urlDebug === undefined ||
+        document.location.hostname !== 'localhost')
+    {
+        return url;
+    }
+
+    try {
+        let ret = await fetch(urlDebug + 'hello', {
+            method: "GET",
+            mode: "no-cors", // no-cors, cors, *same-origin
+            headers: {
+                "Content-Type": "text/plain"
+            },
+        });
+        return urlDebug;
+    }
+    catch {
+        console.log('cannot connect %s, so use %s', urlDebug, url);
+        return url;
+    }
+    /*
+    if (process.env.NODE_ENV==='development') {
+        if (urlDebug !== undefined) url = urlDebug;
+        //if (wsDebug !== undefined) ws = wsDebug;
+    }
+    //this.ws = ws;
+    */
+}

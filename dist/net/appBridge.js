@@ -10,6 +10,7 @@ import { nav } from '../ui';
 import { uid } from '../uid';
 import { apiTokenApi, callCenterapi, CenterAppApi, centerToken } from './centerApi';
 import { setSubAppWindow, wsBridge } from './wsChannel';
+import { getUrlOrDebug } from './apiBase';
 const debugUnitId = Number(process.env.REACT_APP_DEBUG_UNITID);
 const apiTokens = {};
 const appsInFrame = {};
@@ -157,16 +158,9 @@ export function appApi(api, apiOwner, apiName) {
             if (apiToken.token === undefined)
                 apiToken.token = centerToken;
             let { url, urlDebug } = apiToken;
-            if (document.location.hostname === 'localhost') {
-                try {
-                    let ret = yield fetch(urlDebug);
-                    if (urlDebug !== undefined)
-                        apiToken.url = urlDebug;
-                }
-                catch (_a) {
-                    console.log('cannot connect %s, so use %s', urlDebug, url);
-                }
-            }
+            let realUrl = yield getUrlOrDebug(url, urlDebug);
+            console.log('realUrl: %s', realUrl);
+            apiToken.url = realUrl;
             apiTokens[api] = apiToken;
             return apiToken;
         }
