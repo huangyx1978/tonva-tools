@@ -162,9 +162,15 @@ export async function appApi(api:string, apiOwner:string, apiName:string): Promi
             throw err;
         }
         if (apiToken.token === undefined) apiToken.token = centerToken;
-        let {urlDebug} = apiToken;
-        if (document.location.hostname === 'localhost') {            
-            if (urlDebug !== undefined) apiToken.url = urlDebug;
+        let {url, urlDebug} = apiToken;
+        if (document.location.hostname === 'localhost') {
+            try {
+                let ret = await fetch(urlDebug);
+                if (urlDebug !== undefined) apiToken.url = urlDebug;
+            }
+            catch {
+                console.log('cannot connect %s, so use %s', urlDebug, url);
+            }
         }
         apiTokens[api] = apiToken;
         return apiToken;

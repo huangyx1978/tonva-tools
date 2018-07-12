@@ -19,8 +19,8 @@ export function logoutApis() {
     logoutChatApis();
 }
 export class Api extends ApiBase {
-    constructor(baseUrl, url, ws, apiOwner, apiName, showWaiting) {
-        super(baseUrl, ws, showWaiting);
+    constructor(baseUrl, url, /*ws, */ apiOwner, apiName, showWaiting) {
+        super(baseUrl, /*ws, */ showWaiting);
         this.url = url;
         if (apiName) {
             this.apiOwner = apiOwner;

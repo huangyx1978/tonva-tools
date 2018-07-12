@@ -3,7 +3,21 @@ import {HttpChannelNavUI} from './httpChannelUI';
 import {HttpChannel} from './httpChannel';
 import {ApiBase} from './apiBase';
 
-const centerHost = process.env.REACT_APP_CENTER_URL; //APIHOST_CENTER;
+/*
+const centerHost_Debug = process.env.REACT_APP_CENTER_URL_DEBUG;
+const wsHost = process.env.REACT_APP_WSHOST;
+const wsHost_Debug = process.env.REACT_APP_WSHOST_DEBUG;
+*/
+let centerHost:string; // = process.env.REACT_APP_CENTER_URL;
+
+export function setCenterUrl(url:string) {
+    console.log('setCenterUrl %s', url);
+    centerHost = url;
+    centerToken = undefined;
+    centerChannel = undefined;
+    centerChannelUI = undefined;
+}
+
 export let centerToken:string|undefined = undefined;
 
 export function setCenterToken(t?:string) {
@@ -27,8 +41,8 @@ function getCenterChannel():HttpChannel {
 export abstract class CenterApi extends ApiBase {
     //private channel: HttpChannel;
 
-    constructor(path: string, ws:string, showWaiting?: boolean) {
-        super(path, ws, showWaiting);
+    constructor(path: string, /*ws:string, */showWaiting?: boolean) {
+        super(path, /*ws, */showWaiting);
     }
 
     protected async getHttpChannel(): Promise<HttpChannel> {

@@ -9,7 +9,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import { HttpChannelNavUI } from './httpChannelUI';
 import { HttpChannel } from './httpChannel';
 import { ApiBase } from './apiBase';
-const centerHost = process.env.REACT_APP_CENTER_URL; //APIHOST_CENTER;
+/*
+const centerHost_Debug = process.env.REACT_APP_CENTER_URL_DEBUG;
+const wsHost = process.env.REACT_APP_WSHOST;
+const wsHost_Debug = process.env.REACT_APP_WSHOST_DEBUG;
+*/
+let centerHost; // = process.env.REACT_APP_CENTER_URL;
+export function setCenterUrl(url) {
+    console.log('setCenterUrl %s', url);
+    centerHost = url;
+    centerToken = undefined;
+    centerChannel = undefined;
+    centerChannelUI = undefined;
+}
 export let centerToken = undefined;
 export function setCenterToken(t) {
     centerToken = t;
@@ -31,8 +43,8 @@ function getCenterChannel() {
 }
 export class CenterApi extends ApiBase {
     //private channel: HttpChannel;
-    constructor(path, ws, showWaiting) {
-        super(path, ws, showWaiting);
+    constructor(path, /*ws:string, */ showWaiting) {
+        super(path, /*ws, */ showWaiting);
     }
     getHttpChannel() {
         return __awaiter(this, void 0, void 0, function* () {

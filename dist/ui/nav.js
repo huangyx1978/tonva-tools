@@ -14,13 +14,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import * as React from 'react';
 import { observable } from 'mobx';
+import { Page } from './page';
 import { netToken } from '../net/netToken';
 import FetchErrorView from './fetchErrorView';
 import { appUrl, setMeInFrame } from '../net/appBridge';
 import { LocalData } from '../local';
-import { logoutApis, setCenterToken, WSChannel } from '../net';
+import { logoutApis, setCenterUrl, setCenterToken, WSChannel } from '../net';
 import 'font-awesome/css/font-awesome.min.css';
 import '../css/va.css';
+import '../css/animation.css';
 const regEx = new RegExp('Android|webOS|iPhone|iPad|' +
     'BlackBerry|Windows Phone|' +
     'Opera Mini|IEMobile|Mobile', 'i');
@@ -32,7 +34,7 @@ const logo = require('../img/logo.svg');
 const logs = [];
 ;
 let stackKey = 1;
-const ws = new WSChannel(process.env.REACT_APP_WSHOST, undefined);
+let ws;
 export class NavView extends React.Component {
     constructor(props) {
         super(props);
@@ -56,47 +58,17 @@ export class NavView extends React.Component {
         return __awaiter(this, void 0, void 0, function* () {
             //nav.set(this.props.logo, this);
             nav.set(this);
-            let hash = document.location.hash;
-            // document.title = document.location.origin;
-            console.log("url=%s hash=%s", document.location.origin, hash);
-            this.isInFrame = hash !== undefined && hash !== '' && hash.startsWith('#tv');
-            if (this.isInFrame === true) {
-                let mif = setMeInFrame(hash);
-                if (mif !== undefined) {
-                    nav.user = { id: 0 };
-                    if (self !== window.parent) {
-                        window.parent.postMessage({ type: 'hide-frame-back', hash: mif.hash }, '*');
-                    }
-                    this.showAppView();
-                    return;
-                }
-            }
-            let user = nav.local.user.get();
-            if (user !== undefined) {
-                yield nav.logined(user);
+            let start = this.props.start;
+            if (start !== undefined) {
+                yield start();
             }
             else {
-                yield nav.showLogin();
+                yield nav.start();
             }
         });
     }
     get level() {
         return this.stack.length;
-    }
-    showAppView() {
-        let view = this.props.view;
-        if (typeof view === 'function')
-            this.show(view());
-        else
-            this.show(view);
-        console.log('logined: AppView shown');
-        if (this.isInFrame === true) {
-            // 桥接主页的 websocket
-            // ...
-        }
-        else {
-            ws.connect();
-        }
     }
     startWait() {
         if (this.waitCount === 0) {
@@ -301,13 +273,87 @@ export class Nav {
     unregisterReceiveHandler(handlerId) {
         ws.endWsReceive(handlerId);
     }
+    start() {
+        return __awaiter(this, void 0, void 0, function* () {
+            nav.push(React.createElement(Page, { header: false },
+                React.createElement("div", { style: { height: '100%' }, className: "d-flex flex-fill align-items-center justify-content-center" },
+                    React.createElement("div", { className: "d-flex align-items-center justify-content-center slide text-info", style: { width: '5em', height: '2em' } }, "\u52A0\u8F7D\u4E2D..."))));
+            let centerUrl, wsHost;
+            if (process.env.NODE_ENV === 'development') {
+                try {
+                    centerUrl = process.env.REACT_APP_CENTER_URL_DEBUG;
+                    wsHost = process.env.REACT_APP_WSHOST_DEBUG;
+                    console.log('try connect debug url');
+                    let ret = yield fetch(centerUrl);
+                    console.log('connected');
+                }
+                catch (err) {
+                    let e = err;
+                    console.error(e);
+                    centerUrl = process.env.REACT_APP_CENTER_URL;
+                    wsHost = process.env.REACT_APP_WSHOST;
+                }
+            }
+            else {
+                centerUrl = process.env.REACT_APP_CENTER_URL;
+                wsHost = process.env.REACT_APP_WSHOST;
+            }
+            setCenterUrl(centerUrl);
+            let hash = document.location.hash;
+            // document.title = document.location.origin;
+            console.log("url=%s hash=%s", document.location.origin, hash);
+            this.isInFrame = hash !== undefined && hash !== '' && hash.startsWith('#tv');
+            if (this.isInFrame === true) {
+                let mif = setMeInFrame(hash);
+                if (mif !== undefined) {
+                    nav.user = { id: 0 };
+                    if (self !== window.parent) {
+                        window.parent.postMessage({ type: 'hide-frame-back', hash: mif.hash }, '*');
+                    }
+                    yield this.showAppView();
+                    return;
+                }
+            }
+            let user = nav.local.user.get();
+            if (user !== undefined) {
+                yield nav.logined(user);
+            }
+            else {
+                yield nav.showLogin();
+            }
+            wsHost = process.env.REACT_APP_WSHOST;
+            ws = new WSChannel(wsHost, undefined);
+        });
+    }
+    showAppView() {
+        return __awaiter(this, void 0, void 0, function* () {
+            /*
+            let view = this.nav.props.view;
+            if (typeof view === 'function') this.show(view());
+            else this.show(view);
+            console.log('logined: AppView shown');
+            if (this.isInFrame === true) {
+                // 桥接主页的 websocket
+                // ...
+            }
+            else {
+                if (ws !== undefined) ws.connect();
+            }*/
+            let { onLogined } = this.nav.props;
+            if (onLogined === undefined) {
+                nav.push(React.createElement("div", null, "NavView has no prop onLogined"));
+                return;
+            }
+            yield onLogined();
+        });
+    }
     logined(user) {
         return __awaiter(this, void 0, void 0, function* () {
             console.log("logined: %s", JSON.stringify(user));
             this.local.user.set(user);
             netToken.set(user.token);
             this.user = user;
-            this.nav.showAppView();
+            yield this.showAppView();
         });
     }
     showLogin() {

@@ -12,8 +12,8 @@ export function refetchApi(channel, url, options, resolve, reject) {
     });
 }
 export class ApiBase {
-    constructor(path, ws, showWaiting) {
-        this.ws = ws;
+    constructor(path, /*ws:string, */ showWaiting) {
+        //this.ws = ws;
         this.path = path || '';
         this.showWaiting = showWaiting;
     }

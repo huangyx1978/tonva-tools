@@ -20,8 +20,8 @@ export class Api extends ApiBase {
     apiName: string;
     api: string;
 
-    constructor(baseUrl: string, url:string, ws, apiOwner, apiName: string, showWaiting?: boolean) {
-        super(baseUrl, ws, showWaiting);
+    constructor(baseUrl: string, url:string, /*ws, */apiOwner, apiName: string, showWaiting?: boolean) {
+        super(baseUrl, /*ws, */showWaiting);
         this.url = url;
         if (apiName) {
             this.apiOwner = apiOwner;

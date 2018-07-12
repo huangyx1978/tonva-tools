@@ -21,7 +21,7 @@ export class ChatApi extends ApiBase {
 
     constructor(unitId:number) {
     //constructor(path: string, url:string, apiOwner, apiName: string, showWaiting?: boolean) {
-        super('tv/', undefined, true);
+        super('tv/', /*undefined, */true);
         this.unitId = unitId;
         /*
         this.url = url;
@@ -44,12 +44,12 @@ export class ChatApi extends ApiBase {
         let channelUI = new HttpChannelNavUI();
         let centerAppApi = new CenterAppApi('tv/', undefined);
         let ret = await centerAppApi.chatApi(this.unitId);
-        let {token, url, urlDebug, ws, wsDebug} = ret;
+        let {token, url, urlDebug/*, ws, wsDebug*/} = ret;
         if (process.env.NODE_ENV==='development') {
             if (urlDebug !== undefined) url = urlDebug;
-            if (wsDebug !== undefined) ws = wsDebug;
+            //if (wsDebug !== undefined) ws = wsDebug;
         }
-        this.ws = ws;
+        //this.ws = ws;
         this.token = token;
         return new HttpChannel(false, url, token, channelUI);
     }

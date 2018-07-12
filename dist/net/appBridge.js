@@ -156,10 +156,16 @@ export function appApi(api, apiOwner, apiName) {
             }
             if (apiToken.token === undefined)
                 apiToken.token = centerToken;
-            let { urlDebug } = apiToken;
+            let { url, urlDebug } = apiToken;
             if (document.location.hostname === 'localhost') {
-                if (urlDebug !== undefined)
-                    apiToken.url = urlDebug;
+                try {
+                    let ret = yield fetch(urlDebug);
+                    if (urlDebug !== undefined)
+                        apiToken.url = urlDebug;
+                }
+                catch (_a) {
+                    console.log('cannot connect %s, so use %s', urlDebug, url);
+                }
             }
             apiTokens[api] = apiToken;
             return apiToken;

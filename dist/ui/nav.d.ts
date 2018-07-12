@@ -4,11 +4,13 @@ import { FetchError } from '../fetchError';
 import { LocalData } from '../local';
 import 'font-awesome/css/font-awesome.min.css';
 import '../css/va.css';
+import '../css/animation.css';
 export declare const mobileHeaderStyle: {
     minHeight: string;
 };
 export interface Props {
-    view: JSX.Element | (() => JSX.Element);
+    start?: () => Promise<void>;
+    onLogined: () => Promise<void>;
 }
 export interface StackItem {
     key: number;
@@ -28,10 +30,8 @@ export declare class NavView extends React.Component<Props, State> {
     private waitTimeHandler?;
     constructor(props: any);
     componentWillMount(): Promise<void>;
-    private isInFrame;
     componentDidMount(): Promise<void>;
     readonly level: number;
-    showAppView(): void;
     startWait(): void;
     endWait(): void;
     onError(fetchError: FetchError): Promise<void>;
@@ -59,6 +59,9 @@ export declare class Nav {
     debug(): void;
     registerReceiveHandler(handler: (message: any) => Promise<void>): number;
     unregisterReceiveHandler(handlerId: number): void;
+    private isInFrame;
+    start(): Promise<void>;
+    private showAppView;
     logined(user: User): Promise<void>;
     showLogin(): Promise<void>;
     logout(): Promise<void>;

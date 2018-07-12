@@ -5,13 +5,13 @@ export async function refetchApi(channel:HttpChannel, url, options, resolve, rej
 }
 
 export abstract class ApiBase {
-    ws: string;
+    //ws: string;
     protected token: string;
     protected path: string;
     protected showWaiting: boolean;
 
-    constructor(path: string, ws:string, showWaiting: boolean) {
-        this.ws = ws;
+    constructor(path: string, /*ws:string, */showWaiting: boolean) {
+        //this.ws = ws;
         this.path = path || '';
         this.showWaiting = showWaiting;
     }
