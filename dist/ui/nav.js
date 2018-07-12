@@ -256,6 +256,34 @@ export class NavView extends React.Component {
         // this.forceUpdate();
     }
 }
+function loadCenterUrl() {
+    return __awaiter(this, void 0, void 0, function* () {
+        let centerUrl, wsHost;
+        if (process.env.NODE_ENV === 'development') {
+            centerUrl = process.env.REACT_APP_CENTER_URL_DEBUG;
+            if (centerUrl !== undefined) {
+                wsHost = process.env.REACT_APP_WSHOST_DEBUG;
+                try {
+                    console.log('try connect debug url');
+                    let ret = yield fetch(centerUrl);
+                    console.log('connected');
+                }
+                catch (err) {
+                    console.error(err);
+                    centerUrl = undefined;
+                }
+            }
+        }
+        if (centerUrl === undefined) {
+            centerUrl = process.env.REACT_APP_CENTER_URL;
+            wsHost = process.env.REACT_APP_WSHOST;
+        }
+        return {
+            centerUrl: centerUrl,
+            wsHost: wsHost,
+        };
+    });
+}
 export class Nav {
     constructor() {
         this.local = new LocalData();
@@ -278,26 +306,7 @@ export class Nav {
             nav.push(React.createElement(Page, { header: false },
                 React.createElement("div", { style: { height: '100%' }, className: "d-flex flex-fill align-items-center justify-content-center" },
                     React.createElement("div", { className: "d-flex align-items-center justify-content-center slide text-info", style: { width: '5em', height: '2em' } }, "\u52A0\u8F7D\u4E2D..."))));
-            let centerUrl, wsHost;
-            if (process.env.NODE_ENV === 'development') {
-                try {
-                    centerUrl = process.env.REACT_APP_CENTER_URL_DEBUG;
-                    wsHost = process.env.REACT_APP_WSHOST_DEBUG;
-                    console.log('try connect debug url');
-                    let ret = yield fetch(centerUrl);
-                    console.log('connected');
-                }
-                catch (err) {
-                    let e = err;
-                    console.error(e);
-                    centerUrl = process.env.REACT_APP_CENTER_URL;
-                    wsHost = process.env.REACT_APP_WSHOST;
-                }
-            }
-            else {
-                centerUrl = process.env.REACT_APP_CENTER_URL;
-                wsHost = process.env.REACT_APP_WSHOST;
-            }
+            let { centerUrl, wsHost } = yield loadCenterUrl();
             setCenterUrl(centerUrl);
             let hash = document.location.hash;
             // document.title = document.location.origin;

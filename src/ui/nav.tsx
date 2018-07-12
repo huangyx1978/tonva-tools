@@ -282,6 +282,33 @@ export class NavView extends React.Component<Props, State> {
     }
 }
 
+async function loadCenterUrl():Promise<{centerUrl:string, wsHost:string}> {
+    let centerUrl:string, wsHost:string;
+    if (process.env.NODE_ENV==='development') {
+        centerUrl = process.env.REACT_APP_CENTER_URL_DEBUG;
+        if (centerUrl !== undefined) {
+            wsHost = process.env.REACT_APP_WSHOST_DEBUG;
+            try {
+                console.log('try connect debug url');
+                let ret = await fetch(centerUrl);
+                console.log('connected');
+            }
+            catch (err) {
+                console.error(err);
+                centerUrl = undefined;
+            }
+        }
+    }
+    if (centerUrl === undefined) {
+        centerUrl = process.env.REACT_APP_CENTER_URL;
+        wsHost = process.env.REACT_APP_WSHOST;
+    }
+    return {
+        centerUrl: centerUrl,
+        wsHost: wsHost,
+    }
+}
+
 export class Nav {
     private nav:NavView;
     //private logo: any;
@@ -315,26 +342,7 @@ export class Nav {
             </div>
         </Page>);
 
-        let centerUrl:string, wsHost:string;
-        if (process.env.NODE_ENV==='development') {
-            try {
-                centerUrl = process.env.REACT_APP_CENTER_URL_DEBUG;
-                wsHost = process.env.REACT_APP_WSHOST_DEBUG;
-                console.log('try connect debug url');
-                let ret = await fetch(centerUrl);
-                console.log('connected');
-            }
-            catch (err) {
-                let e = err;
-                console.error(e);
-                centerUrl = process.env.REACT_APP_CENTER_URL;
-                wsHost = process.env.REACT_APP_WSHOST;
-            }
-        }
-        else {
-            centerUrl = process.env.REACT_APP_CENTER_URL;
-            wsHost = process.env.REACT_APP_WSHOST;
-        }
+        let {centerUrl, wsHost} = await loadCenterUrl();
         setCenterUrl(centerUrl);
 
         let hash = document.location.hash;
