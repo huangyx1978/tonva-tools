@@ -308,6 +308,7 @@ export class Nav {
                     React.createElement("div", { className: "d-flex align-items-center justify-content-center slide text-info", style: { width: '5em', height: '2em' } }, "\u52A0\u8F7D\u4E2D..."))));
             let { centerUrl, wsHost } = yield loadCenterUrl();
             setCenterUrl(centerUrl);
+            ws = new WSChannel(wsHost, undefined);
             let hash = document.location.hash;
             // document.title = document.location.origin;
             console.log("url=%s hash=%s", document.location.origin, hash);
@@ -330,8 +331,6 @@ export class Nav {
             else {
                 yield nav.showLogin();
             }
-            wsHost = process.env.REACT_APP_WSHOST;
-            ws = new WSChannel(wsHost, undefined);
         });
     }
     showAppView() {

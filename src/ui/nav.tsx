@@ -344,6 +344,7 @@ export class Nav {
 
         let {centerUrl, wsHost} = await loadCenterUrl();
         setCenterUrl(centerUrl);
+        ws = new WSChannel(wsHost, undefined);
 
         let hash = document.location.hash;
         // document.title = document.location.origin;
@@ -366,9 +367,6 @@ export class Nav {
         } else {
             await nav.showLogin();
         }
-
-        wsHost = process.env.REACT_APP_WSHOST;
-        ws = new WSChannel(wsHost, undefined);
     }
 
     private async showAppView() {
