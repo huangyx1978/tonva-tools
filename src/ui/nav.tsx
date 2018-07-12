@@ -11,6 +11,7 @@ import {logoutApis, setCenterUrl, setCenterToken, WSChannel} from '../net';
 import 'font-awesome/css/font-awesome.min.css';
 import '../css/va.css';
 import '../css/animation.css';
+import { WsBase, wsBridge } from '../net/wsChannel';
 
 const regEx = new RegExp('Android|webOS|iPhone|iPad|' +
     'BlackBerry|Windows Phone|'  +
@@ -43,7 +44,7 @@ export interface State {
     fetchError: FetchError
 }
 
-let ws:WSChannel;
+//let ws:WSChannel;
 export class NavView extends React.Component<Props, State> {
     private stack: StackItem[];
     private htmlTitle: string;
@@ -311,8 +312,8 @@ async function loadCenterUrl():Promise<{centerUrl:string, wsHost:string}> {
 
 export class Nav {
     private nav:NavView;
-    //private logo: any;
     private loginView: JSX.Element;
+    private ws: WsBase;
     local: LocalData = new LocalData();
     @observable user: User = undefined; // = {id:undefined, name:undefined, token:undefined};
     
@@ -325,11 +326,14 @@ export class Nav {
     }
 
     registerReceiveHandler(handler: (message:any)=>Promise<void>):number {
-        return ws.onWsReceiveAny(handler);
+        if (this.ws === undefined) return;
+        return this.ws.onWsReceiveAny(handler);
     }
 
     unregisterReceiveHandler(handlerId:number) {
-        ws.endWsReceive(handlerId);
+        if (this.ws === undefined) return;
+        if (handlerId === undefined) return;
+        this.ws.endWsReceive(handlerId);
     }
 
     private isInFrame:boolean;
@@ -344,7 +348,6 @@ export class Nav {
 
         let {centerUrl, wsHost} = await loadCenterUrl();
         setCenterUrl(centerUrl);
-        ws = new WSChannel(wsHost, undefined);
 
         let hash = document.location.hash;
         // document.title = document.location.origin;
@@ -353,6 +356,8 @@ export class Nav {
         if (this.isInFrame === true) {
             let mif = setMeInFrame(hash);
             if (mif !== undefined) {
+                this.ws = wsBridge;
+                console.log('this.ws = wsBridge in sub frame');
                 nav.user = {id:0} as User;
                 if (self !== window.parent) {
                     window.parent.postMessage({type:'hide-frame-back', hash: mif.hash}, '*');
@@ -361,33 +366,29 @@ export class Nav {
                 return;
             }
         }
+        let ws:WSChannel = this.ws = new WSChannel(wsHost, undefined);
+        ws.onWsReceiveAny(async (msg:any)=> {
+            console.log("websocket receive and post to frames: %s", JSON.stringify(msg));
+            (window.opener || window.parent).postMessage({type:'ws', msg:msg}, '*');
+        });
         let user: User = nav.local.user.get();
         if (user !== undefined) {
             await nav.logined(user);
         } else {
             await nav.showLogin();
         }
+        console.log('ws.connect() in app main frame');
+        ws.connect();
     }
 
     private async showAppView() {
-        /*
-        let view = this.nav.props.view;
-        if (typeof view === 'function') this.show(view());
-        else this.show(view);
-        console.log('logined: AppView shown');
-        if (this.isInFrame === true) {
-            // 桥接主页的 websocket
-            // ...
-        }
-        else {
-            if (ws !== undefined) ws.connect();
-        }*/
         let {onLogined} = this.nav.props;
         if (onLogined === undefined) {
             nav.push(<div>NavView has no prop onLogined</div>);
             return;
         }
         await onLogined();
+        console.log('logined: AppView shown');
     }
 
     async logined(user: User) {

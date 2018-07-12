@@ -55,12 +55,13 @@ window.addEventListener('message', function (evt) {
                     type: 'app-api-return',
                     apiName: message.apiName,
                     url: ret.url,
+                    urlDebug: ret.urlDebug,
                     token: ret.token
                 }, "*");
                 break;
             case 'app-api-return':
                 console.log("app-api-return: %s", JSON.stringify(message));
-                onAppApiReturn(message.apiName, message.url, message.token);
+                yield onAppApiReturn(message);
                 break;
         }
     });
@@ -83,18 +84,22 @@ function onReceiveAppApiMessage(hash, apiName) {
             console.log('apiTokenApi.api return undefined. api=%s, unit=%s', apiName, unit);
             throw 'api not found';
         }
-        return { name: apiName, url: ret.url, urlDebug: ret.UrlDebug, token: ret.token };
+        return { name: apiName, url: ret.url, urlDebug: ret.urlDebug, token: ret.token };
     });
 }
-function onAppApiReturn(api, url, token) {
-    let action = apiTokens[api];
-    if (action === undefined) {
-        throw 'error app api return';
-        //return;
-    }
-    action.url = url;
-    action.token = token;
-    action.resolve(action);
+function onAppApiReturn(message) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let { apiName, url, urlDebug, token } = message;
+        let action = apiTokens[apiName];
+        if (action === undefined) {
+            throw 'error app api return';
+            //return;
+        }
+        let realUrl = yield getUrlOrDebug(url, urlDebug);
+        action.url = realUrl;
+        action.token = token;
+        action.resolve(action);
+    });
 }
 export function setMeInFrame(appHash) {
     let parts = appHash.split('-');
@@ -106,14 +111,6 @@ export function setMeInFrame(appHash) {
         meInFrame.page = parts[2];
     if (len > 2)
         meInFrame.param = parts.slice(3);
-    //let p0 = 3;
-    //let p1 = appHash.indexOf('-', p0);
-    //if (p1<p0) return;
-    //let p2 = appHash.indexOf('-', p1+1);
-    //if (p2<p1) return;
-    //meInFrame.hash = appHash.substring(p0, p1);
-    //meInFrame.unit = Number(appHash.substring(p1+1));
-    //meInFrame.app = Number(appHash.substring(p2+1));
     return meInFrame;
 }
 export function appUrl(url, unitId, page, param) {

@@ -94,41 +94,11 @@ export class WSChannel extends WsBase {
         }
     }
     private async wsMessage(event:any):Promise<void> {
-        /*
-        event dump:
-        currentTarget:WebSocket {url: "ws://192.168.0.199:3000/tv", readyState: 1, bufferedAmount: 0, …}
-        data:"{"type":"sheetAct","data":{"state":"备货"}}"
-        defaultPrevented:false
-        eventPhase:0
-        isTrusted:true
-        lastEventId:""
-        origin:"ws://192.168.0.199:3000"
-        path:Array(0) []
-        ports:null
-        returnValue:true
-        source:null
-        srcElement:WebSocket {url: "ws://192.168.0.199:3000/tv", readyState: 1, bufferedAmount: 0, …}
-        target:WebSocket {url: "ws://192.168.0.199:3000/tv", readyState: 1, bufferedAmount: 0, …}
-        timeStamp:34665.245
-        type:"message"
-        */
-        //console.log('ws msg:', event);
         try {
             console.log('websocket message: %s', event.data);
             let msg = JSON.parse(event.data);
             postWsToSubApp(msg);
             await this.receive(msg);
-            /*
-            let t = json.type;
-            for (let i in this.anyHandlers) {
-                await this.anyHandlers[i](json);
-            }
-            for (let i in this.msgHandlers) {
-                let {type, handler} = this.msgHandlers[i];
-                if (type !== t) continue;
-                await handler(json);
-            }
-            */
         }
         catch (err) {
             console.log('ws msg error: ', err);
@@ -141,6 +111,3 @@ export class WSChannel extends WsBase {
         });
     }
 }
-
-//const wsChannel = new WSChannel();
-//export default wsChannel;

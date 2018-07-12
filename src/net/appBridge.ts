@@ -68,11 +68,12 @@ window.addEventListener('message', async function(evt) {
                 type: 'app-api-return', 
                 apiName: message.apiName,
                 url: ret.url,
+                urlDebug: ret.urlDebug,
                 token: ret.token}, "*");
             break;
         case 'app-api-return':
             console.log("app-api-return: %s", JSON.stringify(message));
-            onAppApiReturn(message.apiName, message.url, message.token);
+            await onAppApiReturn(message);
             break;
     }
 });
@@ -93,16 +94,18 @@ async function onReceiveAppApiMessage(hash: string, apiName: string): Promise<Ap
         console.log('apiTokenApi.api return undefined. api=%s, unit=%s', apiName, unit);
         throw 'api not found';
     }
-    return {name: apiName, url: ret.url, urlDebug:ret.UrlDebug, token: ret.token};
+    return {name: apiName, url: ret.url, urlDebug:ret.urlDebug, token: ret.token};
 }
 
-function onAppApiReturn(api: string, url: string, token: string) {
-    let action = apiTokens[api];
+async function onAppApiReturn(message:any) {
+    let {apiName, url, urlDebug, token} = message;
+    let action = apiTokens[apiName];
     if (action === undefined) {
         throw 'error app api return';
         //return;
     }
-    action.url = url;
+    let realUrl = await getUrlOrDebug(url, urlDebug);
+    action.url = realUrl;
     action.token = token;
     action.resolve(action);
 }
@@ -114,14 +117,6 @@ export function setMeInFrame(appHash: string):AppInFrame {
     if (len>0) meInFrame.unit = Number(parts[1]);
     if (len>1) meInFrame.page = parts[2];
     if (len>2) meInFrame.param = parts.slice(3);
-    //let p0 = 3;
-    //let p1 = appHash.indexOf('-', p0);
-    //if (p1<p0) return;
-    //let p2 = appHash.indexOf('-', p1+1);
-    //if (p2<p1) return;
-    //meInFrame.hash = appHash.substring(p0, p1);
-    //meInFrame.unit = Number(appHash.substring(p1+1));
-    //meInFrame.app = Number(appHash.substring(p2+1));
     return meInFrame;
 }
 

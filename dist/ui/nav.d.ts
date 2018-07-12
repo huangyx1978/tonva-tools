@@ -53,6 +53,7 @@ export declare class NavView extends React.Component<Props, State> {
 export declare class Nav {
     private nav;
     private loginView;
+    private ws;
     local: LocalData;
     user: User;
     set(nav: NavView): void;
