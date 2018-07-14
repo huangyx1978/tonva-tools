@@ -54,10 +54,10 @@ export declare class Nav {
     private nav;
     private loginView;
     private ws;
+    private wsHost;
     local: LocalData;
     user: User;
     set(nav: NavView): void;
-    debug(): void;
     registerReceiveHandler(handler: (message: any) => Promise<void>): number;
     unregisterReceiveHandler(handlerId: number): void;
     private isInFrame;

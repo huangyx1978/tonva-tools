@@ -3,8 +3,8 @@ import * as jwtDecode from 'jwt-decode';
 export interface User {
     id: number;
     name: string;
-    //accesses?: string[];
     token: string;
+    device: string;
     nick?: string;
     icon?: string;
 }
@@ -13,11 +13,12 @@ export function decodeToken(token: string): User {
     let ret:any = jwtDecode(token);
     let accesses;
     if (ret.accesses) accesses = ret.accesses.split(',');
+
     let user: User = {
         id: ret.id,
         name: ret.name,
-        // accesses: accesses,
-        token: token
+        token: token,
+        device: ret.device,
     };
     return user;
 }

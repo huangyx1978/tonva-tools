@@ -24,6 +24,7 @@ import 'font-awesome/css/font-awesome.min.css';
 import '../css/va.css';
 import '../css/animation.css';
 import { wsBridge } from '../net/wsChannel';
+import { uid } from '../uid';
 const regEx = new RegExp('Android|webOS|iPhone|iPad|' +
     'BlackBerry|Windows Phone|' +
     'Opera Mini|IEMobile|Mobile', 'i');
@@ -294,8 +295,6 @@ export class Nav {
         //this.logo = logo;
         this.nav = nav;
     }
-    debug() {
-    }
     registerReceiveHandler(handler) {
         if (this.ws === undefined)
             return;
@@ -315,6 +314,7 @@ export class Nav {
                     React.createElement("div", { className: "d-flex align-items-center justify-content-center slide text-info", style: { width: '5em', height: '2em' } }, "\u52A0\u8F7D\u4E2D..."))));
             let { centerUrl, wsHost } = yield loadCenterUrl();
             setCenterUrl(centerUrl);
+            this.wsHost = wsHost;
             let hash = document.location.hash;
             // document.title = document.location.origin;
             console.log("url=%s hash=%s", document.location.origin, hash);
@@ -332,20 +332,18 @@ export class Nav {
                     return;
                 }
             }
-            let ws = this.ws = new WSChannel(wsHost, undefined);
-            ws.onWsReceiveAny((msg) => __awaiter(this, void 0, void 0, function* () {
-                console.log("websocket receive and post to frames: %s", JSON.stringify(msg));
-                (window.opener || window.parent).postMessage({ type: 'ws', msg: msg }, '*');
-            }));
-            let user = nav.local.user.get();
-            if (user !== undefined) {
-                yield nav.logined(user);
+            let device = this.local.device.get();
+            let user = this.local.user.get();
+            if (device === undefined) {
+                device = uid();
+                this.local.device.set(device);
+                user = undefined;
             }
-            else {
+            if (user === undefined || user.device !== device) {
                 yield nav.showLogin();
+                return;
             }
-            console.log('ws.connect() in app main frame');
-            ws.connect();
+            yield nav.logined(user);
         });
     }
     showAppView() {
@@ -361,10 +359,17 @@ export class Nav {
     }
     logined(user) {
         return __awaiter(this, void 0, void 0, function* () {
+            let ws = this.ws = new WSChannel(this.wsHost, user.token);
+            ws.onWsReceiveAny((msg) => __awaiter(this, void 0, void 0, function* () {
+                console.log("websocket receive and post to frames: %s", JSON.stringify(msg));
+                (window.opener || window.parent).postMessage({ type: 'ws', msg: msg }, '*');
+            }));
+            ws.connect();
             console.log("logined: %s", JSON.stringify(user));
             this.local.user.set(user);
             netToken.set(user.token);
             this.user = user;
+            console.log('ws.connect() in app main frame');
             yield this.showAppView();
         });
     }

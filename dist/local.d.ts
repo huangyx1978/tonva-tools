@@ -12,6 +12,7 @@ export declare class Data<T> implements ClearableData {
 }
 export declare class LocalData {
     user: Data<User>;
+    device: Data<string>;
     homeTabCur: Data<number>;
     logoutClear(): void;
 }

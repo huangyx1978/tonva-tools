@@ -26,6 +26,7 @@ export class Data<T> implements ClearableData {
 
 export class LocalData {
     user = new Data<User>('user');
+    device = new Data<string>('device');
     homeTabCur = new Data<number>('homeTabCur');
 
     logoutClear() {

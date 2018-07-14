@@ -1,14 +1,11 @@
 import {CenterApi} from '../net';
 import {User, decodeToken} from '../user';
+import { nav } from '../ui';
 
 export class UserApi extends CenterApi {
     async login(params: {user: string, pwd: string}): Promise<any> {
+        (params as any).device = nav.local.device.get();
         let ret = await this.get('login', params);
-        /*
-        .then((token?:string) => {
-                if (token !== undefined) return decodeToken(token);
-            });
-        */
         switch (typeof ret) {
             default: return;
             case 'string': return decodeToken(ret);

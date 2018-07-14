@@ -7,8 +7,8 @@ export function decodeToken(token) {
     let user = {
         id: ret.id,
         name: ret.name,
-        // accesses: accesses,
-        token: token
+        token: token,
+        device: ret.device,
     };
     return user;
 }

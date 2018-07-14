@@ -12,6 +12,7 @@ import 'font-awesome/css/font-awesome.min.css';
 import '../css/va.css';
 import '../css/animation.css';
 import { WsBase, wsBridge } from '../net/wsChannel';
+import { uid } from '../uid';
 
 const regEx = new RegExp('Android|webOS|iPhone|iPad|' +
     'BlackBerry|Windows Phone|'  +
@@ -314,15 +315,13 @@ export class Nav {
     private nav:NavView;
     private loginView: JSX.Element;
     private ws: WsBase;
+    private wsHost: string;
     local: LocalData = new LocalData();
     @observable user: User = undefined; // = {id:undefined, name:undefined, token:undefined};
     
     set(nav:NavView) {
         //this.logo = logo;
         this.nav = nav;
-    }
-
-    debug() {
     }
 
     registerReceiveHandler(handler: (message:any)=>Promise<void>):number {
@@ -348,6 +347,7 @@ export class Nav {
 
         let {centerUrl, wsHost} = await loadCenterUrl();
         setCenterUrl(centerUrl);
+        this.wsHost = wsHost;
 
         let hash = document.location.hash;
         // document.title = document.location.origin;
@@ -366,19 +366,19 @@ export class Nav {
                 return;
             }
         }
-        let ws:WSChannel = this.ws = new WSChannel(wsHost, undefined);
-        ws.onWsReceiveAny(async (msg:any)=> {
-            console.log("websocket receive and post to frames: %s", JSON.stringify(msg));
-            (window.opener || window.parent).postMessage({type:'ws', msg:msg}, '*');
-        });
-        let user: User = nav.local.user.get();
-        if (user !== undefined) {
-            await nav.logined(user);
-        } else {
-            await nav.showLogin();
+        let device: string = this.local.device.get();
+        let user: User = this.local.user.get();
+        if (device === undefined) {
+            device = uid();
+            this.local.device.set(device);
+            user = undefined;
         }
-        console.log('ws.connect() in app main frame');
-        ws.connect();
+        if (user === undefined || user.device !== device) {
+            await nav.showLogin();
+            return;
+        }
+
+        await nav.logined(user);
     }
 
     private async showAppView() {
@@ -392,10 +392,18 @@ export class Nav {
     }
 
     async logined(user: User) {
+        let ws:WSChannel = this.ws = new WSChannel(this.wsHost, user.token);
+        ws.onWsReceiveAny(async (msg:any)=> {
+            console.log("websocket receive and post to frames: %s", JSON.stringify(msg));
+            (window.opener || window.parent).postMessage({type:'ws', msg:msg}, '*');
+        });
+        ws.connect();
+
         console.log("logined: %s", JSON.stringify(user));
         this.local.user.set(user);
         netToken.set(user.token);
         this.user = user;
+        console.log('ws.connect() in app main frame');
         await this.showAppView();
     }
 
