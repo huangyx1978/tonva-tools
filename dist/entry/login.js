@@ -12,7 +12,7 @@ import { nav, Page, FormSchema } from '../ui';
 import RegisterView from './register';
 import Forget from './forget';
 import userApi from './userApi';
-import { ValidForm } from '../index';
+import { ValidForm } from '..';
 const logo = require('../img/logo.svg');
 /*
 export interface Values {

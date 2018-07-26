@@ -42,9 +42,8 @@ function getCenterChannel() {
     return centerChannel = new HttpChannel(true, centerHost, centerToken);
 }
 export class CenterApi extends ApiBase {
-    //private channel: HttpChannel;
-    constructor(path, /*ws:string, */ showWaiting) {
-        super(path, /*ws, */ showWaiting);
+    constructor(path, showWaiting) {
+        super(path, showWaiting);
     }
     getHttpChannel() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -76,9 +75,9 @@ export class CenterAppApi extends CenterApi {
             return yield this.get('tie/app-apis', { unit: unit, appOwner: appOwner, appName: appName });
         });
     }
-    chatApi(unit) {
+    unitxApi(unit) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.get('tie/chat-api', { unit: unit });
+            return yield this.get('tie/unitx-api', { unit: unit });
         });
     }
 }

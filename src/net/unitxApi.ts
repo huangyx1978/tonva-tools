@@ -1,19 +1,18 @@
 import {ApiBase, getUrlOrDebug} from './apiBase';
 import {HttpChannel} from './httpChannel';
-import {HttpChannelUI, HttpChannelNavUI} from './httpChannelUI';
-import {appApi} from './appBridge';
+import {HttpChannelNavUI} from './httpChannelUI';
 import {CenterAppApi} from './centerApi';
 
 let channels:{[unitId:number]: HttpChannel} = {};
 
-export function logoutChatApis() {
+export function logoutUnitxApis() {
     channels = {};
 }
 
-export class ChatApi extends ApiBase {
+export class UnitxApi extends ApiBase {
     private unitId:number;
     constructor(unitId:number) {
-        super('tv/', /*undefined, */true);
+        super('tv/', true);
         this.unitId = unitId;
     }
 
@@ -26,8 +25,8 @@ export class ChatApi extends ApiBase {
     private async buildChannel():Promise<HttpChannel> {
         let channelUI = new HttpChannelNavUI();
         let centerAppApi = new CenterAppApi('tv/', undefined);
-        let ret = await centerAppApi.chatApi(this.unitId);
-        let {token, url, urlDebug/*, ws, wsDebug*/} = ret;
+        let ret = await centerAppApi.unitxApi(this.unitId);
+        let {token, url, urlDebug} = ret;
         let realUrl = await getUrlOrDebug(url, urlDebug);
         this.token = token;
         return new HttpChannel(false, realUrl, token, channelUI);

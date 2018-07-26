@@ -12,8 +12,7 @@ export function refetchApi(channel, url, options, resolve, reject) {
     });
 }
 export class ApiBase {
-    constructor(path, /*ws:string, */ showWaiting) {
-        //this.ws = ws;
+    constructor(path, showWaiting) {
         this.path = path || '';
         this.showWaiting = showWaiting;
     }
@@ -55,6 +54,8 @@ export function getUrlOrDebug(url, urlDebug) {
             return url;
         }
         try {
+            if (urlDebug.endsWith('/') === false)
+                urlDebug += '/';
             let ret = yield fetch(urlDebug + 'hello', {
                 method: "GET",
                 mode: "no-cors",
@@ -62,19 +63,13 @@ export function getUrlOrDebug(url, urlDebug) {
                     "Content-Type": "text/plain"
                 },
             });
+            let text = yield ret.text();
             return urlDebug;
         }
         catch (_a) {
             console.log('cannot connect %s, so use %s', urlDebug, url);
             return url;
         }
-        /*
-        if (process.env.NODE_ENV==='development') {
-            if (urlDebug !== undefined) url = urlDebug;
-            //if (wsDebug !== undefined) ws = wsDebug;
-        }
-        //this.ws = ws;
-        */
     });
 }
 //# sourceMappingURL=apiBase.js.map

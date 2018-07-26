@@ -1,4 +1,3 @@
-//import nav from './nav';
 import {bridgeCenterApi, isBridged} from './appBridge';
 import {FetchError} from '../fetchError';
 import {HttpChannelUI} from './httpChannelUI';

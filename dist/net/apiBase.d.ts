@@ -4,7 +4,7 @@ export declare abstract class ApiBase {
     protected token: string;
     protected path: string;
     protected showWaiting: boolean;
-    constructor(path: string, /*ws:string, */ showWaiting: boolean);
+    constructor(path: string, showWaiting: boolean);
     protected abstract getHttpChannel(): Promise<HttpChannel>;
     call(url: string, method: string, body: any): Promise<any>;
     get(path: string, params: any): Promise<any>;

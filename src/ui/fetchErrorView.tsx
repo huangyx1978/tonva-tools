@@ -7,10 +7,13 @@ export interface FetchErrorProps extends FetchError {
 }
 
 export default class FetchErrorView extends React.Component<FetchErrorProps, null> {
-    private click() {
+    private reApi = async () => {
         this.props.clearError();
         const {channel, url, options, resolve, reject} = this.props;
-        refetchApi(channel, url, options, resolve, reject);
+        await refetchApi(channel, url, options, resolve, reject);
+    }
+    private close = async () => {
+        this.props.clearError();
     }
     render() {
         let {error, url} = this.props;
@@ -26,8 +29,7 @@ export default class FetchErrorView extends React.Component<FetchErrorProps, nul
         else {
             errContent = <div>{error}</div>;
         }
-        return <li
-            onClick={() => this.click()}>
+        return <li>
             <article className="page-container">
                 <section>
                     <div  className="va-error">
@@ -35,6 +37,10 @@ export default class FetchErrorView extends React.Component<FetchErrorProps, nul
                         <div>点击重新访问</div>
                         <div>url: {url}</div>
                         {errContent}
+                        <div className="p-3">
+                            <button type='button' onClick={this.reApi}>重新API</button>
+                            <button type='button' onClick={this.close}>关闭</button>
+                        </div>
                     </div>
                 </section>
             </article>

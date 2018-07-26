@@ -5,13 +5,11 @@ export async function refetchApi(channel:HttpChannel, url, options, resolve, rej
 }
 
 export abstract class ApiBase {
-    //ws: string;
     protected token: string;
     protected path: string;
     protected showWaiting: boolean;
 
-    constructor(path: string, /*ws:string, */showWaiting: boolean) {
-        //this.ws = ws;
+    constructor(path: string, showWaiting: boolean) {
         this.path = path || '';
         this.showWaiting = showWaiting;
     }
@@ -52,6 +50,7 @@ export async function getUrlOrDebug(url:string, urlDebug:string):Promise<string>
     }
 
     try {
+        if (urlDebug.endsWith('/') === false) urlDebug += '/';
         let ret = await fetch(urlDebug + 'hello', {
             method: "GET",
             mode: "no-cors", // no-cors, cors, *same-origin
@@ -59,17 +58,11 @@ export async function getUrlOrDebug(url:string, urlDebug:string):Promise<string>
                 "Content-Type": "text/plain"
             },
         });
+        let text = await ret.text();
         return urlDebug;
     }
     catch {
         console.log('cannot connect %s, so use %s', urlDebug, url);
         return url;
     }
-    /*
-    if (process.env.NODE_ENV==='development') {
-        if (urlDebug !== undefined) url = urlDebug;
-        //if (wsDebug !== undefined) ws = wsDebug;
-    }
-    //this.ws = ws;
-    */
 }

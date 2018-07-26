@@ -16,7 +16,7 @@ export function logoutUnitxApis() {
 }
 export class UnitxApi extends ApiBase {
     constructor(unitId) {
-        super('tv/', /*undefined, */ true);
+        super('tv/', true);
         this.unitId = unitId;
     }
     getHttpChannel() {
@@ -32,11 +32,11 @@ export class UnitxApi extends ApiBase {
             let channelUI = new HttpChannelNavUI();
             let centerAppApi = new CenterAppApi('tv/', undefined);
             let ret = yield centerAppApi.unitxApi(this.unitId);
-            let { token, url, urlDebug /*, ws, wsDebug*/ } = ret;
+            let { token, url, urlDebug } = ret;
             let realUrl = yield getUrlOrDebug(url, urlDebug);
             this.token = token;
             return new HttpChannel(false, realUrl, token, channelUI);
         });
     }
 }
-//# sourceMappingURL=chatApi.js.map
+//# sourceMappingURL=unitxApi.js.map

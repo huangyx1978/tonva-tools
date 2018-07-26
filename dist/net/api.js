@@ -10,18 +10,17 @@ import { ApiBase } from './apiBase';
 import { HttpChannel } from './httpChannel';
 import { HttpChannelNavUI } from './httpChannelUI';
 import { appApi } from './appBridge';
-import { logoutChatApis } from './chatApi';
+import { logoutUnitxApis } from './unitxApi';
 let channelUIs = {};
 let channelNoUIs = {};
 export function logoutApis() {
     channelUIs = {};
     channelNoUIs = {};
-    logoutChatApis();
+    logoutUnitxApis();
 }
 export class Api extends ApiBase {
-    constructor(baseUrl, url, /*ws, */ apiOwner, apiName, showWaiting) {
-        super(baseUrl, /*ws, */ showWaiting);
-        this.url = url;
+    constructor(basePath, apiOwner, apiName, showWaiting) {
+        super(basePath, showWaiting);
         if (apiName) {
             this.apiOwner = apiOwner;
             this.apiName = apiName;

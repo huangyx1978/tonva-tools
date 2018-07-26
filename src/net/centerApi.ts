@@ -39,10 +39,8 @@ function getCenterChannel():HttpChannel {
 }
 
 export abstract class CenterApi extends ApiBase {
-    //private channel: HttpChannel;
-
-    constructor(path: string, /*ws:string, */showWaiting?: boolean) {
-        super(path, /*ws, */showWaiting);
+    constructor(path: string, showWaiting?: boolean) {
+        super(path, showWaiting);
     }
 
     protected async getHttpChannel(): Promise<HttpChannel> {
@@ -84,7 +82,7 @@ export class CenterAppApi extends CenterApi {
     async apis(unit:number, appOwner:string, appName:string):Promise<AppApi[]> {
         return await this.get('tie/app-apis', {unit:unit, appOwner:appOwner, appName:appName});
     }
-    async chatApi(unit:number):Promise<AppApi> {
-        return await this.get('tie/chat-api', {unit:unit});
+    async unitxApi(unit:number):Promise<AppApi> {
+        return await this.get('tie/unitx-api', {unit:unit});
     }
 }

@@ -42,6 +42,9 @@ export class NavView extends React.Component {
         super(props);
         this.waitCount = 0;
         this.isHistoryBack = false;
+        this.clearError = () => {
+            this.setState({ fetchError: undefined });
+        };
         this.back = this.back.bind(this);
         this.navBack = this.navBack.bind(this);
         this.stack = [];
@@ -87,9 +90,10 @@ export class NavView extends React.Component {
     }
     endWait() {
         setTimeout(() => {
+            /*
             this.setState({
                 fetchError: undefined,
-            });
+            });*/
             --this.waitCount;
             if (this.waitCount === 0) {
                 if (this.waitTimeHandler !== undefined) {
@@ -243,7 +247,7 @@ export class NavView extends React.Component {
                 break;
         }
         if (fetchError)
-            elError = React.createElement(FetchErrorView, Object.assign({ clearError: () => this.setState({ fetchError: undefined }) }, fetchError));
+            elError = React.createElement(FetchErrorView, Object.assign({ clearError: this.clearError }, fetchError));
         return (React.createElement("ul", { className: 'va' },
             stack.map((item, index) => {
                 let { key, view } = item;

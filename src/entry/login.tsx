@@ -7,7 +7,7 @@ import RegisterView from './register';
 import RegisterSuccess from './regSuccess';
 import Forget from './forget';
 import userApi from './userApi';
-import { ValidForm } from '../index';
+import { ValidForm } from '..';
 
 const logo = require('../img/logo.svg');
 

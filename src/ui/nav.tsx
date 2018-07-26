@@ -5,7 +5,7 @@ import {Page} from './page';
 import {netToken} from '../net/netToken';
 import FetchErrorView from './fetchErrorView';
 import {FetchError} from '../fetchError';
-import {appUrl, appApi, setMeInFrame} from '../net/appBridge';
+import {appUrl, setMeInFrame} from '../net/appBridge';
 import {LocalData} from '../local';
 import {logoutApis, setCenterUrl, setCenterToken, WSChannel} from '../net';
 import 'font-awesome/css/font-awesome.min.css';
@@ -102,9 +102,10 @@ export class NavView extends React.Component<Props, State> {
 
     endWait() {
         setTimeout(() => {
+            /*
             this.setState({
                 fetchError: undefined,
-            });
+            });*/
             --this.waitCount;
             if (this.waitCount === 0) {
                 if (this.waitTimeHandler !== undefined) {
@@ -240,6 +241,9 @@ export class NavView extends React.Component<Props, State> {
     confirmBox(message?:string): boolean {
         return window.confirm(message);
     }
+    clearError = () => {
+        this.setState({fetchError: undefined});
+    }
     render() {
         const {wait, fetchError} = this.state;
         let stack = this.state.stack;
@@ -258,9 +262,7 @@ export class NavView extends React.Component<Props, State> {
                 break;
         }
         if (fetchError)
-            elError = <FetchErrorView 
-                clearError={()=>this.setState({fetchError: undefined})} 
-                {...fetchError} />
+            elError = <FetchErrorView clearError={this.clearError} {...fetchError} />
         return (
         <ul className='va'>
             {

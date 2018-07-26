@@ -2,7 +2,7 @@ import {ApiBase} from './apiBase';
 import {HttpChannel} from './httpChannel';
 import {HttpChannelUI, HttpChannelNavUI} from './httpChannelUI';
 import {appApi} from './appBridge';
-import {logoutChatApis} from './chatApi';
+import {logoutUnitxApis} from './unitxApi';
 import { debug } from 'util';
 
 let channelUIs:{[name:string]: HttpChannel} = {};
@@ -11,18 +11,16 @@ let channelNoUIs:{[name:string]: HttpChannel} = {};
 export function logoutApis() {
     channelUIs = {};
     channelNoUIs = {};
-    logoutChatApis();
+    logoutUnitxApis();
 }
 
 export class Api extends ApiBase {
-    url: string;
     apiOwner: string;
     apiName: string;
     api: string;
 
-    constructor(baseUrl: string, url:string, /*ws, */apiOwner, apiName: string, showWaiting?: boolean) {
-        super(baseUrl, /*ws, */showWaiting);
-        this.url = url;
+    constructor(basePath: string, apiOwner, apiName: string, showWaiting?: boolean) {
+        super(basePath, showWaiting);
         if (apiName) {
             this.apiOwner = apiOwner;
             this.apiName = apiName;
