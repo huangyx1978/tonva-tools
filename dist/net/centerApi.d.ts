@@ -19,7 +19,12 @@ export declare class CallCenterApi extends CenterApi {
     directCall(url: string, method: string, body: any): Promise<any>;
 }
 export declare const callCenterapi: CallCenterApi;
+export interface App {
+    id: number;
+    apis: AppApi[];
+}
 export interface AppApi {
+    id: number;
     apiOwner: string;
     apiName: string;
     url: string;
@@ -30,6 +35,6 @@ export interface AppApi {
     token: string;
 }
 export declare class CenterAppApi extends CenterApi {
-    apis(unit: number, appOwner: string, appName: string): Promise<AppApi[]>;
+    apis(unit: number, appOwner: string, appName: string): Promise<App>;
     unitxApi(unit: number): Promise<AppApi>;
 }

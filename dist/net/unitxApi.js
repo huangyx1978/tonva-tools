@@ -6,17 +6,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { ApiBase, getUrlOrDebug } from './apiBase';
+import { getUrlOrDebug } from './apiBase';
 import { HttpChannel } from './httpChannel';
 import { HttpChannelNavUI } from './httpChannelUI';
 import { CenterAppApi } from './centerApi';
+import { Api } from './api';
 let channels = {};
 export function logoutUnitxApis() {
     channels = {};
 }
-export class UnitxApi extends ApiBase {
+export class UnitxApi extends Api {
     constructor(unitId) {
-        super('tv/', true);
+        super('tv/', undefined, undefined, true);
         this.unitId = unitId;
     }
     getHttpChannel() {

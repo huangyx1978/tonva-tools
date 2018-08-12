@@ -1,4 +1,4 @@
-import { AppApi } from './centerApi';
+import { App } from './api';
 export interface ApiToken {
     name: string;
     url: string;
@@ -14,10 +14,10 @@ export interface AppInFrame {
 export declare let meInFrame: AppInFrame;
 export declare function isBridged(): boolean;
 export declare function setMeInFrame(appHash: string): AppInFrame;
-export declare function appUrl(url: string, unitId: number, page?: string, param?: string[]): {
+export declare function appUrl(url: string, unitId: number, page?: string, param?: any[]): {
     url: string;
     hash: string;
 };
-export declare function loadAppApis(appOwner: string, appName: any): Promise<AppApi[]>;
+export declare function loadAppApis(appOwner: string, appName: any): Promise<App>;
 export declare function appApi(api: string, apiOwner: string, apiName: string): Promise<ApiToken>;
 export declare function bridgeCenterApi(url: string, method: string, body: any): Promise<any>;

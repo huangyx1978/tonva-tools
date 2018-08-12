@@ -8,21 +8,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { nav } from '../ui';
 import { uid } from '../uid';
-import { apiTokenApi, callCenterapi, CenterAppApi, centerToken } from './centerApi';
+import { apiTokenApi, callCenterapi, CenterAppApi, centerToken } from './api';
 import { setSubAppWindow, wsBridge } from './wsChannel';
 import { getUrlOrDebug } from './apiBase';
-const debugUnitId = Number(process.env.REACT_APP_DEBUG_UNITID);
 const apiTokens = {};
 const appsInFrame = {};
 export let meInFrame = {
     hash: undefined,
-    unit: debugUnitId,
+    unit: undefined,
     page: undefined,
     param: undefined,
 };
 export function isBridged() {
     return self !== window.parent;
-    //if (sourceWin === undefined && window === window.parent) {
 }
 window.addEventListener('message', function (evt) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -137,7 +135,7 @@ export function appUrl(url, unitId, page, param) {
 export function loadAppApis(appOwner, appName) {
     return __awaiter(this, void 0, void 0, function* () {
         let centerAppApi = new CenterAppApi('tv/', undefined);
-        return yield centerAppApi.apis(debugUnitId, appOwner, appName);
+        return yield centerAppApi.apis(meInFrame.unit, appOwner, appName);
     });
 }
 export function appApi(api, apiOwner, apiName) {
@@ -146,10 +144,9 @@ export function appApi(api, apiOwner, apiName) {
         if (apiToken !== undefined)
             return apiToken;
         if (!isBridged()) {
-            apiToken = yield apiTokenApi.api({ unit: debugUnitId, apiOwner: apiOwner, apiName: apiName });
+            apiToken = yield apiTokenApi.api({ unit: meInFrame.unit, apiOwner: apiOwner, apiName: apiName });
             if (apiToken === undefined) {
                 let err = 'unauthorized call: apiTokenApi center return undefined!';
-                //console.log(err);
                 throw err;
             }
             if (apiToken.token === undefined)

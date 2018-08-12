@@ -80,7 +80,7 @@ export declare class Nav {
     back(confirm?: boolean): Promise<void>;
     regConfirmClose(confirmClose: () => Promise<boolean>): void;
     confirmBox(message?: string): boolean;
-    navToApp(url: string, unitId: number): void;
+    navToApp(url: string, unitId: number, apiId?: number, sheetType?: number, sheetId?: number): void;
     navToSite(url: string): void;
     readonly logs: string[];
     log(msg: string): void;

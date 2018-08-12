@@ -19,7 +19,7 @@ import { netToken } from '../net/netToken';
 import FetchErrorView from './fetchErrorView';
 import { appUrl, setMeInFrame } from '../net/appBridge';
 import { LocalData } from '../local';
-import { logoutApis, setCenterUrl, setCenterToken, WSChannel } from '../net';
+import { logoutApis, setCenterUrl, setCenterToken, WSChannel, getCenterUrl } from '../net';
 import 'font-awesome/css/font-awesome.min.css';
 import '../css/va.css';
 import '../css/animation.css';
@@ -265,7 +265,12 @@ export class NavView extends React.Component {
 function loadCenterUrl() {
     return __awaiter(this, void 0, void 0, function* () {
         let centerUrl, wsHost;
-        if (process.env.NODE_ENV === 'development') {
+        let hash = document.location.hash;
+        if (hash.includes('sheet_debug') === true) {
+            centerUrl = process.env.REACT_APP_CENTER_URL_DEBUG;
+            wsHost = process.env.REACT_APP_WSHOST_DEBUG;
+        }
+        else if (process.env.NODE_ENV === 'development') {
             centerUrl = process.env.REACT_APP_CENTER_URL_DEBUG;
             if (centerUrl !== undefined) {
                 wsHost = process.env.REACT_APP_WSHOST_DEBUG;
@@ -441,8 +446,12 @@ export class Nav {
     confirmBox(message) {
         return this.nav.confirmBox(message);
     }
-    navToApp(url, unitId) {
-        let uh = appUrl(url, unitId);
+    navToApp(url, unitId, apiId, sheetType, sheetId) {
+        let centerUrl = getCenterUrl();
+        let sheet = centerUrl.includes('http://localhost:') === true ? 'sheet_debug' : 'sheet';
+        let uh = sheetId === undefined ?
+            appUrl(url, unitId) :
+            appUrl(url, unitId, sheet, [apiId, sheetType, sheetId]);
         console.log('navToApp: %s', JSON.stringify(uh));
         nav.push(React.createElement("article", { className: 'app-container' },
             React.createElement("span", { id: uh.hash, onClick: () => this.back(), style: mobileHeaderStyle },

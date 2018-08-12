@@ -9,11 +9,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import { HttpChannelNavUI } from './httpChannelUI';
 import { HttpChannel } from './httpChannel';
 import { ApiBase } from './apiBase';
-/*
-const centerHost_Debug = process.env.REACT_APP_CENTER_URL_DEBUG;
-const wsHost = process.env.REACT_APP_WSHOST;
-const wsHost_Debug = process.env.REACT_APP_WSHOST_DEBUG;
-*/
 let centerHost; // = process.env.REACT_APP_CENTER_URL;
 export function setCenterUrl(url) {
     console.log('setCenterUrl %s', url);

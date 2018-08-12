@@ -1,10 +1,10 @@
 import {nav} from '../ui';
 import {uid} from '../uid';
-import {apiTokenApi, callCenterapi, CenterAppApi, AppApi, centerToken} from './centerApi';
+import {apiTokenApi, callCenterapi, CenterAppApi, AppApi, centerToken, App} from './api';
 import {setSubAppWindow, wsBridge} from './wsChannel';
 import { getUrlOrDebug } from './apiBase';
 
-const debugUnitId = Number(process.env.REACT_APP_DEBUG_UNITID);
+//const debugUnitId = Number(process.env.REACT_APP_DEBUG_UNITID);
 
 export interface ApiToken {
     name: string;
@@ -28,14 +28,13 @@ const appsInFrame:{[key:string]:AppInFrame} = {};
 
 export let meInFrame:AppInFrame = {
     hash: undefined,
-    unit: debugUnitId,
+    unit: undefined, //debugUnitId,
     page: undefined,
     param: undefined,
 }
 
 export function isBridged():boolean {
     return self !== window.parent;
-    //if (sourceWin === undefined && window === window.parent) {
 }
 
 window.addEventListener('message', async function(evt) {
@@ -120,7 +119,7 @@ export function setMeInFrame(appHash: string):AppInFrame {
     return meInFrame;
 }
 
-export function appUrl(url: string, unitId: number, page?:string, param?:string[]):{url:string; hash:string} {
+export function appUrl(url: string, unitId: number, page?:string, param?:any[]):{url:string; hash:string} {
     let u:string;
     for (;;) {
         u = uid();
@@ -142,19 +141,18 @@ export function appUrl(url: string, unitId: number, page?:string, param?:string[
     return {url: url, hash: u};
 }
 
-export async function loadAppApis(appOwner:string, appName): Promise<AppApi[]> {
+export async function loadAppApis(appOwner:string, appName): Promise<App> {
     let centerAppApi = new CenterAppApi('tv/', undefined);
-    return await centerAppApi.apis(debugUnitId, appOwner, appName);
+    return await centerAppApi.apis(meInFrame.unit, appOwner, appName);
 }
 
 export async function appApi(api:string, apiOwner:string, apiName:string): Promise<ApiToken> {
     let apiToken = apiTokens[api];
     if (apiToken !== undefined) return apiToken;
     if (!isBridged()) {
-        apiToken = await apiTokenApi.api({unit: debugUnitId, apiOwner:apiOwner, apiName:apiName});
+        apiToken = await apiTokenApi.api({unit: meInFrame.unit, apiOwner:apiOwner, apiName:apiName});
         if (apiToken === undefined) {
             let err = 'unauthorized call: apiTokenApi center return undefined!';
-            //console.log(err);
             throw err;
         }
         if (apiToken.token === undefined) apiToken.token = centerToken;
