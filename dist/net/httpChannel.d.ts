@@ -18,3 +18,4 @@ export declare class HttpChannel {
     callFetch(url: string, method: string, body: any): Promise<any>;
     private buildOptions;
 }
+//# sourceMappingURL=httpChannel.d.ts.map

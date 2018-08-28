@@ -15,3 +15,4 @@ export default class Register extends React.Component {
     click(): void;
     render(): JSX.Element;
 }
+//# sourceMappingURL=register.d.ts.map

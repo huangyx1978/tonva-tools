@@ -23,7 +23,7 @@ export interface PageProps extends ScrollProps {
     right?: JSX.Element;
     footer?: JSX.Element;
     tabs?: Tab[];
-    logout?: () => void;
+    logout?: boolean | (() => void);
 }
 export interface PageState {
     cur?: Tab;
@@ -37,3 +37,4 @@ export declare class Page extends React.Component<PageProps, PageState> {
     private renderSingle;
     render(): JSX.Element;
 }
+//# sourceMappingURL=page.d.ts.map

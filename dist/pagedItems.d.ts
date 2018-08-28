@@ -20,3 +20,4 @@ export declare abstract class PagedItems<T> {
     first(param: any): Promise<void>;
     more(): Promise<void>;
 }
+//# sourceMappingURL=pagedItems.d.ts.map

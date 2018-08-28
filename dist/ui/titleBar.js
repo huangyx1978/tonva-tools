@@ -11,6 +11,13 @@ import { nav, mobileHeaderStyle } from './nav';
 export class TitleBar extends React.Component {
     constructor(props) {
         super(props);
+        this.logoutClick = () => {
+            let { logout } = this.props;
+            if (typeof logout === 'function') {
+                logout();
+            }
+            nav.logout();
+        };
         this.navChange = this.navChange.bind(this);
         this.state = {
             hasBack: false,
@@ -39,12 +46,13 @@ export class TitleBar extends React.Component {
     render() {
         let b = this.state.hasBack || self != top;
         let { right, center, logout } = this.props;
-        //let r = this.props.right;
-        //let c = this.props.center;
         let back, pop, debugLogout;
         if (logout !== undefined && self === top) {
-            debugLogout = React.createElement("a", { className: "dropdown-toggle btn btn-secondary btn-sm", role: "button", onClick: () => { logout(); nav.logout(); } },
-                React.createElement("i", { className: "fa fa-sign-out" }));
+            if (typeof logout === 'boolean' && logout === true
+                || typeof logout === 'function') {
+                debugLogout = React.createElement("a", { className: "dropdown-toggle btn btn-secondary btn-sm", role: "button", onClick: this.logoutClick },
+                    React.createElement("i", { className: "fa fa-sign-out" }));
+            }
         }
         if (b) {
             switch (this.props.back) {

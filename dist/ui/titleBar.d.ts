@@ -3,7 +3,7 @@ export interface TitleBarProps {
     back?: 'back' | 'close' | 'none';
     center: string | JSX.Element;
     right?: JSX.Element;
-    logout?: () => void;
+    logout?: boolean | (() => void);
 }
 export interface TitleBarState {
     hasBack: boolean;
@@ -16,5 +16,7 @@ export declare class TitleBar extends React.Component<TitleBarProps, TitleBarSta
     componentWillUnmount(): void;
     back(): Promise<void>;
     openWindow(): void;
+    private logoutClick;
     render(): JSX.Element;
 }
+//# sourceMappingURL=titleBar.d.ts.map

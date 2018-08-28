@@ -13,3 +13,4 @@ export declare abstract class CacheIds<T extends Id> {
     protected abstract _loadIds(ids: number[]): Promise<T[]>;
     protected abstract _loadId(id: number): Promise<T>;
 }
+//# sourceMappingURL=cacheIds.d.ts.map

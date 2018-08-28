@@ -8,3 +8,4 @@ export default class FetchErrorView extends React.Component<FetchErrorProps, nul
     private close;
     render(): JSX.Element;
 }
+//# sourceMappingURL=fetchErrorView.d.ts.map

@@ -54,3 +54,4 @@ export declare class CenterAppApi extends CenterApi {
     apis(unit: number, appOwner: string, appName: string): Promise<App>;
     unitxApi(unit: number): Promise<AppApi>;
 }
+//# sourceMappingURL=api.d.ts.map

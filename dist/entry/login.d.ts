@@ -6,3 +6,4 @@ export default class Login extends React.Component {
     click(): void;
     render(): JSX.Element;
 }
+//# sourceMappingURL=login.d.ts.map

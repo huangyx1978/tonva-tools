@@ -86,3 +86,4 @@ export declare class Nav {
     log(msg: string): void;
 }
 export declare const nav: Nav;
+//# sourceMappingURL=nav.d.ts.map

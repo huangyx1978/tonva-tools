@@ -8,3 +8,4 @@ export declare class ValidForm extends React.Component<FormProps, {}> {
     componentDidMount(): void;
     render(): JSX.Element;
 }
+//# sourceMappingURL=validForm.d.ts.map

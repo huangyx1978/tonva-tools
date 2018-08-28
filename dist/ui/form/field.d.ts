@@ -26,3 +26,4 @@ export declare type FormFields = {
     resetButton?: string | boolean;
     onSumit: (values: any) => Promise<SubmitReturn | undefined>;
 };
+//# sourceMappingURL=field.d.ts.map

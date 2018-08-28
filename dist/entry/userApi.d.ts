@@ -15,3 +15,4 @@ export declare class UserApi extends CenterApi {
 }
 declare const userApi: UserApi;
 export default userApi;
+//# sourceMappingURL=userApi.d.ts.map

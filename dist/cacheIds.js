@@ -22,6 +22,8 @@ export class CacheIds {
     loadIds(ids) {
         let arr = [];
         for (let id of ids) {
+            if (id === null)
+                continue;
             let item = this.dict.get(id);
             if (item === undefined) {
                 arr.push(id);
@@ -32,13 +34,13 @@ export class CacheIds {
         this.loadId(arr);
     }
     get(id) {
-        if (id === undefined)
+        if (id === undefined || id === null)
             return null;
         let item = this.dict.get(id);
         if (item === undefined) {
-            item = { id: id };
-            this.dict.set(id, item);
+            this.dict.set(id, { id: id });
             this.loadId([id]);
+            item = this.dict.get(id);
         }
         return item;
     }
@@ -61,6 +63,8 @@ export class CacheIds {
             let items = yield this._loadIds(ids);
             if (items === undefined) {
                 for (let id of ids) {
+                    if (id === null)
+                        continue;
                     let item = yield this._loadId(id);
                     this.setItem(id, item);
                 }

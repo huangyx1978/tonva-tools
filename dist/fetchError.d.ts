@@ -7,3 +7,4 @@ export interface FetchError {
     reject: (reason?: any) => void;
     error: any;
 }
+//# sourceMappingURL=fetchError.d.ts.map

@@ -16,3 +16,4 @@ export declare class LocalData {
     homeTabCur: Data<number>;
     logoutClear(): void;
 }
+//# sourceMappingURL=local.d.ts.map

@@ -7,3 +7,4 @@ export interface User {
     icon?: string;
 }
 export declare function decodeToken(token: string): User;
+//# sourceMappingURL=user.d.ts.map

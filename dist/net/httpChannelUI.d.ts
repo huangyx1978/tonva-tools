@@ -9,3 +9,4 @@ export declare class HttpChannelNavUI implements HttpChannelUI {
     endWait(): void;
     showError(error: FetchError): Promise<void>;
 }
+//# sourceMappingURL=httpChannelUI.d.ts.map

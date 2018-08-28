@@ -9,3 +9,4 @@ export default class RegSuccess extends React.Component<Props, null> {
     login(): void;
     render(): JSX.Element;
 }
+//# sourceMappingURL=regSuccess.d.ts.map

@@ -6,9 +6,12 @@
       "declaration": true,
       "lib": ["es2016", "dom"],
       "outDir": "./dist",
+      "rootDir": "src",
       "sourceMap": true,
       "jsx": "react",
-      "experimentalDecorators": true
+      "experimentalDecorators": true,
+      "composite": true,
+      "declarationMap": true
     },
     "include": [
       "src/**/*"

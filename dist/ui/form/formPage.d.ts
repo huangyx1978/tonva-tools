@@ -20,3 +20,4 @@ export declare class FormPage extends React.Component<FormPageProps, FormPageSta
     renderMenu(menuItems: MenuItem[]): JSX.Element;
     render(): JSX.Element;
 }
+//# sourceMappingURL=formPage.d.ts.map

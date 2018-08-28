@@ -3,6 +3,7 @@ import {uid} from '../uid';
 import {apiTokenApi, callCenterapi, CenterAppApi, AppApi, centerToken, App} from './api';
 import {setSubAppWindow, wsBridge} from './wsChannel';
 import { getUrlOrDebug } from './apiBase';
+import { debug } from 'util';
 
 //const debugUnitId = Number(process.env.REACT_APP_DEBUG_UNITID);
 
@@ -26,12 +27,22 @@ export interface AppInFrame {
 }
 const appsInFrame:{[key:string]:AppInFrame} = {};
 
-export let meInFrame:AppInFrame = {
-    hash: undefined,
-    unit: undefined, //debugUnitId,
-    page: undefined,
-    param: undefined,
+class AppInFrameClass implements AppInFrame {
+    hash: string;
+    private _unit: number;
+    get unit(): number {return this._unit;}       // unit id
+    set unit(val:number) { this._unit=val;}
+    page?: string;
+    param?: string[];
 }
+
+export let meInFrame:AppInFrame = new AppInFrameClass();
+/* {
+    hash: undefined,
+    get unit():number {return } undefined, //debugUnitId,
+    page: undefined;
+    param: undefined,
+}*/
 
 export function isBridged():boolean {
     return self !== window.parent;
@@ -47,14 +58,14 @@ window.addEventListener('message', async function(evt) {
             wsBridge.receive(message.msg);
             break;
         case 'hide-frame-back':
-            setSubAppWindow(evt.source);
+            setSubAppWindow(evt.source as Window);
             hideFrameBack(message.hash);
             break;
         case 'pop-app':
             nav.navBack();
             break;
         case 'center-api':
-            await callCenterApiFromMessage(evt.source, message);
+            await callCenterApiFromMessage(evt.source as Window, message);
             break;
         case 'center-api-return':
             bridgeCenterApiReturn(message);
@@ -63,12 +74,12 @@ window.addEventListener('message', async function(evt) {
             console.log("receive PostMessage: %s", JSON.stringify(message));
             let ret = await onReceiveAppApiMessage(message.hash, message.apiName);
             console.log("onReceiveAppApiMessage: %s", JSON.stringify(ret));
-            evt.source.postMessage({
+            (evt.source as Window).postMessage({
                 type: 'app-api-return', 
                 apiName: message.apiName,
                 url: ret.url,
                 urlDebug: ret.urlDebug,
-                token: ret.token}, "*");
+                token: ret.token} as any, "*");
             break;
         case 'app-api-return':
             console.log("app-api-return: %s", JSON.stringify(message));

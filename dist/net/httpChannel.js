@@ -97,8 +97,9 @@ export class HttpChannel {
                 let ct = res.headers.get('content-type');
                 if (ct && ct.indexOf('json') >= 0) {
                     return res.json().then((retJson) => __awaiter(this, void 0, void 0, function* () {
-                        if (retJson.ok === true)
+                        if (retJson.ok === true) {
                             return resolve(retJson.res);
+                        }
                         if (retJson.error === undefined) {
                             yield that.showError(buildError('not valid tonva json'));
                         }

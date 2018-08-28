@@ -13,3 +13,4 @@ export declare abstract class ApiBase {
     delete(path: string, params: any): Promise<any>;
 }
 export declare function getUrlOrDebug(url: string, urlDebug: string): Promise<string>;
+//# sourceMappingURL=apiBase.d.ts.map

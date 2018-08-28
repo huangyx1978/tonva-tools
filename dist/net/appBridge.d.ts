@@ -21,3 +21,4 @@ export declare function appUrl(url: string, unitId: number, page?: string, param
 export declare function loadAppApis(appOwner: string, appName: any): Promise<App>;
 export declare function appApi(api: string, apiOwner: string, apiName: string): Promise<ApiToken>;
 export declare function bridgeCenterApi(url: string, method: string, body: any): Promise<any>;
+//# sourceMappingURL=appBridge.d.ts.map

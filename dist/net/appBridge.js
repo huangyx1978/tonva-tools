@@ -13,12 +13,17 @@ import { setSubAppWindow, wsBridge } from './wsChannel';
 import { getUrlOrDebug } from './apiBase';
 const apiTokens = {};
 const appsInFrame = {};
-export let meInFrame = {
+class AppInFrameClass {
+    get unit() { return this._unit; } // unit id
+    set unit(val) { this._unit = val; }
+}
+export let meInFrame = new AppInFrameClass();
+/* {
     hash: undefined,
-    unit: undefined,
-    page: undefined,
+    get unit():number {return } undefined, //debugUnitId,
+    page: undefined;
     param: undefined,
-};
+}*/
 export function isBridged() {
     return self !== window.parent;
 }

@@ -23,3 +23,4 @@ export declare class WSChannel extends WsBase {
     private wsMessage;
     sendWs(msg: any): void;
 }
+//# sourceMappingURL=wsChannel.d.ts.map

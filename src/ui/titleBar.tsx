@@ -10,7 +10,7 @@ export interface TitleBarProps {
     back?: 'back' | 'close' | 'none';
     center: string | JSX.Element;
     right?: JSX.Element;
-    logout?: ()=>void;
+    logout?: boolean | (()=>void);
 }
 export interface TitleBarState {
     hasBack: boolean;
@@ -42,18 +42,27 @@ export class TitleBar extends React.Component<TitleBarProps, TitleBarState> {
     openWindow() {
         window.open(document.location.href);
     }
+    private logoutClick = () => {
+        let {logout} = this.props;
+        if (typeof logout === 'function') {
+            logout(); 
+        }
+        nav.logout();
+    }
     render() {
         let b = this.state.hasBack || self != top;
         let {right, center, logout} = this.props;
-        //let r = this.props.right;
-        //let c = this.props.center;
         let back, pop, debugLogout;
         if (logout !== undefined && self === top) {
-            debugLogout = <a className="dropdown-toggle btn btn-secondary btn-sm"
-                role="button"
-                onClick={()=>{logout(); nav.logout();}}>
-                <i className="fa fa-sign-out" />
-            </a>
+            if (typeof logout === 'boolean' && logout === true
+                || typeof logout === 'function')
+            {
+                debugLogout = <a className="dropdown-toggle btn btn-secondary btn-sm"
+                    role="button"
+                    onClick={this.logoutClick}>
+                    <i className="fa fa-sign-out" />
+                </a>
+            }
         }
         if (b) {
             switch (this.props.back) {

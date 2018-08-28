@@ -15,6 +15,7 @@ export abstract class CacheIds<T extends Id> {
     loadIds(ids:number[]) {
         let arr:number[] = [];
         for (let id of ids) {
+            if (id === null) continue;
             let item = this.dict.get(id);
             if (item === undefined) {
                 arr.push(id);
@@ -26,12 +27,12 @@ export abstract class CacheIds<T extends Id> {
     }
 
     get(id:number):T {
-        if (id === undefined) return null;
+        if (id === undefined || id === null) return null;
         let item = this.dict.get(id);
         if (item === undefined) {
-            item = {id:id} as T;
-            this.dict.set(id, item);
+            this.dict.set(id, {id:id} as T);
             this.loadId([id]);
+            item = this.dict.get(id);
         }
         return item;
     }
@@ -53,6 +54,7 @@ export abstract class CacheIds<T extends Id> {
         let items = await this._loadIds(ids);
         if (items === undefined) {
             for (let id of ids) {
+                if (id === null) continue;
                 let item = await this._loadId(id);
                 this.setItem(id, item);
             }
