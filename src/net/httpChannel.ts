@@ -1,6 +1,7 @@
 import {bridgeCenterApi, isBridged} from './appBridge';
 import {FetchError} from '../fetchError';
 import {HttpChannelUI} from './httpChannelUI';
+import {nav} from '../ui/nav';
 
 export class HttpChannel {
     private isCenter: boolean;
@@ -118,6 +119,12 @@ export class HttpChannel {
             }
         }
         catch(error) {
+            if (typeof error === 'string') {
+                if (error.toLowerCase().startsWith('unauthorized') === true) {
+                    nav.logout();
+                    return;
+                }
+            }
             await this.showError(buildError(error.message));
         };
     }

@@ -1,5 +1,5 @@
-import { App } from './api';
-export interface ApiToken {
+import { App } from './usqApi';
+export interface UsqToken {
     name: string;
     url: string;
     urlDebug: string;
@@ -18,7 +18,7 @@ export declare function appUrl(url: string, unitId: number, page?: string, param
     url: string;
     hash: string;
 };
-export declare function loadAppApis(appOwner: string, appName: any): Promise<App>;
-export declare function appApi(api: string, apiOwner: string, apiName: string): Promise<ApiToken>;
+export declare function loadAppUsqs(appOwner: string, appName: any): Promise<App>;
+export declare function appUsq(api: string, apiOwner: string, apiName: string): Promise<UsqToken>;
 export declare function bridgeCenterApi(url: string, method: string, body: any): Promise<any>;
 //# sourceMappingURL=appBridge.d.ts.map

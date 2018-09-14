@@ -1,15 +1,15 @@
 import { HttpChannel } from './httpChannel';
 import { ApiBase } from './apiBase';
 export declare function logoutApis(): void;
-export declare class Api extends ApiBase {
-    apiOwner: string;
-    apiName: string;
-    api: string;
-    constructor(basePath: string, apiOwner: any, apiName: string, showWaiting?: boolean);
+export declare class Usq extends ApiBase {
+    usqOwner: string;
+    usqName: string;
+    usq: string;
+    constructor(basePath: string, usqOwner: any, usqName: string, showWaiting?: boolean);
     protected getHttpChannel(): Promise<HttpChannel>;
 }
 export declare function logoutUnitxApis(): void;
-export declare class UnitxApi extends Api {
+export declare class UnitxApi extends Usq {
     private unitId;
     constructor(unitId: number);
     protected getHttpChannel(): Promise<HttpChannel>;
@@ -37,12 +37,12 @@ export declare class CallCenterApi extends CenterApi {
 export declare const callCenterapi: CallCenterApi;
 export interface App {
     id: number;
-    apis: AppApi[];
+    usqs: AppUsq[];
 }
-export interface AppApi {
+export interface AppUsq {
     id: number;
-    apiOwner: string;
-    apiName: string;
+    usqOwner: string;
+    usqName: string;
     url: string;
     urlDebug: string;
     ws: string;
@@ -51,7 +51,7 @@ export interface AppApi {
     token: string;
 }
 export declare class CenterAppApi extends CenterApi {
-    apis(unit: number, appOwner: string, appName: string): Promise<App>;
-    unitxApi(unit: number): Promise<AppApi>;
+    usqs(unit: number, appOwner: string, appName: string): Promise<App>;
+    unitxUsq(unit: number): Promise<AppUsq>;
 }
 //# sourceMappingURL=api.d.ts.map

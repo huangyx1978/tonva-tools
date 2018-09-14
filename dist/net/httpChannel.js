@@ -7,6 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { bridgeCenterApi, isBridged } from './appBridge';
+import { nav } from '../ui/nav';
 export class HttpChannel {
     constructor(isCenter, hostUrl, apiToken, ui) {
         this.isCenter = isCenter;
@@ -117,6 +118,12 @@ export class HttpChannel {
                 }
             }
             catch (error) {
+                if (typeof error === 'string') {
+                    if (error.toLowerCase().startsWith('unauthorized') === true) {
+                        nav.logout();
+                        return;
+                    }
+                }
                 yield this.showError(buildError(error.message));
             }
             ;

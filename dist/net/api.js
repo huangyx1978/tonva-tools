@@ -17,13 +17,13 @@ export function logoutApis() {
     channelNoUIs = {};
     logoutUnitxApis();
 }
-export class Api extends ApiBase {
-    constructor(basePath, apiOwner, apiName, showWaiting) {
+export class Usq extends ApiBase {
+    constructor(basePath, usqOwner, usqName, showWaiting) {
         super(basePath, showWaiting);
-        if (apiName) {
-            this.apiOwner = apiOwner;
-            this.apiName = apiName;
-            this.api = apiOwner + '/' + apiName;
+        if (usqName) {
+            this.usqOwner = usqOwner;
+            this.usqName = usqName;
+            this.usq = usqOwner + '/' + usqName;
         }
         this.showWaiting = showWaiting;
     }
@@ -38,13 +38,13 @@ export class Api extends ApiBase {
             else {
                 channels = channelNoUIs;
             }
-            let channel = channels[this.api];
+            let channel = channels[this.usq];
             if (channel !== undefined)
                 return channel;
-            let apiToken = yield appApi(this.api, this.apiOwner, this.apiName);
+            let apiToken = yield appApi(this.usq, this.usqOwner, this.usqName);
             this.token = apiToken.token;
             channel = new HttpChannel(false, apiToken.url, apiToken.token, channelUI);
-            return channels[this.api] = channel;
+            return channels[this.usq] = channel;
         });
     }
 }
@@ -52,7 +52,7 @@ let channels = {};
 export function logoutUnitxApis() {
     channels = {};
 }
-export class UnitxApi extends Api {
+export class UnitxApi extends Usq {
     constructor(unitId) {
         super('tv/', undefined, undefined, true);
         this.unitId = unitId;
@@ -69,7 +69,7 @@ export class UnitxApi extends Api {
         return __awaiter(this, void 0, void 0, function* () {
             let channelUI = new HttpChannelNavUI();
             let centerAppApi = new CenterAppApi('tv/', undefined);
-            let ret = yield centerAppApi.unitxApi(this.unitId);
+            let ret = yield centerAppApi.unitxUsq(this.unitId);
             let { token, url, urlDebug } = ret;
             let realUrl = yield getUrlOrDebug(url, urlDebug);
             this.token = token;
@@ -136,14 +136,14 @@ export const callCenterapi = new CallCenterApi('', undefined);
 console.log('CenterApi');
 console.log(CenterApi);
 export class CenterAppApi extends CenterApi {
-    apis(unit, appOwner, appName) {
+    usqs(unit, appOwner, appName) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.get('tie/app-apis', { unit: unit, appOwner: appOwner, appName: appName });
+            return yield this.get('tie/app-usqs', { unit: unit, appOwner: appOwner, appName: appName });
         });
     }
-    unitxApi(unit) {
+    unitxUsq(unit) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.get('tie/unitx-api', { unit: unit });
+            return yield this.get('tie/unitx-usq', { unit: unit });
         });
     }
 }

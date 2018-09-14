@@ -8,10 +8,11 @@ export interface ScrollProps {
 export interface Tab extends ScrollProps {
     title: string;
     icon?: string;
-    content?: JSX.Element;
+    content?: JSX.Element | (() => JSX.Element);
     header?: string;
     isSelected?: boolean;
     redDot?: IComputedValue<number>;
+    load?: () => Promise<void>;
 }
 export interface TabState extends Tab {
     isMounted?: boolean;
@@ -32,6 +33,7 @@ export interface PageState {
 export declare class Page extends React.Component<PageProps, PageState> {
     private tabs;
     constructor(props: PageProps);
+    componentDidMount(): Promise<void>;
     private onTabClick;
     private renderTabs;
     private renderSingle;

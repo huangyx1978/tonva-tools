@@ -55,10 +55,11 @@ class ScrollView extends React.Component<ScrollViewProps, null> {
 export interface Tab extends ScrollProps {
     title: string;
     icon?: string;
-    content?: JSX.Element;
+    content?: JSX.Element | (()=>JSX.Element);
     header?: string;
     isSelected?: boolean;
     redDot?: IComputedValue<number>;
+    load?: () => Promise<void>;
 }
 export interface TabState extends Tab {
     isMounted?: boolean;
@@ -82,12 +83,13 @@ export class Page extends React.Component<PageProps, PageState> {
     private tabs:TabState[];
     constructor(props: PageProps) {
         super(props);
-        this.tabs = props.tabs;
-        if (this.tabs === undefined || this.tabs.length === 0) return;
+        let {tabs} = props;
+        if (tabs === undefined || tabs.length === 0) return;
+        this.tabs = tabs;
         let cur:Tab;
-        let tabs:Tab[] = [];
-        for (let tab of this.tabs) {
-            let t = _.clone(tab);
+        let tabStates:Tab[] = [];
+        for (let tab of tabs) {
+            let t:TabState = _.clone(tab);
             if (cur === undefined) {
                 if (t.isSelected === true)
                     cur = t;
@@ -98,21 +100,24 @@ export class Page extends React.Component<PageProps, PageState> {
                 t.isSelected = false;
             }
             t.isMounted = false;
-            tabs.push(t);
-        }
-        if (cur === undefined) {
-            cur = tabs[0];
-            cur.isSelected = true;
+            tabStates.push(t);
         }
         this.state = {
             cur: cur,
-            tabs: tabs,
+            tabs: tabStates,
         };
-    } 
+    }
 
-    private onTabClick(tab: Tab) {
+    async componentDidMount() {
+        if (this.tabs === undefined) return;
+        let t0 = this.state.tabs[0];
+        if (t0 === undefined) return;
+        await this.onTabClick(t0);
+    }
+
+    private async onTabClick(tab: TabState) {
         if (tab.isSelected === true) return;
-        let cur:Tab;
+        let cur:TabState;
         let tabs = this.state.tabs;
         for (let t of tabs) {
             if (t === tab) {
@@ -121,6 +126,12 @@ export class Page extends React.Component<PageProps, PageState> {
             }
             else
                 t.isSelected = false;
+        }
+        if (cur.isMounted !== true) {
+            let {load} = cur;
+            if (load !== undefined) {
+                await load();
+            }
         }
         this.setState({
             cur: cur,
@@ -158,7 +169,7 @@ export class Page extends React.Component<PageProps, PageState> {
         if (header !== false) {
             titleBar = <TitleBar 
                 back={back} 
-                center={keepHeader===true? (header as string) : (cur.header || cur.title)}
+                center={keepHeader===true? (header as string) : (cur && (cur.header || cur.title))}
                 right={right} 
             />;
         }
@@ -168,15 +179,16 @@ export class Page extends React.Component<PageProps, PageState> {
             <section>
             {
                 this.state.tabs.map((tab, index) => {
-                    if (tab.isSelected === true || tab.isMounted === true) {
+                    let {isSelected, isMounted, content} = tab;
+                    if (isSelected === true || isMounted === true) {
                         tab.isMounted = true;
                         return <ScrollView key={index}
-                            className={classNames({invisible: tab.isSelected===false})}
+                            className={classNames({invisible: isSelected===false})}
                             onScroll={tab.onScroll}
                             onScrollTop={tab.onScrollTop}
                             onScrollBottom={tab.onScrollBottom}
                         >
-                            {tab.content}
+                            {(typeof content)==='function'? (content as ()=>JSX.Element)():content}
                         </ScrollView>;
                     }
                 })

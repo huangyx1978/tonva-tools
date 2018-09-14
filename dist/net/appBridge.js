@@ -8,10 +8,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { nav } from '../ui';
 import { uid } from '../uid';
-import { apiTokenApi, callCenterapi, CenterAppApi, centerToken } from './api';
+import { usqTokenApi, callCenterapi, CenterAppApi, centerToken } from './usqApi';
 import { setSubAppWindow, wsBridge } from './wsChannel';
 import { getUrlOrDebug } from './apiBase';
-const apiTokens = {};
+const usqTokens = {};
 const appsInFrame = {};
 class AppInFrameClass {
     get unit() { return this._unit; } // unit id
@@ -82,7 +82,7 @@ function onReceiveAppApiMessage(hash, apiName) {
             return { name: apiName, url: undefined, urlDebug: undefined, token: undefined };
         let { unit } = appInFrame;
         let parts = apiName.split('/');
-        let ret = yield apiTokenApi.api({ unit: unit, apiOwner: parts[0], apiName: parts[1] });
+        let ret = yield usqTokenApi.usq({ unit: unit, usqOwner: parts[0], usqName: parts[1] });
         if (ret === undefined) {
             console.log('apiTokenApi.api return undefined. api=%s, unit=%s', apiName, unit);
             throw 'api not found';
@@ -93,7 +93,7 @@ function onReceiveAppApiMessage(hash, apiName) {
 function onAppApiReturn(message) {
     return __awaiter(this, void 0, void 0, function* () {
         let { apiName, url, urlDebug, token } = message;
-        let action = apiTokens[apiName];
+        let action = usqTokens[apiName];
         if (action === undefined) {
             throw 'error app api return';
             //return;
@@ -137,19 +137,19 @@ export function appUrl(url, unitId, page, param) {
     }
     return { url: url, hash: u };
 }
-export function loadAppApis(appOwner, appName) {
+export function loadAppUsqs(appOwner, appName) {
     return __awaiter(this, void 0, void 0, function* () {
         let centerAppApi = new CenterAppApi('tv/', undefined);
-        return yield centerAppApi.apis(meInFrame.unit, appOwner, appName);
+        return yield centerAppApi.usqs(meInFrame.unit, appOwner, appName);
     });
 }
-export function appApi(api, apiOwner, apiName) {
+export function appUsq(api, apiOwner, apiName) {
     return __awaiter(this, void 0, void 0, function* () {
-        let apiToken = apiTokens[api];
+        let apiToken = usqTokens[api];
         if (apiToken !== undefined)
             return apiToken;
         if (!isBridged()) {
-            apiToken = yield apiTokenApi.api({ unit: meInFrame.unit, apiOwner: apiOwner, apiName: apiName });
+            apiToken = yield usqTokenApi.usq({ unit: meInFrame.unit, usqOwner: apiOwner, usqName: apiName });
             if (apiToken === undefined) {
                 let err = 'unauthorized call: apiTokenApi center return undefined!';
                 throw err;
@@ -160,7 +160,7 @@ export function appApi(api, apiOwner, apiName) {
             let realUrl = yield getUrlOrDebug(url, urlDebug);
             console.log('realUrl: %s', realUrl);
             apiToken.url = realUrl;
-            apiTokens[api] = apiToken;
+            usqTokens[api] = apiToken;
             return apiToken;
         }
         console.log("appApi parent send: %s", meInFrame.hash);
@@ -172,7 +172,7 @@ export function appApi(api, apiOwner, apiName) {
             resolve: undefined,
             reject: undefined,
         };
-        apiTokens[api] = apiToken;
+        usqTokens[api] = apiToken;
         return new Promise((resolve, reject) => {
             apiToken.resolve = (at) => __awaiter(this, void 0, void 0, function* () {
                 let a = yield at;

@@ -4,6 +4,14 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 import * as React from 'react';
 import { observer } from 'mobx-react';
 import * as classNames from 'classnames';
@@ -47,12 +55,13 @@ class ScrollView extends React.Component {
 let Page = class Page extends React.Component {
     constructor(props) {
         super(props);
-        this.tabs = props.tabs;
-        if (this.tabs === undefined || this.tabs.length === 0)
+        let { tabs } = props;
+        if (tabs === undefined || tabs.length === 0)
             return;
+        this.tabs = tabs;
         let cur;
-        let tabs = [];
-        for (let tab of this.tabs) {
+        let tabStates = [];
+        for (let tab of tabs) {
             let t = _.clone(tab);
             if (cur === undefined) {
                 if (t.isSelected === true)
@@ -64,33 +73,47 @@ let Page = class Page extends React.Component {
                 t.isSelected = false;
             }
             t.isMounted = false;
-            tabs.push(t);
-        }
-        if (cur === undefined) {
-            cur = tabs[0];
-            cur.isSelected = true;
+            tabStates.push(t);
         }
         this.state = {
             cur: cur,
-            tabs: tabs,
+            tabs: tabStates,
         };
     }
+    componentDidMount() {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (this.tabs === undefined)
+                return;
+            let t0 = this.state.tabs[0];
+            if (t0 === undefined)
+                return;
+            yield this.onTabClick(t0);
+        });
+    }
     onTabClick(tab) {
-        if (tab.isSelected === true)
-            return;
-        let cur;
-        let tabs = this.state.tabs;
-        for (let t of tabs) {
-            if (t === tab) {
-                t.isSelected = true;
-                cur = t;
+        return __awaiter(this, void 0, void 0, function* () {
+            if (tab.isSelected === true)
+                return;
+            let cur;
+            let tabs = this.state.tabs;
+            for (let t of tabs) {
+                if (t === tab) {
+                    t.isSelected = true;
+                    cur = t;
+                }
+                else
+                    t.isSelected = false;
             }
-            else
-                t.isSelected = false;
-        }
-        this.setState({
-            cur: cur,
-            tabs: tabs
+            if (cur.isMounted !== true) {
+                let { load } = cur;
+                if (load !== undefined) {
+                    yield load();
+                }
+            }
+            this.setState({
+                cur: cur,
+                tabs: tabs
+            });
         });
     }
     renderTabs(footer) {
@@ -120,14 +143,15 @@ let Page = class Page extends React.Component {
         }));
         let titleBar;
         if (header !== false) {
-            titleBar = React.createElement(TitleBar, { back: back, center: keepHeader === true ? header : (cur.header || cur.title), right: right });
+            titleBar = React.createElement(TitleBar, { back: back, center: keepHeader === true ? header : (cur && (cur.header || cur.title)), right: right });
         }
         return React.createElement("article", { className: 'page-container' },
             titleBar,
             React.createElement("section", null, this.state.tabs.map((tab, index) => {
-                if (tab.isSelected === true || tab.isMounted === true) {
+                let { isSelected, isMounted, content } = tab;
+                if (isSelected === true || isMounted === true) {
                     tab.isMounted = true;
-                    return React.createElement(ScrollView, { key: index, className: classNames({ invisible: tab.isSelected === false }), onScroll: tab.onScroll, onScrollTop: tab.onScrollTop, onScrollBottom: tab.onScrollBottom }, tab.content);
+                    return React.createElement(ScrollView, { key: index, className: classNames({ invisible: isSelected === false }), onScroll: tab.onScroll, onScrollTop: tab.onScrollTop, onScrollBottom: tab.onScrollBottom }, (typeof content) === 'function' ? content() : content);
                 }
             })),
             tabs,

@@ -1,23 +1,22 @@
 import {nav} from '../ui';
 import {uid} from '../uid';
-import {apiTokenApi, callCenterapi, CenterAppApi, AppApi, centerToken, App} from './api';
+import {usqTokenApi, callCenterapi, CenterAppApi, AppUsq, centerToken, App} from './usqApi';
 import {setSubAppWindow, wsBridge} from './wsChannel';
 import { getUrlOrDebug } from './apiBase';
-import { debug } from 'util';
 
 //const debugUnitId = Number(process.env.REACT_APP_DEBUG_UNITID);
 
-export interface ApiToken {
+export interface UsqToken {
     name: string;
     url: string;
     urlDebug: string;
     token: string;
 }
-interface ApiTokenAction extends ApiToken {
-    resolve: (value?: ApiToken | PromiseLike<ApiToken>) => void;
+interface UsqTokenAction extends UsqToken {
+    resolve: (value?: UsqToken | PromiseLike<UsqToken>) => void;
     reject: (reason?: any) => void;
 }
-const apiTokens:{[apiName:string]: ApiTokenAction}  = {};
+const usqTokens:{[usqName:string]: UsqTokenAction}  = {};
 
 export interface AppInFrame {
     hash: string;
@@ -94,12 +93,12 @@ function hideFrameBack(hash:string) {
     if (el !== undefined) el.hidden = true;
 }
 
-async function onReceiveAppApiMessage(hash: string, apiName: string): Promise<ApiToken> {
+async function onReceiveAppApiMessage(hash: string, apiName: string): Promise<UsqToken> {
     let appInFrame = appsInFrame[hash];
     if (appInFrame === undefined) return {name:apiName, url:undefined, urlDebug:undefined, token:undefined};
     let {unit} = appInFrame;
     let parts = apiName.split('/');
-    let ret = await apiTokenApi.api({unit: unit, apiOwner: parts[0], apiName: parts[1]});
+    let ret = await usqTokenApi.usq({unit: unit, usqOwner: parts[0], usqName: parts[1]});
     if (ret === undefined) {
         console.log('apiTokenApi.api return undefined. api=%s, unit=%s', apiName, unit);
         throw 'api not found';
@@ -109,7 +108,7 @@ async function onReceiveAppApiMessage(hash: string, apiName: string): Promise<Ap
 
 async function onAppApiReturn(message:any) {
     let {apiName, url, urlDebug, token} = message;
-    let action = apiTokens[apiName];
+    let action = usqTokens[apiName];
     if (action === undefined) {
         throw 'error app api return';
         //return;
@@ -152,16 +151,16 @@ export function appUrl(url: string, unitId: number, page?:string, param?:any[]):
     return {url: url, hash: u};
 }
 
-export async function loadAppApis(appOwner:string, appName): Promise<App> {
+export async function loadAppUsqs(appOwner:string, appName): Promise<App> {
     let centerAppApi = new CenterAppApi('tv/', undefined);
-    return await centerAppApi.apis(meInFrame.unit, appOwner, appName);
+    return await centerAppApi.usqs(meInFrame.unit, appOwner, appName);
 }
 
-export async function appApi(api:string, apiOwner:string, apiName:string): Promise<ApiToken> {
-    let apiToken = apiTokens[api];
+export async function appUsq(api:string, apiOwner:string, apiName:string): Promise<UsqToken> {
+    let apiToken = usqTokens[api];
     if (apiToken !== undefined) return apiToken;
     if (!isBridged()) {
-        apiToken = await apiTokenApi.api({unit: meInFrame.unit, apiOwner:apiOwner, apiName:apiName});
+        apiToken = await usqTokenApi.usq({unit: meInFrame.unit, usqOwner:apiOwner, usqName:apiName});
         if (apiToken === undefined) {
             let err = 'unauthorized call: apiTokenApi center return undefined!';
             throw err;
@@ -171,7 +170,7 @@ export async function appApi(api:string, apiOwner:string, apiName:string): Promi
         let realUrl = await getUrlOrDebug(url, urlDebug);
         console.log('realUrl: %s', realUrl);
         apiToken.url = realUrl;
-        apiTokens[api] = apiToken;
+        usqTokens[api] = apiToken;
         return apiToken;
     }
     console.log("appApi parent send: %s", meInFrame.hash);
@@ -183,8 +182,8 @@ export async function appApi(api:string, apiOwner:string, apiName:string): Promi
         resolve: undefined,
         reject: undefined,
     };
-    apiTokens[api] = apiToken;
-    return new Promise<ApiToken>((resolve, reject) => {
+    usqTokens[api] = apiToken;
+    return new Promise<UsqToken>((resolve, reject) => {
         apiToken.resolve = async (at) => {
             let a = await at;
             console.log('return from parent window: %s', JSON.stringify(a));

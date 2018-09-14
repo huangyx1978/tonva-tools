@@ -56,7 +56,13 @@ body, body>div, ul.va, ul.va>li, ul.va>li>article {
     font-size: 12px;
     text-decoration: none;
   }
-  div.red-dot.num>u {
+div.red-dot>u.message-dot {
+  right: 6px;
+  height: 6px;
+  width: 6px;
+  border-radius: 3px;
+}
+div.red-dot.num>u {
     right: -20px;
     top: -6px;
     height: 18px;
