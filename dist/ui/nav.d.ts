@@ -58,6 +58,9 @@ export declare class Nav {
     private wsHost;
     local: LocalData;
     user: User;
+    language: string;
+    culture: string;
+    constructor();
     set(nav: NavView): void;
     registerReceiveHandler(handler: (message: any) => Promise<void>): number;
     unregisterReceiveHandler(handlerId: number): void;

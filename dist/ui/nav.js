@@ -299,6 +299,17 @@ export class Nav {
     constructor() {
         this.local = new LocalData();
         this.user = undefined; // = {id:undefined, name:undefined, token:undefined};
+        let language = navigator.languages && navigator.languages[0] || // Chrome / Firefox
+            navigator.language; // ||   // All browsers
+        //navigator.userLanguage; // IE <= 10
+        if (!language) {
+            this.language = 'zh';
+            this.culture = 'CN';
+        }
+        let parts = language.split('-');
+        this.language = parts[0];
+        if (parts.length > 1)
+            this.culture = parts[1];
     }
     set(nav) {
         //this.logo = logo;

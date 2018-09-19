@@ -46,7 +46,7 @@ export async function getUrlOrDebug(url:string, urlDebug:string):Promise<string>
     if (urlDebug === undefined ||
         document.location.hostname !== 'localhost')
     {
-        return url;
+        // return url;
     }
 
     try {

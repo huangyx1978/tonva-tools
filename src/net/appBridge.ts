@@ -156,46 +156,47 @@ export async function loadAppUsqs(appOwner:string, appName): Promise<App> {
     return await centerAppApi.usqs(meInFrame.unit, appOwner, appName);
 }
 
-export async function appUsq(api:string, apiOwner:string, apiName:string): Promise<UsqToken> {
-    let apiToken = usqTokens[api];
-    if (apiToken !== undefined) return apiToken;
+export async function appUsq(usq:string, usqOwner:string, usqName:string): Promise<UsqToken> {
+    debugger;
+    let usqToken = usqTokens[usq];
+    if (usqToken !== undefined) return usqToken;
     if (!isBridged()) {
-        apiToken = await usqTokenApi.usq({unit: meInFrame.unit, usqOwner:apiOwner, usqName:apiName});
-        if (apiToken === undefined) {
-            let err = 'unauthorized call: apiTokenApi center return undefined!';
+        usqToken = await usqTokenApi.usq({unit: meInFrame.unit, usqOwner:usqOwner, usqName:usqName});
+        if (usqToken === undefined) {
+            let err = 'unauthorized call: usqTokenApi center return undefined!';
             throw err;
         }
-        if (apiToken.token === undefined) apiToken.token = centerToken;
-        let {url, urlDebug} = apiToken;
+        if (usqToken.token === undefined) usqToken.token = centerToken;
+        let {url, urlDebug} = usqToken;
         let realUrl = await getUrlOrDebug(url, urlDebug);
         console.log('realUrl: %s', realUrl);
-        apiToken.url = realUrl;
-        usqTokens[api] = apiToken;
-        return apiToken;
+        usqToken.url = realUrl;
+        usqTokens[usq] = usqToken;
+        return usqToken;
     }
     console.log("appApi parent send: %s", meInFrame.hash);
-    apiToken = {
-        name: api,
+    usqToken = {
+        name: usq,
         url: undefined,
         urlDebug: undefined,
         token: undefined,
         resolve: undefined,
         reject: undefined,
     };
-    usqTokens[api] = apiToken;
+    usqTokens[usq] = usqToken;
     return new Promise<UsqToken>((resolve, reject) => {
-        apiToken.resolve = async (at) => {
+        usqToken.resolve = async (at) => {
             let a = await at;
             console.log('return from parent window: %s', JSON.stringify(a));
-            apiToken.url = a.url;
-            apiToken.urlDebug = a.urlDebug;
-            apiToken.token = a.token;
-            resolve(apiToken);
+            usqToken.url = a.url;
+            usqToken.urlDebug = a.urlDebug;
+            usqToken.token = a.token;
+            resolve(usqToken);
         }
-        apiToken.reject = reject;
+        usqToken.reject = reject;
         (window.opener || window.parent).postMessage({
             type: 'app-api',
-            apiName: api,
+            apiName: usq,
             hash: meInFrame.hash,
         }, "*");
     });

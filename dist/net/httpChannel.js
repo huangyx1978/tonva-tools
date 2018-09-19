@@ -146,9 +146,14 @@ export class HttpChannel {
         }));
     }
     buildOptions() {
+        let { language, culture } = nav;
         let headers = new Headers();
         headers.append('Access-Control-Allow-Origin', '*');
         headers.append('Content-Type', 'application/json;charset=UTF-8');
+        let lang = language;
+        if (culture)
+            lang += '-' + culture;
+        headers.append('Accept-Language', lang);
         // headers.append('')
         //headers.append('a', 'b');
         if (this.apiToken) {

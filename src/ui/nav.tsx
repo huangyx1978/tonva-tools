@@ -325,6 +325,21 @@ export class Nav {
     private wsHost: string;
     local: LocalData = new LocalData();
     @observable user: User = undefined; // = {id:undefined, name:undefined, token:undefined};
+    language: string;
+    culture: string;
+
+    constructor() {
+        let language = navigator.languages && navigator.languages[0] || // Chrome / Firefox
+               navigator.language; // ||   // All browsers
+               //navigator.userLanguage; // IE <= 10
+        if (!language) {
+            this.language = 'zh';
+            this.culture = 'CN';
+        }
+        let parts = language.split('-');
+        this.language = parts[0];
+        if (parts.length > 1) this.culture = parts[1];
+    }
     
     set(nav:NavView) {
         //this.logo = logo;

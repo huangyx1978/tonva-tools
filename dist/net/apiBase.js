@@ -51,7 +51,7 @@ export function getUrlOrDebug(url, urlDebug) {
     return __awaiter(this, void 0, void 0, function* () {
         if (urlDebug === undefined ||
             document.location.hostname !== 'localhost') {
-            return url;
+            // return url;
         }
         try {
             if (urlDebug.endsWith('/') === false)
