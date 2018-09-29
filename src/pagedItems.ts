@@ -32,6 +32,15 @@ export abstract class PagedItems<T> {
     protected abstract async load():Promise<T[]>;
     protected abstract setPageStart(item:T);
 
+    reset() {
+        this.beforeLoad = true;
+        this.loaded = false;
+        this.param = undefined;        
+        this.allLoaded = false;
+        this._items.clear();
+        this.setPageStart(undefined);
+    }
+
     append(item:T) {
         if (this.appendPosition === 'tail')
             this._items.unshift(item);
@@ -40,13 +49,15 @@ export abstract class PagedItems<T> {
     }
 
     async first(param:any):Promise<void> {
-        //if (this.loaded === true) return;
+        this.reset();
         this.beforeLoad = false;
-        this.loaded = false;
         this.param = param;
+        /*
+        this.loaded = false;
         this._items.clear();
         this.allLoaded = false;
         this.setPageStart(undefined);
+        */
         await this.more();
     }
 

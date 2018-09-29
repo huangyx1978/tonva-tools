@@ -4,8 +4,6 @@ import {usqTokenApi, callCenterapi, CenterAppApi, AppUsq, centerToken, App} from
 import {setSubAppWindow, wsBridge} from './wsChannel';
 import { getUrlOrDebug } from './apiBase';
 
-//const debugUnitId = Number(process.env.REACT_APP_DEBUG_UNITID);
-
 export interface UsqToken {
     name: string;
     url: string;
@@ -153,11 +151,11 @@ export function appUrl(url: string, unitId: number, page?:string, param?:any[]):
 
 export async function loadAppUsqs(appOwner:string, appName): Promise<App> {
     let centerAppApi = new CenterAppApi('tv/', undefined);
-    return await centerAppApi.usqs(meInFrame.unit, appOwner, appName);
+    let unit = meInFrame.unit;
+    return await centerAppApi.usqs(unit, appOwner, appName);
 }
 
 export async function appUsq(usq:string, usqOwner:string, usqName:string): Promise<UsqToken> {
-    debugger;
     let usqToken = usqTokens[usq];
     if (usqToken !== undefined) return usqToken;
     if (!isBridged()) {

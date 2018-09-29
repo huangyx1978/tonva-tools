@@ -20,8 +20,6 @@ export declare class UsqApi extends ApiBase {
     tuidArrGetAll(name: string, arr: string, owner: number): Promise<any[]>;
     tuidArrSave(name: string, arr: string, owner: number, params: any): Promise<any>;
     tuidArrPos(name: string, arr: string, owner: number, id: number, order: number): Promise<any>;
-    tuidBindSlaveSave(name: string, slave: any, params: any): Promise<any>;
-    tuidBindSlaves(name: string, slave: string, masterId: number, order: number, pageSize: number): Promise<any>;
     tuidIds(name: string, arr: string, ids: number[]): Promise<any[]>;
     proxied(name: string, proxy: string, id: number): Promise<any>;
     sheetSave(name: string, data: object): Promise<any>;

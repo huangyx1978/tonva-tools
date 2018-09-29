@@ -17,11 +17,13 @@ export declare abstract class Controller {
     start(param?: any): Promise<void>;
     private _resolve_$;
     call(param?: any): Promise<any>;
+    vCall(vp: new (coordinator: Controller) => VPage<Controller>, param?: any): Promise<any>;
     return(value: any): void;
     openPage(page: JSX.Element): void;
     replacePage(page: JSX.Element): void;
     backPage(): void;
     closePage(level?: number): void;
+    ceasePage(level?: number): void;
     regConfirmClose(confirmClose: () => Promise<boolean>): void;
 }
 export declare abstract class View<C extends Controller> {
@@ -37,6 +39,7 @@ export declare abstract class View<C extends Controller> {
     protected replacePageElement(page: JSX.Element): void;
     protected backPage(): void;
     protected closePage(level?: number): void;
+    protected ceasePage(level?: number): void;
     protected regConfirmClose(confirmClose: () => Promise<boolean>): void;
 }
 export declare abstract class VPage<C extends Controller> extends View<C> {

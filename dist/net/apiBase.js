@@ -6,6 +6,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+import { centerDebugHost } from './centerDebugHost';
 export function refetchApi(channel, url, options, resolve, reject) {
     return __awaiter(this, void 0, void 0, function* () {
         yield channel.fetch(url, options, resolve, reject);
@@ -56,6 +57,14 @@ export function getUrlOrDebug(url, urlDebug) {
         try {
             if (urlDebug.endsWith('/') === false)
                 urlDebug += '/';
+            let hostString = '://centerhost:';
+            let pos = urlDebug.indexOf(hostString);
+            if (pos > 0) {
+                let centerHost = centerDebugHost;
+                if (centerHost === undefined)
+                    process.env.REACT_APP_CENTER_HOST;
+                urlDebug = urlDebug.replace(hostString, '://' + centerHost + ':');
+            }
             let ret = yield fetch(urlDebug + 'hello', {
                 method: "GET",
                 mode: "no-cors",

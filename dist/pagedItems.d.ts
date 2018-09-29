@@ -16,6 +16,7 @@ export declare abstract class PagedItems<T> {
     protected appendPosition: 'head' | 'tail';
     protected abstract load(): Promise<T[]>;
     protected abstract setPageStart(item: T): any;
+    reset(): void;
     append(item: T): void;
     first(param: any): Promise<void>;
     more(): Promise<void>;

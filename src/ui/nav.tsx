@@ -7,7 +7,7 @@ import FetchErrorView from './fetchErrorView';
 import {FetchError} from '../fetchError';
 import {appUrl, setMeInFrame} from '../net/appBridge';
 import {LocalData} from '../local';
-import {logoutApis, setCenterUrl, setCenterToken, WSChannel, getCenterUrl} from '../net';
+import {logoutApis, setCenterUrl, setCenterToken, WSChannel, getCenterUrl, centerDebugHost} from '../net';
 import 'font-awesome/css/font-awesome.min.css';
 import '../css/va.css';
 import '../css/animation.css';
@@ -36,6 +36,7 @@ let stackKey = 1;
 export interface StackItem {
     key: number;
     view: JSX.Element;
+    ceased: boolean;
     confirmClose?: ()=>Promise<boolean>;
     disposer?: ()=>void;
 }
@@ -69,7 +70,6 @@ export class NavView extends React.Component<Props, State> {
 
     async componentDidMount()
     {
-        //nav.set(this.props.logo, this);
         nav.set(this);
         let start = this.props.start;
         if (start !== undefined) {
@@ -135,10 +135,16 @@ export class NavView extends React.Component<Props, State> {
     }
 
     push(view: JSX.Element, disposer?: ()=>void): void {
+        this.removeCeased();
         if (this.stack.length > 0) {
             window.history.pushState('forward', null, null);
         }
-        this.stack.push({key: stackKey++, view: view, disposer: disposer});
+        this.stack.push({
+            key: stackKey++, 
+            view: view, 
+            ceased: false,
+            disposer: disposer
+        });
         this.refresh();
         //console.log('push: %s pages', this.stack.length);
     }
@@ -150,13 +156,27 @@ export class NavView extends React.Component<Props, State> {
             item = stack.pop();
             //this.popAndDispose();
         }
-        this.stack.push({key: stackKey++, view: view, disposer: disposer});
+        this.stack.push({
+            key: stackKey++, 
+            view: view, 
+            ceased: false,
+            disposer: disposer
+        });
         if (item !== undefined) this.dispose(item.disposer);
         this.refresh();
         //console.log('replace: %s pages', this.stack.length);
     }
 
-    pop(level: Number = 1) {
+    ceaseTop(level:number = 1) {
+        let p = this.stack.length - 1;
+        for (let i=0; i<level; i++, p--) {
+            if (p < 0) break;
+            let item = this.stack[p];
+            item.ceased = true;
+        }
+    }
+
+    pop(level:number = 1) {
         let stack = this.stack;
         let len = stack.length;
         //console.log('pop start: %s pages level=%s', len, level);
@@ -179,11 +199,27 @@ export class NavView extends React.Component<Props, State> {
         //console.log('pop: %s pages', stack.length);
     }
 
+    private removeCeased() {
+        for (;;) {
+            let p=this.stack.length-1;
+            if (p < 0) break;
+            let top = this.stack[p];
+            if (top.ceased === false) break;
+            this.stack.pop();
+        }
+    }
+
     private popAndDispose() {
-        let item = this.stack.pop();
-        if (item === undefined) return;
+        let item;
+        for (;;) {
+            item = this.stack.pop();
+            if (item === undefined) return;
+            if (item.ceased === false) break;
+        }
         let {disposer} = item;
         this.dispose(disposer);
+        this.removeCeased();
+        return item;
     }
 
     private dispose(disposer:()=>void) {
@@ -286,36 +322,50 @@ export class NavView extends React.Component<Props, State> {
     }
 }
 
-async function loadCenterUrl():Promise<{centerUrl:string, wsHost:string}> {
-    let centerUrl:string, wsHost:string;
+interface UrlAndWs {
+    url: string;
+    ws: string;
+}
+
+function centerUrlAndWs():UrlAndWs {
+    let host = 'REACT_APP_CENTER_HOST';
+    let centerHost = process.env[host];
+    if (centerHost === undefined) return {url:undefined, ws:undefined};
+    return {
+        url: 'http://' + centerHost + '/',
+        ws: 'ws://' + centerHost + '/tv/',
+    }
+}
+
+function centerDebugUrlAndWs():UrlAndWs {
+    let centerHost = centerDebugHost;
+    return {
+        url: 'http://' + centerHost + ':3000/',
+        ws: 'ws://' + centerHost + ':3000/tv/',
+    }
+}
+
+async function loadCenterUrl():Promise<{url:string, ws:string}> {
+    let urlAndWs:UrlAndWs = centerUrlAndWs();
+    let debugUrlAndWs:UrlAndWs = centerDebugUrlAndWs();
     let hash = document.location.hash;
     if (hash.includes('sheet_debug') === true) {
-        centerUrl = process.env.REACT_APP_CENTER_URL_DEBUG;
-        wsHost = process.env.REACT_APP_WSHOST_DEBUG;
+        return debugUrlAndWs;
     }
-    else if (process.env.NODE_ENV==='development') {
-        centerUrl = process.env.REACT_APP_CENTER_URL_DEBUG;
-        if (centerUrl !== undefined) {
-            wsHost = process.env.REACT_APP_WSHOST_DEBUG;
+    if (process.env.NODE_ENV==='development') {
+        if (debugUrlAndWs.url !== undefined) {
             try {
                 console.log('try connect debug url');
-                let ret = await fetch(centerUrl);
+                let ret = await fetch(debugUrlAndWs.url);
                 console.log('connected');
+                return debugUrlAndWs;
             }
             catch (err) {
                 console.error(err);
-                centerUrl = undefined;
             }
         }
     }
-    if (centerUrl === undefined) {
-        centerUrl = process.env.REACT_APP_CENTER_URL;
-        wsHost = process.env.REACT_APP_WSHOST;
-    }
-    return {
-        centerUrl: centerUrl,
-        wsHost: wsHost,
-    }
+    return urlAndWs;
 }
 
 export class Nav {
@@ -367,9 +417,9 @@ export class Nav {
             </div>
         </Page>);
 
-        let {centerUrl, wsHost} = await loadCenterUrl();
-        setCenterUrl(centerUrl);
-        this.wsHost = wsHost;
+        let {url, ws} = await loadCenterUrl();
+        setCenterUrl(url);
+        this.wsHost = ws;
 
         let hash = document.location.hash;
         // document.title = document.location.origin;
@@ -469,7 +519,7 @@ export class Nav {
     replace(view: JSX.Element, disposer?: ()=>void): void {
         this.nav.replace(view, disposer);
     }
-    pop(level: Number = 1) {
+    pop(level:number = 1) {
         this.nav.pop(level);
     }
     clear() {
@@ -477,6 +527,9 @@ export class Nav {
     }
     navBack() {
         this.nav.navBack();
+    }
+    ceaseTop(level?:number) {
+        this.nav.ceaseTop(level);
     }
     async back(confirm:boolean = true) {
         await this.nav.back(confirm);

@@ -106,20 +106,6 @@ export class UsqApi extends ApiBase {
         });
     }
 
-    async tuidBindSlaveSave(name:string, slave, params):Promise<any> {
-        return await this.post('tuid-bindSlave/' + name + '/' + slave, params);
-    }
-
-    async tuidBindSlaves(name:string, slave:string, masterId:number, order:number, pageSize:number) {
-        let ret = await this.get('tuid-bindSlaves/' + name, {
-            slave: slave,
-            masterId: masterId,
-            pageStart: order,
-            pageSize: pageSize
-        });
-        return ret;
-    }
-
     async tuidIds(name:string, arr:string, ids:number[]):Promise<any[]> {
         try {
             let url = 'tuidids/' + name + '/';
@@ -239,7 +225,7 @@ export class UnitxApi extends UsqApi {
     }
 }
 
-let centerHost:string; // = process.env.REACT_APP_CENTER_URL;
+let centerHost:string;
 
 export function setCenterUrl(url:string) {
     console.log('setCenterUrl %s', url);

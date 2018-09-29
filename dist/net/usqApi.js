@@ -122,22 +122,6 @@ export class UsqApi extends ApiBase {
             });
         });
     }
-    tuidBindSlaveSave(name, slave, params) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return yield this.post('tuid-bindSlave/' + name + '/' + slave, params);
-        });
-    }
-    tuidBindSlaves(name, slave, masterId, order, pageSize) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let ret = yield this.get('tuid-bindSlaves/' + name, {
-                slave: slave,
-                masterId: masterId,
-                pageStart: order,
-                pageSize: pageSize
-            });
-            return ret;
-        });
-    }
     tuidIds(name, arr, ids) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -272,7 +256,7 @@ export class UnitxApi extends UsqApi {
         });
     }
 }
-let centerHost; // = process.env.REACT_APP_CENTER_URL;
+let centerHost;
 export function setCenterUrl(url) {
     console.log('setCenterUrl %s', url);
     centerHost = url;

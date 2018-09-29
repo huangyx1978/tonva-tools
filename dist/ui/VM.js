@@ -18,6 +18,7 @@ export class Controller {
         this.onMessageReceive = (message) => __awaiter(this, void 0, void 0, function* () {
             yield this.onMessage(message);
         });
+        this._resolve_$ = [];
     }
     showVPage(vp, param) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -60,18 +61,27 @@ export class Controller {
     call(param) {
         return __awaiter(this, void 0, void 0, function* () {
             return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
-                this._resolve_$ = resolve;
+                this._resolve_$.push(resolve);
                 yield this.start(param);
             }));
         });
     }
+    vCall(vp, param) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+                this._resolve_$.push(resolve);
+                yield (new vp(this)).showEntry(param);
+            }));
+        });
+    }
     return(value) {
-        if (this._resolve_$ === undefined) {
+        let resolve = this._resolve_$.pop();
+        if (resolve === undefined) {
             alert('the Coordinator call already returned, or not called');
             return;
         }
-        this._resolve_$(value);
-        this._resolve_$ = undefined;
+        resolve(value);
+        //this._resolve_$ = undefined;
     }
     openPage(page) {
         nav.push(page, this.disposer);
@@ -86,6 +96,9 @@ export class Controller {
     }
     closePage(level) {
         nav.pop(level);
+    }
+    ceasePage(level) {
+        nav.ceaseTop(level);
     }
     regConfirmClose(confirmClose) {
         nav.regConfirmClose(confirmClose);
@@ -128,6 +141,9 @@ export class View {
     }
     closePage(level) {
         this.controller.closePage(level);
+    }
+    ceasePage(level) {
+        this.controller.ceasePage(level);
     }
     regConfirmClose(confirmClose) {
         this.controller.regConfirmClose(confirmClose);

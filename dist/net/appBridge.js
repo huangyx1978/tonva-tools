@@ -140,12 +140,12 @@ export function appUrl(url, unitId, page, param) {
 export function loadAppUsqs(appOwner, appName) {
     return __awaiter(this, void 0, void 0, function* () {
         let centerAppApi = new CenterAppApi('tv/', undefined);
-        return yield centerAppApi.usqs(meInFrame.unit, appOwner, appName);
+        let unit = meInFrame.unit;
+        return yield centerAppApi.usqs(unit, appOwner, appName);
     });
 }
 export function appUsq(usq, usqOwner, usqName) {
     return __awaiter(this, void 0, void 0, function* () {
-        debugger;
         let usqToken = usqTokens[usq];
         if (usqToken !== undefined)
             return usqToken;

@@ -54,21 +54,29 @@ export abstract class Controller {
         await this.internalStart(param);
     }
 
-    private _resolve_$:(value:any) => void;
+    private _resolve_$:((value:any) => void)[] = [];
     async call(param?:any):Promise<any> {
         return new Promise<any> (async (resolve, reject) => {
-            this._resolve_$ = resolve;
+            this._resolve_$.push(resolve);
             await this.start(param);
         });
     }
 
+    async vCall(vp: new (coordinator: Controller)=>VPage<Controller>, param?:any):Promise<any> {
+        return new Promise<any> (async (resolve, reject) => {
+            this._resolve_$.push(resolve);
+            await (new vp(this)).showEntry(param);
+        });
+    }
+
     return(value:any) {
-        if (this._resolve_$ === undefined) {
+        let resolve = this._resolve_$.pop();
+        if (resolve === undefined) {
             alert('the Coordinator call already returned, or not called');
             return;
         }
-        this._resolve_$(value);
-        this._resolve_$ = undefined;
+        resolve(value);
+        //this._resolve_$ = undefined;
     }
 
     openPage(page:JSX.Element) {
@@ -87,6 +95,10 @@ export abstract class Controller {
 
     closePage(level?:number) {
         nav.pop(level);
+    }
+
+    ceasePage(level?:number) {
+        nav.ceaseTop(level);
     }
 
     regConfirmClose(confirmClose: ()=>Promise<boolean>) {
@@ -143,6 +155,10 @@ export abstract class View<C extends Controller> {
 
     protected closePage(level?:number) {
         this.controller.closePage(level);
+    }
+
+    protected ceasePage(level?:number) {
+        this.controller.ceasePage(level);
     }
 
     protected regConfirmClose(confirmClose: ()=>Promise<boolean>) {

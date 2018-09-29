@@ -77,7 +77,7 @@ export class UnitxApi extends Usq {
         });
     }
 }
-let centerHost; // = process.env.REACT_APP_CENTER_URL;
+let centerHost; 
 export function setCenterUrl(url) {
     console.log('setCenterUrl %s', url);
     centerHost = url;

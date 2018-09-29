@@ -19,7 +19,7 @@ import { netToken } from '../net/netToken';
 import FetchErrorView from './fetchErrorView';
 import { appUrl, setMeInFrame } from '../net/appBridge';
 import { LocalData } from '../local';
-import { logoutApis, setCenterUrl, setCenterToken, WSChannel, getCenterUrl } from '../net';
+import { logoutApis, setCenterUrl, setCenterToken, WSChannel, getCenterUrl, centerDebugHost } from '../net';
 import 'font-awesome/css/font-awesome.min.css';
 import '../css/va.css';
 import '../css/animation.css';
@@ -61,7 +61,6 @@ export class NavView extends React.Component {
     }
     componentDidMount() {
         return __awaiter(this, void 0, void 0, function* () {
-            //nav.set(this.props.logo, this);
             nav.set(this);
             let start = this.props.start;
             if (start !== undefined) {
@@ -121,10 +120,16 @@ export class NavView extends React.Component {
         this.push(view, disposer);
     }
     push(view, disposer) {
+        this.removeCeased();
         if (this.stack.length > 0) {
             window.history.pushState('forward', null, null);
         }
-        this.stack.push({ key: stackKey++, view: view, disposer: disposer });
+        this.stack.push({
+            key: stackKey++,
+            view: view,
+            ceased: false,
+            disposer: disposer
+        });
         this.refresh();
         //console.log('push: %s pages', this.stack.length);
     }
@@ -135,11 +140,25 @@ export class NavView extends React.Component {
             item = stack.pop();
             //this.popAndDispose();
         }
-        this.stack.push({ key: stackKey++, view: view, disposer: disposer });
+        this.stack.push({
+            key: stackKey++,
+            view: view,
+            ceased: false,
+            disposer: disposer
+        });
         if (item !== undefined)
             this.dispose(item.disposer);
         this.refresh();
         //console.log('replace: %s pages', this.stack.length);
+    }
+    ceaseTop(level = 1) {
+        let p = this.stack.length - 1;
+        for (let i = 0; i < level; i++, p--) {
+            if (p < 0)
+                break;
+            let item = this.stack[p];
+            item.ceased = true;
+        }
     }
     pop(level = 1) {
         let stack = this.stack;
@@ -167,12 +186,30 @@ export class NavView extends React.Component {
         }
         //console.log('pop: %s pages', stack.length);
     }
+    removeCeased() {
+        for (;;) {
+            let p = this.stack.length - 1;
+            if (p < 0)
+                break;
+            let top = this.stack[p];
+            if (top.ceased === false)
+                break;
+            this.stack.pop();
+        }
+    }
     popAndDispose() {
-        let item = this.stack.pop();
-        if (item === undefined)
-            return;
+        let item;
+        for (;;) {
+            item = this.stack.pop();
+            if (item === undefined)
+                return;
+            if (item.ceased === false)
+                break;
+        }
         let { disposer } = item;
         this.dispose(disposer);
+        this.removeCeased();
+        return item;
     }
     dispose(disposer) {
         if (disposer === undefined)
@@ -262,37 +299,45 @@ export class NavView extends React.Component {
         // this.forceUpdate();
     }
 }
+function centerUrlAndWs() {
+    let host = 'REACT_APP_CENTER_HOST';
+    let centerHost = process.env[host];
+    if (centerHost === undefined)
+        return { url: undefined, ws: undefined };
+    return {
+        url: 'http://' + centerHost + '/',
+        ws: 'ws://' + centerHost + '/tv/',
+    };
+}
+function centerDebugUrlAndWs() {
+    let centerHost = centerDebugHost;
+    return {
+        url: 'http://' + centerHost + ':3000/',
+        ws: 'ws://' + centerHost + ':3000/tv/',
+    };
+}
 function loadCenterUrl() {
     return __awaiter(this, void 0, void 0, function* () {
-        let centerUrl, wsHost;
+        let urlAndWs = centerUrlAndWs();
+        let debugUrlAndWs = centerDebugUrlAndWs();
         let hash = document.location.hash;
         if (hash.includes('sheet_debug') === true) {
-            centerUrl = process.env.REACT_APP_CENTER_URL_DEBUG;
-            wsHost = process.env.REACT_APP_WSHOST_DEBUG;
+            return debugUrlAndWs;
         }
-        else if (process.env.NODE_ENV === 'development') {
-            centerUrl = process.env.REACT_APP_CENTER_URL_DEBUG;
-            if (centerUrl !== undefined) {
-                wsHost = process.env.REACT_APP_WSHOST_DEBUG;
+        if (process.env.NODE_ENV === 'development') {
+            if (debugUrlAndWs.url !== undefined) {
                 try {
                     console.log('try connect debug url');
-                    let ret = yield fetch(centerUrl);
+                    let ret = yield fetch(debugUrlAndWs.url);
                     console.log('connected');
+                    return debugUrlAndWs;
                 }
                 catch (err) {
                     console.error(err);
-                    centerUrl = undefined;
                 }
             }
         }
-        if (centerUrl === undefined) {
-            centerUrl = process.env.REACT_APP_CENTER_URL;
-            wsHost = process.env.REACT_APP_WSHOST;
-        }
-        return {
-            centerUrl: centerUrl,
-            wsHost: wsHost,
-        };
+        return urlAndWs;
     });
 }
 export class Nav {
@@ -332,9 +377,9 @@ export class Nav {
             nav.push(React.createElement(Page, { header: false },
                 React.createElement("div", { style: { height: '100%' }, className: "d-flex flex-fill align-items-center justify-content-center" },
                     React.createElement("div", { className: "d-flex align-items-center justify-content-center slide text-info", style: { width: '5em', height: '2em' } }, "\u52A0\u8F7D\u4E2D..."))));
-            let { centerUrl, wsHost } = yield loadCenterUrl();
-            setCenterUrl(centerUrl);
-            this.wsHost = wsHost;
+            let { url, ws } = yield loadCenterUrl();
+            setCenterUrl(url);
+            this.wsHost = ws;
             let hash = document.location.hash;
             // document.title = document.location.origin;
             console.log("url=%s hash=%s", document.location.origin, hash);
@@ -445,6 +490,9 @@ export class Nav {
     }
     navBack() {
         this.nav.navBack();
+    }
+    ceaseTop(level) {
+        this.nav.ceaseTop(level);
     }
     back(confirm = true) {
         return __awaiter(this, void 0, void 0, function* () {

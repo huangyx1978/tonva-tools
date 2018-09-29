@@ -15,6 +15,7 @@ export interface Props {
 export interface StackItem {
     key: number;
     view: JSX.Element;
+    ceased: boolean;
     confirmClose?: () => Promise<boolean>;
     disposer?: () => void;
 }
@@ -38,7 +39,9 @@ export declare class NavView extends React.Component<Props, State> {
     show(view: JSX.Element, disposer?: () => void): void;
     push(view: JSX.Element, disposer?: () => void): void;
     replace(view: JSX.Element, disposer?: () => void): void;
-    pop(level?: Number): void;
+    ceaseTop(level?: number): void;
+    pop(level?: number): void;
+    private removeCeased;
     private popAndDispose;
     private dispose;
     clear(): void;
@@ -77,9 +80,10 @@ export declare class Nav {
     show(view: JSX.Element, disposer?: () => void): void;
     push(view: JSX.Element, disposer?: () => void): void;
     replace(view: JSX.Element, disposer?: () => void): void;
-    pop(level?: Number): void;
+    pop(level?: number): void;
     clear(): void;
     navBack(): void;
+    ceaseTop(level?: number): void;
     back(confirm?: boolean): Promise<void>;
     regConfirmClose(confirmClose: () => Promise<boolean>): void;
     confirmBox(message?: string): boolean;

@@ -1,4 +1,5 @@
 import {HttpChannel} from './httpChannel';
+import {centerDebugHost} from './centerDebugHost';
 
 export async function refetchApi(channel:HttpChannel, url, options, resolve, reject) {
     await channel.fetch(url, options, resolve, reject);
@@ -51,6 +52,13 @@ export async function getUrlOrDebug(url:string, urlDebug:string):Promise<string>
 
     try {
         if (urlDebug.endsWith('/') === false) urlDebug += '/';
+        let hostString = '://centerhost:';
+        let pos = urlDebug.indexOf(hostString);
+        if (pos > 0) {
+            let centerHost = centerDebugHost;
+            if (centerHost === undefined) process.env.REACT_APP_CENTER_HOST;
+            urlDebug = urlDebug.replace(hostString, '://' + centerHost + ':');
+        }
         let ret = await fetch(urlDebug + 'hello', {
             method: "GET",
             mode: "no-cors", // no-cors, cors, *same-origin

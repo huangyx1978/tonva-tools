@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import { HttpChannelNavUI } from './httpChannelUI';
 import { HttpChannel } from './httpChannel';
 import { ApiBase } from './apiBase';
-let centerHost; // = process.env.REACT_APP_CENTER_URL;
+let centerHost;
 export function setCenterUrl(url) {
     console.log('setCenterUrl %s', url);
     centerHost = url;

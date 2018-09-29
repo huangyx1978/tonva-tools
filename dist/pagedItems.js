@@ -37,6 +37,14 @@ export class PagedItems {
     scrollToBottom() {
         this.bottomDiv = '$$' + uid();
     }
+    reset() {
+        this.beforeLoad = true;
+        this.loaded = false;
+        this.param = undefined;
+        this.allLoaded = false;
+        this._items.clear();
+        this.setPageStart(undefined);
+    }
     append(item) {
         if (this.appendPosition === 'tail')
             this._items.unshift(item);
@@ -45,13 +53,15 @@ export class PagedItems {
     }
     first(param) {
         return __awaiter(this, void 0, void 0, function* () {
-            //if (this.loaded === true) return;
+            this.reset();
             this.beforeLoad = false;
-            this.loaded = false;
             this.param = param;
+            /*
+            this.loaded = false;
             this._items.clear();
             this.allLoaded = false;
             this.setPageStart(undefined);
+            */
             yield this.more();
         });
     }
