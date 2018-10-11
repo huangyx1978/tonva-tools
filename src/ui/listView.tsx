@@ -1,3 +1,4 @@
+/*
 import * as React from 'react';
 import * as classNames from 'classnames';
 import {observer} from 'mobx-react';
@@ -76,3 +77,4 @@ export class ListView extends React.Component<ListViewProps, null> {
         )
     }
 }
+*/

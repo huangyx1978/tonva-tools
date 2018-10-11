@@ -81,7 +81,6 @@ export class Controller {
             return;
         }
         resolve(value);
-        //this._resolve_$ = undefined;
     }
     openPage(page) {
         nav.push(page, this.disposer);

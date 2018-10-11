@@ -1,22 +1,39 @@
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
+/*
 import * as React from 'react';
 import * as classNames from 'classnames';
-import { observer } from 'mobx-react';
-import { ListRow } from './listRow';
-let ListView = class ListView extends React.Component {
+import {observer} from 'mobx-react';
+import {ListItem, ListRow} from './listRow';
+
+export interface ListViewProps {
+    className?: string;
+    items?: any[];
+    renderRow?: (item:any, index:number, ex?:any) => JSX.Element;
+    ex?: any;
+    header?: string|JSX.Element;
+    unload?: string|JSX.Element;
+    none?: string|JSX.Element;
+    footer?: string|JSX.Element;
+    itemClick?: (item:any)=>void;
+    converter?: (item:any)=>ListItem;
+}
+
+@observer
+export class ListView extends React.Component<ListViewProps, null> {
     render() {
-        let { header, items, unload, none, renderRow, className, footer, itemClick, converter } = this.props;
+        let {header, items, unload, none, renderRow, className, footer, itemClick, converter} = this.props;
         let cn = classNames(className, 'va-list');
         let content, elHeader;
         if (items === undefined)
-            content = React.createElement("li", { className: 'empty' }, unload || '...');
+            content = <li className='empty'>
+                {unload || '...'}
+            </li>;
         else if (items.length === 0) {
-            content = (React.createElement("li", { className: 'empty' }, none || '[none]'));
+            content = (
+            <li className='empty'>
+                {
+                    none || '[none]'
+                }
+            </li>);
         }
         else if (renderRow !== undefined) {
             content = items.map((item, index) => renderRow(item, index, this.props.ex));
@@ -25,37 +42,40 @@ let ListView = class ListView extends React.Component {
             content = items.map((item, index) => {
                 let onClick = item.onClick;
                 if (onClick === undefined && itemClick !== undefined)
-                    onClick = () => itemClick(item);
-                let listItem;
+                    onClick = ()=>itemClick(item);
+                let listItem:ListItem;
                 if (converter !== undefined) {
                     listItem = converter(item);
-                    if (listItem === undefined)
-                        return null;
+                    if (listItem === undefined) return null;
                 }
                 else {
-                    listItem = Object.assign({}, item);
+                    listItem = {
+                        ...item
+                    }
                 }
-                if (listItem.key === undefined)
-                    listItem.key = listItem.main;
-                return React.createElement(ListRow, Object.assign({ onClick: onClick }, listItem));
+                if (listItem.key === undefined) listItem.key = listItem.main;
+                return <ListRow onClick={onClick} {...listItem} />;
             });
         }
         if (header !== undefined) {
             if (typeof header === 'string') {
-                elHeader = React.createElement("div", { className: 'va-list-header' }, header);
+                elHeader = <div className='va-list-header'>{header}</div>;
             }
             else {
                 elHeader = header;
             }
         }
-        return (React.createElement("div", { className: cn },
-            elHeader,
-            React.createElement("ul", null, content),
-            footer));
+
+        return (
+        <div className={cn}>
+            {elHeader}
+            <ul>
+                {content}
+            </ul>
+            {footer}
+        </div>
+        )
     }
-};
-ListView = __decorate([
-    observer
-], ListView);
-export { ListView };
+}
+*/ 
 //# sourceMappingURL=listView.js.map

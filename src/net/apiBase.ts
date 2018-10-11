@@ -1,5 +1,6 @@
 import {HttpChannel} from './httpChannel';
 import {centerDebugHost} from './centerDebugHost';
+import {fetchLocalCheck} from './fetchLocalCheck';
 
 export async function refetchApi(channel:HttpChannel, url, options, resolve, reject) {
     await channel.fetch(url, options, resolve, reject);
@@ -44,28 +45,25 @@ export abstract class ApiBase {
 }
 
 export async function getUrlOrDebug(url:string, urlDebug:string):Promise<string> {
-    if (urlDebug === undefined ||
-        document.location.hostname !== 'localhost')
-    {
-        // return url;
-    }
-
     try {
         if (urlDebug.endsWith('/') === false) urlDebug += '/';
         let hostString = '://centerhost:';
         let pos = urlDebug.indexOf(hostString);
+        console.log("let pos = urlDebug.indexOf(hostString); pos=%s, urlDebug=%s", pos, urlDebug);
         if (pos > 0) {
-            let centerHost = centerDebugHost;
-            if (centerHost === undefined) process.env.REACT_APP_CENTER_HOST;
+            let centerHost = process.env.REACT_APP_CENTER_DEBUG_HOST || centerDebugHost;
+            console.log("let centerHost = process.env.REACT_APP_CENTER_DEBUG_HOST || centerDebugHost;centerHost=%s", centerHost);
             urlDebug = urlDebug.replace(hostString, '://' + centerHost + ':');
         }
-        let ret = await fetch(urlDebug + 'hello', {
+        let fetchUrl = urlDebug + 'hello';
+        let fetchOptions = {
             method: "GET",
             mode: "no-cors", // no-cors, cors, *same-origin
             headers: {
                 "Content-Type": "text/plain"
             },
-        });
+        };
+        let ret = await fetchLocalCheck(fetchUrl, fetchOptions);
         let text = await ret.text();
         return urlDebug;
     }

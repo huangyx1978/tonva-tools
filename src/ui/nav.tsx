@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {observable} from 'mobx';
+import {fetchLocalCheck} from '../net/fetchLocalCheck';
 import {User, decodeToken} from '../user';
 import {Page} from './page';
 import {netToken} from '../net/netToken';
@@ -338,7 +339,7 @@ function centerUrlAndWs():UrlAndWs {
 }
 
 function centerDebugUrlAndWs():UrlAndWs {
-    let centerHost = centerDebugHost;
+    let centerHost = process.env.REACT_APP_CENTER_DEBUG_HOST || centerDebugHost;
     return {
         url: 'http://' + centerHost + ':3000/',
         ws: 'ws://' + centerHost + ':3000/tv/',
@@ -356,12 +357,13 @@ async function loadCenterUrl():Promise<{url:string, ws:string}> {
         if (debugUrlAndWs.url !== undefined) {
             try {
                 console.log('try connect debug url');
-                let ret = await fetch(debugUrlAndWs.url);
+                //let ret = await fetch(debugUrlAndWs.url);
+                let ret = await fetchLocalCheck(debugUrlAndWs.url);
                 console.log('connected');
                 return debugUrlAndWs;
             }
             catch (err) {
-                console.error(err);
+                //console.error(err);
             }
         }
     }

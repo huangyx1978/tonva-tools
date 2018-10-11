@@ -64,6 +64,7 @@ window.addEventListener('message', function (evt) {
                 break;
             case 'app-api-return':
                 console.log("app-api-return: %s", JSON.stringify(message));
+                console.log('await onAppApiReturn(message);');
                 yield onAppApiReturn(message);
                 break;
         }
@@ -92,12 +93,14 @@ function onReceiveAppApiMessage(hash, apiName) {
 }
 function onAppApiReturn(message) {
     return __awaiter(this, void 0, void 0, function* () {
+        console.log('start await onAppApiReturn(message);');
         let { apiName, url, urlDebug, token } = message;
         let action = usqTokens[apiName];
         if (action === undefined) {
             throw 'error app api return';
             //return;
         }
+        console.log('async function onAppApiReturn(message:any) {');
         let realUrl = yield getUrlOrDebug(url, urlDebug);
         action.url = realUrl;
         action.token = token;

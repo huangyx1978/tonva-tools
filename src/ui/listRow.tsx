@@ -1,3 +1,4 @@
+/*
 import * as React from 'react';
 import * as classNames from 'classnames';
 import {IObservableValue, IComputedValue} from 'mobx';
@@ -89,3 +90,4 @@ export class ListRow extends React.Component<ListRowProps, ListRowState> {
         );
     }
 }
+*/

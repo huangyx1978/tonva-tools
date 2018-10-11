@@ -80,6 +80,7 @@ window.addEventListener('message', async function(evt) {
             break;
         case 'app-api-return':
             console.log("app-api-return: %s", JSON.stringify(message));
+            console.log('await onAppApiReturn(message);');
             await onAppApiReturn(message);
             break;
     }
@@ -105,12 +106,14 @@ async function onReceiveAppApiMessage(hash: string, apiName: string): Promise<Us
 }
 
 async function onAppApiReturn(message:any) {
+    console.log('start await onAppApiReturn(message);');
     let {apiName, url, urlDebug, token} = message;
     let action = usqTokens[apiName];
     if (action === undefined) {
         throw 'error app api return';
         //return;
     }
+    console.log('async function onAppApiReturn(message:any) {');
     let realUrl = await getUrlOrDebug(url, urlDebug);
     action.url = realUrl;
     action.token = token;

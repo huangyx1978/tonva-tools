@@ -76,7 +76,6 @@ export abstract class Controller {
             return;
         }
         resolve(value);
-        //this._resolve_$ = undefined;
     }
 
     openPage(page:JSX.Element) {

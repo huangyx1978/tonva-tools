@@ -1,53 +1,66 @@
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
+/*
 import * as React from 'react';
 import * as classNames from 'classnames';
-import { observer } from 'mobx-react';
+import {IObservableValue, IComputedValue} from 'mobx';
+import {observer} from 'mobx-react';
 import '../css/va-row.css';
-let ListRow = class ListRow extends React.Component {
+
+export interface ListItem {
+    key?: string|number;
+    date?: Date;
+    icon?: string | JSX.Element;
+    main?: string;
+    vice?: string;
+    middle?: string | JSX.Element;
+    midSize?: number;
+    right?: string | JSX.Element;
+    onClick?: () => void;
+    unread?: number|IComputedValue<number>;         // <0 表示red dot
+}
+
+export interface ListRowProps extends ListItem {
+    //onClick: () => void;
+}
+
+export interface ListRowState {
+    pressed: boolean;
+}
+
+@observer
+export class ListRow extends React.Component<ListRowProps, ListRowState> {
     constructor(props) {
         super(props);
         this.state = {
             pressed: false,
-        };
+        }
     }
     render() {
-        let { date, main, vice, middle, midSize, icon, unread, right, onClick } = this.props;
-        let header, isIcon, noteNum;
+        let {date, main, vice, middle, midSize, icon, unread, right, onClick} = this.props;
+        let header, isIcon:boolean, noteNum;
         if (unread !== undefined) {
-            let uv;
-            if (typeof unread === 'number')
-                uv = unread;
-            else
-                uv = unread.get();
-            if (uv > 0)
-                noteNum = React.createElement("b", null, uv);
+            let uv:number;
+            if (typeof unread === 'number') uv = unread;
+            else uv = unread.get();
+                if (uv > 0)
+                noteNum = <b>{uv}</b>;
             else if (uv < 0)
-                noteNum = React.createElement("b", { className: 'dot' });
+                noteNum = <b className='dot' />;
         }
         switch (typeof icon) {
             case 'object':
-                header = React.createElement("header", null,
-                    icon,
-                    noteNum);
-                isIcon = false;
+                header = <header>{icon}{noteNum}</header>;
+                isIcon= false;
                 break;
             case 'string':
-                header = React.createElement("header", { className: 'icon' },
-                    React.createElement("img", { src: icon }),
-                    noteNum);
-                isIcon = true;
+                header = <header className='icon'><img src={icon as string} />{noteNum}</header>;
+                isIcon= true;
                 break;
         }
         let mid;
         if (middle !== undefined) {
             switch (typeof middle) {
                 case 'string':
-                    mid = React.createElement("div", { style: { flex: midSize } }, middle);
+                    mid = <div style={{flex:midSize}}>{middle}</div>;
                     break;
                 default:
                     mid = middle;
@@ -57,26 +70,25 @@ let ListRow = class ListRow extends React.Component {
         let footer;
         if (right !== undefined) {
             if (typeof right === 'string')
-                footer = React.createElement("footer", null,
-                    React.createElement("small", { className: "text-muted" }, right));
+                footer = <footer><small className="text-muted">{right}</small></footer>;
             else
-                footer = React.createElement("footer", null, right);
+                footer = <footer>{right}</footer>;
         }
         let viceSpan;
-        if (vice !== undefined)
-            viceSpan = React.createElement("span", null, vice);
-        let cn = classNames('va-row', { icon: isIcon, pressed: this.state.pressed }, { "va-action": onClick !== undefined });
-        return (React.createElement("li", { className: cn, onClick: onClick },
-            header,
-            React.createElement("div", null,
-                React.createElement("div", null, main),
-                viceSpan),
-            mid,
-            footer));
+        if (vice !== undefined) viceSpan = <span>{vice}</span>;
+        let cn = classNames('va-row', {icon:isIcon, pressed: this.state.pressed}, {"va-action": onClick !== undefined});
+        return (
+        <li className={cn} onClick={onClick}>
+            {header}
+            <div>
+                <div>{main}</div>
+                {viceSpan}
+            </div>
+            {mid}
+            {footer}
+        </li>
+        );
     }
-};
-ListRow = __decorate([
-    observer
-], ListRow);
-export { ListRow };
+}
+*/ 
 //# sourceMappingURL=listRow.js.map

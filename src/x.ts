@@ -54,7 +54,11 @@ function buildPrototype(src) {
         Object.defineProperty(pt, i, {
             enumerable: true,
             get: function() {
-                if (typeof obj === 'function') return obj();
+                /*
+                if (typeof obj === 'function') {
+                    debugger;
+                    return obj();
+                }*/
                 return obj;
             }
         });

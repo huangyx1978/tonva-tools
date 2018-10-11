@@ -7,6 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { centerDebugHost } from './centerDebugHost';
+import { fetchLocalCheck } from './fetchLocalCheck';
 export function refetchApi(channel, url, options, resolve, reject) {
     return __awaiter(this, void 0, void 0, function* () {
         yield channel.fetch(url, options, resolve, reject);
@@ -50,28 +51,26 @@ export class ApiBase {
 }
 export function getUrlOrDebug(url, urlDebug) {
     return __awaiter(this, void 0, void 0, function* () {
-        if (urlDebug === undefined ||
-            document.location.hostname !== 'localhost') {
-            // return url;
-        }
         try {
             if (urlDebug.endsWith('/') === false)
                 urlDebug += '/';
             let hostString = '://centerhost:';
             let pos = urlDebug.indexOf(hostString);
+            console.log("let pos = urlDebug.indexOf(hostString); pos=%s, urlDebug=%s", pos, urlDebug);
             if (pos > 0) {
-                let centerHost = centerDebugHost;
-                if (centerHost === undefined)
-                    process.env.REACT_APP_CENTER_HOST;
+                let centerHost = process.env.REACT_APP_CENTER_DEBUG_HOST || centerDebugHost;
+                console.log("let centerHost = process.env.REACT_APP_CENTER_DEBUG_HOST || centerDebugHost;centerHost=%s", centerHost);
                 urlDebug = urlDebug.replace(hostString, '://' + centerHost + ':');
             }
-            let ret = yield fetch(urlDebug + 'hello', {
+            let fetchUrl = urlDebug + 'hello';
+            let fetchOptions = {
                 method: "GET",
                 mode: "no-cors",
                 headers: {
                     "Content-Type": "text/plain"
                 },
-            });
+            };
+            let ret = yield fetchLocalCheck(fetchUrl, fetchOptions);
             let text = yield ret.text();
             return urlDebug;
         }

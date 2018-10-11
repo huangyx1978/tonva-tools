@@ -14,6 +14,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import * as React from 'react';
 import { observable } from 'mobx';
+import { fetchLocalCheck } from '../net/fetchLocalCheck';
 import { Page } from './page';
 import { netToken } from '../net/netToken';
 import FetchErrorView from './fetchErrorView';
@@ -310,7 +311,7 @@ function centerUrlAndWs() {
     };
 }
 function centerDebugUrlAndWs() {
-    let centerHost = centerDebugHost;
+    let centerHost = process.env.REACT_APP_CENTER_DEBUG_HOST || centerDebugHost;
     return {
         url: 'http://' + centerHost + ':3000/',
         ws: 'ws://' + centerHost + ':3000/tv/',
@@ -328,12 +329,13 @@ function loadCenterUrl() {
             if (debugUrlAndWs.url !== undefined) {
                 try {
                     console.log('try connect debug url');
-                    let ret = yield fetch(debugUrlAndWs.url);
+                    //let ret = await fetch(debugUrlAndWs.url);
+                    let ret = yield fetchLocalCheck(debugUrlAndWs.url);
                     console.log('connected');
                     return debugUrlAndWs;
                 }
                 catch (err) {
-                    console.error(err);
+                    //console.error(err);
                 }
             }
         }
