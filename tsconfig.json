@@ -1,19 +1,15 @@
 {
+    "extends": "../tsproject.json",
     "compilerOptions": {
-      "module": "esnext",
-      "moduleResolution": "node",
-      "target": "es6",
-      "declaration": true,
-      "lib": ["es2016", "dom"],
-      "outDir": "./dist",
-      "rootDir": "src",
-      "sourceMap": true,
-      "jsx": "react",
-      "experimentalDecorators": true,
       "composite": true,
-      "declarationMap": true
+      "outDir": "../lib/tonva-tools",
+        "rootDir": "."
     },
     "include": [
-      "src/**/*", "../../src/ui-usql/vm/link/crLink.tsx", "../../src/ui/$unitx/query/getMessage/cGetMessge.tsx", "../../src/ui/$unitx/crTuid/vTuidMain.tsx", "../../src/ui/$unitx/crTuid/myCTuid.ts"
+        "src/**/*"
+    ],
+    "exclude": [
+        "node_modules",
+        "dist"
     ]
 }
