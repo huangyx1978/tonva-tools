@@ -57,12 +57,12 @@ body, body>div, ul.va, ul.va>li, ul.va>li>article {
     text-decoration: none;
   }
 div.red-dot>u.message-dot {
-  right: 6px;
-  height: 6px;
-  width: 6px;
-  border-radius: 3px;
+    right: 6px;
+    height: 6px;
+    width: 6px;
+    border-radius: 3px;
 }
-div.red-dot.num>u {
+  div.red-dot.num>u {
     right: -20px;
     top: -6px;
     height: 18px;
@@ -354,3 +354,29 @@ div.red-dot.num>u {
     margin: 0; 
     padding: 0;
   }
+  @-webkit-keyframes rotate-center {
+    0% {
+      -webkit-transform: rotate(0);
+              transform: rotate(0);
+    }
+    100% {
+      -webkit-transform: rotate(360deg);
+              transform: rotate(360deg);
+    }
+  }
+  @keyframes rotate-center {
+    0% {
+      -webkit-transform: rotate(0);
+              transform: rotate(0);
+    }
+    100% {
+      -webkit-transform: rotate(360deg);
+              transform: rotate(360deg);
+    }
+  }
+  
+  .rotate-center {
+    -webkit-animation: rotate-center 1s infinite ease-in-out both;
+            animation: rotate-center 1s infinite ease-in-out both;
+  }
+  

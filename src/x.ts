@@ -1,42 +1,48 @@
-import * as _ from 'lodash';
+import _ from 'lodash';
 
-interface ResX {
-    district: string;
-    lang: string;
-    res: any;
-    x: object;
+export interface ResX {
+    $district: string;
+    $lang: string;
+    //$res: any;
+    x: any;
 }
 
 const arr:ResX[] = [];
 
-export function x(res:any) {
-    let func = function() {};
-    let pt = func.prototype;
-    let ret = new func();
-    arr.push({
-        district: undefined,
-        lang: undefined,
-        res: res,
+export function x(res:any):ResX {
+    //let func = function() {};
+    //let pt = func.prototype;
+    //let ret = new func();
+    arr.push(res);
+    return res;
+    /*
+        $district: undefined,
+        $lang: undefined,
+        $res: res,
         x: ret,
-    });
-    return ret;
+    //return ret;
+    */
 }
 
-export function setXLang(lang:string, district:string) {
+export function setXLang(appResX:ResX, lang:string, district:string) {
+    
     for (let rx of arr) {
-        rx.lang = lang;
-        rx.district = district;
-        let r = rx.res;
+        rx.$lang = lang;
+        rx.$district = district;
+        let r = rx;
         if (r === undefined) continue;
-        let r$ = r.$;
+        mergeProps(rx, r)
+        let r$ = r.x;
         if (r$ !== undefined) mergeProps(rx.x, r$);
         let l = r[lang];
         if (l === undefined) continue;
-        let l$ = l.$;
+        mergeProps(rx, l);
+        let l$ = l.x;
         if (l$ !== undefined) mergeProps(rx.x, l$);
         let d = l[district];
         if (d === undefined) continue;
-        let d$ = d.$;
+        mergeProps(rx, d);
+        let d$ = d.x;
         if (d$ !== undefined) mergeProps(rx.x, d$);
     }
 }

@@ -1,41 +1,30 @@
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 import * as React from 'react';
 import { nav } from './nav';
 import { Page } from './page';
 export class Controller {
-    constructor() {
+    constructor(res) {
+        this.isDev = process.env.NODE_ENV === 'development';
         this.disposer = () => {
             // message listener的清理
             nav.unregisterReceiveHandler(this.receiveHandlerId);
         };
-        this.onMessageReceive = (message) => __awaiter(this, void 0, void 0, function* () {
-            yield this.onMessage(message);
-        });
+        this.onMessageReceive = async (message) => {
+            await this.onMessage(message);
+        };
         this._resolve_$ = [];
+        this.res = res || {}; // || entityUI.res;
+        this.x = this.res.x || {};
     }
-    showVPage(vp, param) {
-        return __awaiter(this, void 0, void 0, function* () {
-            yield (new vp(this)).showEntry(param);
-        });
+    async showVPage(vp, param) {
+        await (new vp(this)).showEntry(param);
     }
     renderView(view, param) {
         return (new view(this)).render(param);
     }
-    event(type, value) {
-        return __awaiter(this, void 0, void 0, function* () {
-            yield this.onEvent(type, value);
-        });
+    async event(type, value) {
+        await this.onEvent(type, value);
     }
-    onEvent(type, value) {
-        return __awaiter(this, void 0, void 0, function* () {
-        });
+    async onEvent(type, value) {
     }
     msg(text) {
         alert(text);
@@ -47,31 +36,23 @@ export class Controller {
     onMessage(message) {
         return;
     }
-    beforeStart() {
-        return __awaiter(this, void 0, void 0, function* () {
-            this.receiveHandlerId = nav.registerReceiveHandler(this.onMessageReceive);
+    async beforeStart() {
+        this.receiveHandlerId = nav.registerReceiveHandler(this.onMessageReceive);
+    }
+    async start(param) {
+        await this.beforeStart();
+        await this.internalStart(param);
+    }
+    async call(param) {
+        return new Promise(async (resolve, reject) => {
+            this._resolve_$.push(resolve);
+            await this.start(param);
         });
     }
-    start(param) {
-        return __awaiter(this, void 0, void 0, function* () {
-            yield this.beforeStart();
-            yield this.internalStart(param);
-        });
-    }
-    call(param) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
-                this._resolve_$.push(resolve);
-                yield this.start(param);
-            }));
-        });
-    }
-    vCall(vp, param) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
-                this._resolve_$.push(resolve);
-                yield (new vp(this)).showEntry(param);
-            }));
+    async vCall(vp, param) {
+        return new Promise(async (resolve, reject) => {
+            this._resolve_$.push(resolve);
+            await (new vp(this)).showEntry(param);
         });
     }
     return(value) {
@@ -106,19 +87,23 @@ export class Controller {
 export class View {
     constructor(controller) {
         this.controller = controller;
+        this.res = controller.res;
+        this.x = controller.x;
     }
+    get isDev() { return this.controller.isDev; }
     renderVm(vm, param) {
         return (new vm(this.controller)).render(param);
     }
-    event(type, value) {
-        return __awaiter(this, void 0, void 0, function* () {
-            /*
-            if (this._resolve_$_ !== undefined) {
-                await this._resolve_$_({type:type, value:value});
-                return;
-            }*/
-            yield this.controller.event(type, value);
-        });
+    async showVPage(vp, param) {
+        await (new vp(this.controller)).showEntry(param);
+    }
+    async event(type, value) {
+        /*
+        if (this._resolve_$_ !== undefined) {
+            await this._resolve_$_({type:type, value:value});
+            return;
+        }*/
+        await this.controller.event(type, value);
     }
     return(value) {
         this.controller.return(value);

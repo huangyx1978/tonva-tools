@@ -1,7 +1,11 @@
 import * as React from 'react';
 export declare abstract class Controller {
+    readonly res: any;
+    readonly x: any;
     icon: string | JSX.Element;
     label: string;
+    readonly isDev: boolean;
+    constructor(res: any);
     private receiveHandlerId;
     private disposer;
     protected showVPage(vp: new (coordinator: Controller) => VPage<Controller>, param?: any): Promise<void>;
@@ -28,9 +32,13 @@ export declare abstract class Controller {
 }
 export declare abstract class View<C extends Controller> {
     protected controller: C;
+    protected readonly res: any;
+    protected readonly x: any;
     constructor(controller: C);
+    protected readonly isDev: boolean;
     abstract render(param?: any): JSX.Element;
     protected renderVm(vm: new (coordinator: Controller) => View<C>, param?: any): JSX.Element;
+    protected showVPage(vp: new (coordinator: Controller) => VPage<Controller>, param?: any): Promise<void>;
     protected event(type: string, value?: any): Promise<void>;
     protected return(value: any): void;
     protected openPage(view: React.StatelessComponent<any>, param?: any): void;

@@ -3,8 +3,16 @@ import {nav} from './nav';
 import {Page} from './page';
 
 export abstract class Controller {
+    readonly res: any;
+    readonly x: any;
     icon: string|JSX.Element;
     label:string;
+    readonly isDev:boolean = process.env.NODE_ENV==='development';
+
+    constructor(res:any) {
+        this.res = res || {}; // || entityUI.res;
+        this.x = this.res.x || {};
+    }
 
     private receiveHandlerId:number;
     private disposer = () => {
@@ -108,15 +116,25 @@ export abstract class Controller {
 
 export abstract class View<C extends Controller> {
     protected controller: C;
+    protected readonly res: any;
+    protected readonly x: any;
 
     constructor(controller: C) {
         this.controller = controller;
+        this.res = controller.res;
+        this.x = controller.x;
     }
+
+    protected get isDev() {return this.controller.isDev}
 
     abstract render(param?:any): JSX.Element;
 
     protected renderVm(vm: new (coordinator: Controller)=>View<C>, param?:any) {
         return (new vm(this.controller)).render(param);
+    }
+
+    protected async showVPage(vp: new (coordinator: Controller)=>VPage<Controller>, param?:any):Promise<void> {
+        await (new vp(this.controller)).showEntry(param);
     }
 
     protected async event(type:string, value?:any) {

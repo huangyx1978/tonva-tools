@@ -4,14 +4,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 import * as React from 'react';
 import { observable } from 'mobx';
 import { fetchLocalCheck } from '../net/fetchLocalCheck';
@@ -55,22 +47,18 @@ export class NavView extends React.Component {
             fetchError: undefined
         };
     }
-    componentWillMount() {
-        return __awaiter(this, void 0, void 0, function* () {
-            window.addEventListener('popstate', this.navBack);
-        });
+    async componentWillMount() {
+        window.addEventListener('popstate', this.navBack);
     }
-    componentDidMount() {
-        return __awaiter(this, void 0, void 0, function* () {
-            nav.set(this);
-            let start = this.props.start;
-            if (start !== undefined) {
-                yield start();
-            }
-            else {
-                yield nav.start();
-            }
-        });
+    async componentDidMount() {
+        nav.set(this);
+        let start = this.props.start;
+        if (start !== undefined) {
+            await start();
+        }
+        else {
+            await nav.start();
+        }
     }
     get level() {
         return this.stack.length;
@@ -104,16 +92,14 @@ export class NavView extends React.Component {
             }
         }, 100);
     }
-    onError(fetchError) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let err = fetchError.error;
-            if (err !== undefined && err.unauthorized === true) {
-                yield nav.showLogin();
-                return;
-            }
-            this.setState({
-                fetchError: fetchError,
-            });
+    async onError(fetchError) {
+        let err = fetchError.error;
+        if (err !== undefined && err.unauthorized === true) {
+            await nav.showLogin();
+            return;
+        }
+        this.setState({
+            fetchError: fetchError,
         });
     }
     show(view, disposer) {
@@ -244,27 +230,25 @@ export class NavView extends React.Component {
         this.back(true);
         this.isHistoryBack = false;
     }
-    back(confirm = true) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let stack = this.stack;
-            let len = stack.length;
-            if (len === 0)
-                return;
-            if (len === 1) {
-                if (self != window.top) {
-                    window.top.postMessage({ type: 'pop-app' }, '*');
-                }
-                return;
+    async back(confirm = true) {
+        let stack = this.stack;
+        let len = stack.length;
+        if (len === 0)
+            return;
+        if (len === 1) {
+            if (self != window.top) {
+                window.top.postMessage({ type: 'pop-app' }, '*');
             }
-            let top = stack[len - 1];
-            if (confirm === true && top.confirmClose) {
-                if ((yield top.confirmClose()) === true)
-                    this.pop();
-            }
-            else {
+            return;
+        }
+        let top = stack[len - 1];
+        if (confirm === true && top.confirmClose) {
+            if (await top.confirmClose() === true)
                 this.pop();
-            }
-        });
+        }
+        else {
+            this.pop();
+        }
     }
     confirmBox(message) {
         return window.confirm(message);
@@ -317,30 +301,28 @@ function centerDebugUrlAndWs() {
         ws: 'ws://' + centerHost + ':3000/tv/',
     };
 }
-function loadCenterUrl() {
-    return __awaiter(this, void 0, void 0, function* () {
-        let urlAndWs = centerUrlAndWs();
-        let debugUrlAndWs = centerDebugUrlAndWs();
-        let hash = document.location.hash;
-        if (hash.includes('sheet_debug') === true) {
-            return debugUrlAndWs;
-        }
-        if (process.env.NODE_ENV === 'development') {
-            if (debugUrlAndWs.url !== undefined) {
-                try {
-                    console.log('try connect debug url');
-                    //let ret = await fetch(debugUrlAndWs.url);
-                    let ret = yield fetchLocalCheck(debugUrlAndWs.url);
-                    console.log('connected');
-                    return debugUrlAndWs;
-                }
-                catch (err) {
-                    //console.error(err);
-                }
+async function loadCenterUrl() {
+    let urlAndWs = centerUrlAndWs();
+    let debugUrlAndWs = centerDebugUrlAndWs();
+    let hash = document.location.hash;
+    if (hash.includes('sheet_debug') === true) {
+        return debugUrlAndWs;
+    }
+    if (process.env.NODE_ENV === 'development') {
+        if (debugUrlAndWs.url !== undefined) {
+            try {
+                console.log('try connect debug url');
+                //let ret = await fetch(debugUrlAndWs.url);
+                let ret = await fetchLocalCheck(debugUrlAndWs.url);
+                console.log('connected');
+                return debugUrlAndWs;
+            }
+            catch (err) {
+                //console.error(err);
             }
         }
-        return urlAndWs;
-    });
+    }
+    return urlAndWs;
 }
 export class Nav {
     constructor() {
@@ -374,92 +356,82 @@ export class Nav {
             return;
         this.ws.endWsReceive(handlerId);
     }
-    start() {
-        return __awaiter(this, void 0, void 0, function* () {
-            nav.push(React.createElement(Page, { header: false },
-                React.createElement("div", { style: { height: '100%' }, className: "d-flex flex-fill align-items-center justify-content-center" },
-                    React.createElement("div", { className: "d-flex align-items-center justify-content-center slide text-info", style: { width: '5em', height: '2em' } }, "\u52A0\u8F7D\u4E2D..."))));
-            let { url, ws } = yield loadCenterUrl();
-            setCenterUrl(url);
-            this.wsHost = ws;
-            let hash = document.location.hash;
-            // document.title = document.location.origin;
-            console.log("url=%s hash=%s", document.location.origin, hash);
-            this.isInFrame = hash !== undefined && hash !== '' && hash.startsWith('#tv');
-            if (this.isInFrame === true) {
-                let mif = setMeInFrame(hash);
-                if (mif !== undefined) {
-                    this.ws = wsBridge;
-                    console.log('this.ws = wsBridge in sub frame');
-                    nav.user = { id: 0 };
-                    if (self !== window.parent) {
-                        window.parent.postMessage({ type: 'hide-frame-back', hash: mif.hash }, '*');
-                    }
-                    yield this.showAppView();
-                    return;
+    async start() {
+        nav.push(React.createElement(Page, { header: false },
+            React.createElement("div", { style: { height: '100%' }, className: "d-flex flex-fill align-items-center justify-content-center" },
+                React.createElement("div", { className: "d-flex align-items-center justify-content-center slide text-info", style: { width: '5em', height: '2em' } }, "\u52A0\u8F7D\u4E2D..."))));
+        let { url, ws } = await loadCenterUrl();
+        setCenterUrl(url);
+        this.wsHost = ws;
+        let hash = document.location.hash;
+        // document.title = document.location.origin;
+        console.log("url=%s hash=%s", document.location.origin, hash);
+        this.isInFrame = hash !== undefined && hash !== '' && hash.startsWith('#tv');
+        if (this.isInFrame === true) {
+            let mif = setMeInFrame(hash);
+            if (mif !== undefined) {
+                this.ws = wsBridge;
+                console.log('this.ws = wsBridge in sub frame');
+                nav.user = { id: 0 };
+                if (self !== window.parent) {
+                    window.parent.postMessage({ type: 'hide-frame-back', hash: mif.hash }, '*');
                 }
-            }
-            let device = this.local.device.get();
-            let user = this.local.user.get();
-            if (device === undefined) {
-                device = uid();
-                this.local.device.set(device);
-                user = undefined;
-            }
-            if (user === undefined || user.device !== device) {
-                yield nav.showLogin();
+                await this.showAppView();
                 return;
             }
-            yield nav.logined(user);
-        });
+        }
+        let device = this.local.device.get();
+        let user = this.local.user.get();
+        if (device === undefined) {
+            device = uid();
+            this.local.device.set(device);
+            user = undefined;
+        }
+        if (user === undefined || user.device !== device) {
+            await nav.showLogin();
+            return;
+        }
+        await nav.logined(user);
     }
-    showAppView() {
-        return __awaiter(this, void 0, void 0, function* () {
-            let { onLogined } = this.nav.props;
-            if (onLogined === undefined) {
-                nav.push(React.createElement("div", null, "NavView has no prop onLogined"));
-                return;
-            }
-            yield onLogined();
-            console.log('logined: AppView shown');
-        });
+    async showAppView() {
+        let { onLogined } = this.nav.props;
+        if (onLogined === undefined) {
+            nav.push(React.createElement("div", null, "NavView has no prop onLogined"));
+            return;
+        }
+        await onLogined();
+        console.log('logined: AppView shown');
     }
-    logined(user) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let ws = this.ws = new WSChannel(this.wsHost, user.token);
-            ws.onWsReceiveAny((msg) => __awaiter(this, void 0, void 0, function* () {
-                console.log("websocket receive and post to frames: %s", JSON.stringify(msg));
-                (window.opener || window.parent).postMessage({ type: 'ws', msg: msg }, '*');
-            }));
-            ws.connect();
-            console.log("logined: %s", JSON.stringify(user));
-            this.local.user.set(user);
-            netToken.set(user.token);
-            this.user = user;
-            console.log('ws.connect() in app main frame');
-            yield this.showAppView();
+    async logined(user) {
+        let ws = this.ws = new WSChannel(this.wsHost, user.token);
+        ws.onWsReceiveAny(async (msg) => {
+            console.log("websocket receive and post to frames: %s", JSON.stringify(msg));
+            (window.opener || window.parent).postMessage({ type: 'ws', msg: msg }, '*');
         });
+        ws.connect();
+        console.log("logined: %s", JSON.stringify(user));
+        this.local.user.set(user);
+        netToken.set(user.token);
+        this.user = user;
+        console.log('ws.connect() in app main frame');
+        await this.showAppView();
     }
-    showLogin() {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (this.loginView === undefined) {
-                let lv = yield import('../entry/login');
-                //this.loginView = <lv.default logo={logo} />;
-                this.loginView = React.createElement(lv.default, null);
-            }
-            this.nav.clear();
-            this.pop();
-            this.nav.show(this.loginView);
-        });
+    async showLogin() {
+        if (this.loginView === undefined) {
+            let lv = await import('../entry/login');
+            //this.loginView = <lv.default logo={logo} />;
+            this.loginView = React.createElement(lv.default, null);
+        }
+        this.nav.clear();
+        this.pop();
+        this.nav.show(this.loginView);
     }
-    logout() {
-        return __awaiter(this, void 0, void 0, function* () {
-            this.local.logoutClear();
-            this.user = undefined; //{} as User;
-            logoutApis();
-            setCenterToken(undefined);
-            yield this.showLogin();
-        });
+    async logout() {
+        this.local.logoutClear();
+        this.user = undefined; //{} as User;
+        logoutApis();
+        setCenterToken(undefined);
+        await this.showLogin();
     }
     get level() {
         return this.nav.level;
@@ -470,10 +442,8 @@ export class Nav {
     endWait() {
         this.nav.endWait();
     }
-    onError(error) {
-        return __awaiter(this, void 0, void 0, function* () {
-            yield this.nav.onError(error);
-        });
+    async onError(error) {
+        await this.nav.onError(error);
     }
     show(view, disposer) {
         this.nav.show(view, disposer);
@@ -496,10 +466,8 @@ export class Nav {
     ceaseTop(level) {
         this.nav.ceaseTop(level);
     }
-    back(confirm = true) {
-        return __awaiter(this, void 0, void 0, function* () {
-            yield this.nav.back(confirm);
-        });
+    async back(confirm = true) {
+        await this.nav.back(confirm);
     }
     regConfirmClose(confirmClose) {
         this.nav.regConfirmClose(confirmClose);

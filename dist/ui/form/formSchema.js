@@ -4,14 +4,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __rest = (this && this.__rest) || function (s, e) {
     var t = {};
     for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
@@ -111,40 +103,38 @@ export class FormSchema {
     onClear() {
         this.clear();
     }
-    onSubmit(event) {
-        return __awaiter(this, void 0, void 0, function* () {
-            event.preventDefault();
-            if (this.submit === undefined) {
-                alert('no submit funciton defined');
+    async onSubmit(event) {
+        event.preventDefault();
+        if (this.submit === undefined) {
+            alert('no submit funciton defined');
+            return;
+        }
+        for (let input of this.inputs) {
+            let blur = input.props.onBlur;
+            if (blur === undefined)
+                continue;
+            blur();
+        }
+        let ret = await this.submit(this.values());
+        if (ret === undefined)
+            return;
+        //if (ret === undefined) {
+        //    alert('no submit return');
+        //    return;
+        //}
+        if (ret.success === true) {
+            if (this.onSuccess !== undefined) {
+                this.onSuccess(ret.result);
                 return;
             }
-            for (let input of this.inputs) {
-                let blur = input.props.onBlur;
-                if (blur === undefined)
-                    continue;
-                blur();
-            }
-            let ret = yield this.submit(this.values());
-            if (ret === undefined)
+        }
+        else {
+            if (this.onError !== undefined) {
+                this.onError(ret.result);
                 return;
-            //if (ret === undefined) {
-            //    alert('no submit return');
-            //    return;
-            //}
-            if (ret.success === true) {
-                if (this.onSuccess !== undefined) {
-                    this.onSuccess(ret.result);
-                    return;
-                }
             }
-            else {
-                if (this.onError !== undefined) {
-                    this.onError(ret.result);
-                    return;
-                }
-            }
-            nav.push(React.createElement(ResultPage, { return: ret, onFinish: this.onFinish, onNext: this.onNext }));
-        });
+        }
+        nav.push(React.createElement(ResultPage, { return: ret, onFinish: this.onFinish, onNext: this.onNext }));
     }
     onFinish() {
         nav.pop();

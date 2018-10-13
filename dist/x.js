@@ -1,36 +1,41 @@
 const arr = [];
 export function x(res) {
-    let func = function () { };
-    let pt = func.prototype;
-    let ret = new func();
-    arr.push({
-        district: undefined,
-        lang: undefined,
-        res: res,
+    //let func = function() {};
+    //let pt = func.prototype;
+    //let ret = new func();
+    arr.push(res);
+    return res;
+    /*
+        $district: undefined,
+        $lang: undefined,
+        $res: res,
         x: ret,
-    });
-    return ret;
+    //return ret;
+    */
 }
 export function setXLang(lang, district) {
     for (let rx of arr) {
-        rx.lang = lang;
-        rx.district = district;
-        let r = rx.res;
+        rx.$lang = lang;
+        rx.$district = district;
+        let r = rx;
         if (r === undefined)
             continue;
-        let r$ = r.$;
+        mergeProps(rx, r);
+        let r$ = r.x;
         if (r$ !== undefined)
             mergeProps(rx.x, r$);
         let l = r[lang];
         if (l === undefined)
             continue;
-        let l$ = l.$;
+        mergeProps(rx, l);
+        let l$ = l.x;
         if (l$ !== undefined)
             mergeProps(rx.x, l$);
         let d = l[district];
         if (d === undefined)
             continue;
-        let d$ = d.$;
+        mergeProps(rx, d);
+        let d$ = d.x;
         if (d$ !== undefined)
             mergeProps(rx.x, d$);
     }

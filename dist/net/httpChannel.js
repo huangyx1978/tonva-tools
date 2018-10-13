@@ -1,11 +1,3 @@
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 import { bridgeCenterApi, isBridged } from './appBridge';
 import { nav } from '../ui/nav';
 export class HttpChannel {
@@ -26,11 +18,9 @@ export class HttpChannel {
         if (this.ui !== undefined)
             this.ui.endWait();
     }
-    showError(error) {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (this.ui !== undefined)
-                yield this.ui.showError(error);
-        });
+    async showError(error) {
+        if (this.ui !== undefined)
+            await this.ui.showError(error);
     }
     used() {
         this.post('', {});
@@ -71,79 +61,77 @@ export class HttpChannel {
         options.body = JSON.stringify(params);
         return this.innerFetch(url, options);
     }
-    fetch(url, options, resolve, reject) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let that = this;
-            this.startWait();
-            let path = url;
-            function buildError(err) {
-                return {
-                    channel: that,
-                    url: path,
-                    options: options,
-                    resolve: resolve,
-                    reject: reject,
-                    error: err,
-                };
+    async fetch(url, options, resolve, reject) {
+        let that = this;
+        this.startWait();
+        let path = url;
+        function buildError(err) {
+            return {
+                channel: that,
+                url: path,
+                options: options,
+                resolve: resolve,
+                reject: reject,
+                error: err,
+            };
+        }
+        try {
+            console.log('%s %s', options.method, path);
+            let res = await fetch(path, options);
+            //.then(async res => {
+            setTimeout(() => that.endWait(), 100);
+            if (res.ok === false) {
+                console.log('call error %s', res.statusText);
+                throw res.statusText;
             }
-            try {
-                console.log('%s %s', options.method, path);
-                let res = yield fetch(path, options);
-                //.then(async res => {
-                setTimeout(() => that.endWait(), 100);
-                if (res.ok === false) {
-                    console.log('call error %s', res.statusText);
-                    throw res.statusText;
-                }
-                let ct = res.headers.get('content-type');
-                if (ct && ct.indexOf('json') >= 0) {
-                    return res.json().then((retJson) => __awaiter(this, void 0, void 0, function* () {
-                        if (retJson.ok === true) {
-                            return resolve(retJson.res);
-                        }
-                        if (retJson.error === undefined) {
-                            yield that.showError(buildError('not valid tonva json'));
-                        }
-                        else {
-                            yield that.showError(buildError(retJson.error));
-                            reject(retJson.error);
-                        }
-                        //throw retJson.error;
-                    })).catch((error) => __awaiter(this, void 0, void 0, function* () {
-                        yield that.showError(buildError(error.message));
-                    }));
-                }
-                else {
-                    return res.text().then(text => resolve(text));
-                }
-            }
-            catch (error) {
-                if (typeof error === 'string') {
-                    if (error.toLowerCase().startsWith('unauthorized') === true) {
-                        nav.logout();
-                        return;
+            let ct = res.headers.get('content-type');
+            if (ct && ct.indexOf('json') >= 0) {
+                return res.json().then(async (retJson) => {
+                    if (retJson.ok === true) {
+                        return resolve(retJson.res);
                     }
-                }
-                yield this.showError(buildError(error.message));
+                    if (retJson.error === undefined) {
+                        await that.showError(buildError('not valid tonva json'));
+                    }
+                    else {
+                        await that.showError(buildError(retJson.error));
+                        reject(retJson.error);
+                    }
+                    //throw retJson.error;
+                }).catch(async (error) => {
+                    await that.showError(buildError(error.message));
+                });
             }
-            ;
-        });
+            else {
+                return res.text().then(text => resolve(text));
+            }
+        }
+        catch (error) {
+            if (typeof error === 'string') {
+                if (error.toLowerCase().startsWith('unauthorized') === true) {
+                    nav.logout();
+                    return;
+                }
+            }
+            await this.showError(buildError(error.message));
+        }
+        ;
     }
     innerFetch(url, options) {
         let u = this.hostUrl + url;
         if (this.isCenter === true && this.apiToken === undefined && isBridged())
             return bridgeCenterApi(u, options.method, options.body);
-        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
-            yield this.fetch(u, options, resolve, reject);
-        }));
+        return new Promise(async (resolve, reject) => {
+            await this.fetch(u, options, resolve, reject);
+        });
     }
     callFetch(url, method, body) {
         let options = this.buildOptions();
         options.method = method;
         options.body = body;
-        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
-            yield this.fetch(url, options, resolve, reject);
-        }));
+        return new Promise(async (resolve, reject) => {
+            await this.fetch(url, options, resolve, reject);
+        });
     }
     buildOptions() {
         let { language, culture } = nav;

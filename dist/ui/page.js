@@ -4,14 +4,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 import * as React from 'react';
 import { observer } from 'mobx-react';
 import * as classNames from 'classnames';
@@ -80,40 +72,36 @@ let Page = class Page extends React.Component {
             tabs: tabStates,
         };
     }
-    componentDidMount() {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (this.tabs === undefined)
-                return;
-            let t0 = this.state.tabs[0];
-            if (t0 === undefined)
-                return;
-            yield this.onTabClick(t0);
-        });
+    async componentDidMount() {
+        if (this.tabs === undefined)
+            return;
+        let t0 = this.state.tabs[0];
+        if (t0 === undefined)
+            return;
+        await this.onTabClick(t0);
     }
-    onTabClick(tab) {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (tab.isSelected === true)
-                return;
-            let cur;
-            let tabs = this.state.tabs;
-            for (let t of tabs) {
-                if (t === tab) {
-                    t.isSelected = true;
-                    cur = t;
-                }
-                else
-                    t.isSelected = false;
+    async onTabClick(tab) {
+        if (tab.isSelected === true)
+            return;
+        let cur;
+        let tabs = this.state.tabs;
+        for (let t of tabs) {
+            if (t === tab) {
+                t.isSelected = true;
+                cur = t;
             }
-            if (cur.isMounted !== true) {
-                let { load } = cur;
-                if (load !== undefined) {
-                    yield load();
-                }
+            else
+                t.isSelected = false;
+        }
+        if (cur.isMounted !== true) {
+            let { load } = cur;
+            if (load !== undefined) {
+                await load();
             }
-            this.setState({
-                cur: cur,
-                tabs: tabs
-            });
+        }
+        this.setState({
+            cur: cur,
+            tabs: tabs
         });
     }
     renderTabs(footer) {

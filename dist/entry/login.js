@@ -1,11 +1,3 @@
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 import * as React from 'react';
 import { Button } from 'reactstrap';
 import { nav, Page, FormSchema } from '../ui';
@@ -46,29 +38,27 @@ export default class Login extends React.Component {
             onSumit: this.onLoginSubmit.bind(this),
         });
     }
-    onLoginSubmit(values) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let un = values['username'];
-            let pwd = values['password'];
-            if (pwd === undefined) {
-                alert('something wrong, pwd is undefined');
-                return;
-            }
-            let user = yield userApi.login({
-                user: un,
-                pwd: pwd
-            });
-            if (user === undefined) {
-                //this.failed();
-                this.schema.clear();
-                this.schema.errors.push('用户名或密码错！');
-            }
-            else {
-                console.log("onLoginSubmit: user=%s pwd:%s", user.name, user.token);
-                yield nav.logined(user);
-            }
-            return undefined;
+    async onLoginSubmit(values) {
+        let un = values['username'];
+        let pwd = values['password'];
+        if (pwd === undefined) {
+            alert('something wrong, pwd is undefined');
+            return;
+        }
+        let user = await userApi.login({
+            user: un,
+            pwd: pwd
         });
+        if (user === undefined) {
+            //this.failed();
+            this.schema.clear();
+            this.schema.errors.push('用户名或密码错！');
+        }
+        else {
+            console.log("onLoginSubmit: user=%s pwd:%s", user.name, user.token);
+            await nav.logined(user);
+        }
+        return undefined;
     }
     click() {
         nav.replace(React.createElement(RegisterView, null));

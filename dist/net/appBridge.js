@@ -1,11 +1,3 @@
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 import { nav } from '../ui';
 import { uid } from '../uid';
 import { usqTokenApi, callCenterapi, CenterAppApi, centerToken } from './usqApi';
@@ -27,48 +19,46 @@ export let meInFrame = new AppInFrameClass();
 export function isBridged() {
     return self !== window.parent;
 }
-window.addEventListener('message', function (evt) {
-    return __awaiter(this, void 0, void 0, function* () {
-        var message = evt.data;
-        switch (message.type) {
-            default:
-                this.console.log('message: %s', JSON.stringify(message));
-                break;
-            case 'ws':
-                wsBridge.receive(message.msg);
-                break;
-            case 'hide-frame-back':
-                setSubAppWindow(evt.source);
-                hideFrameBack(message.hash);
-                break;
-            case 'pop-app':
-                nav.navBack();
-                break;
-            case 'center-api':
-                yield callCenterApiFromMessage(evt.source, message);
-                break;
-            case 'center-api-return':
-                bridgeCenterApiReturn(message);
-                break;
-            case 'app-api':
-                console.log("receive PostMessage: %s", JSON.stringify(message));
-                let ret = yield onReceiveAppApiMessage(message.hash, message.apiName);
-                console.log("onReceiveAppApiMessage: %s", JSON.stringify(ret));
-                evt.source.postMessage({
-                    type: 'app-api-return',
-                    apiName: message.apiName,
-                    url: ret.url,
-                    urlDebug: ret.urlDebug,
-                    token: ret.token
-                }, "*");
-                break;
-            case 'app-api-return':
-                console.log("app-api-return: %s", JSON.stringify(message));
-                console.log('await onAppApiReturn(message);');
-                yield onAppApiReturn(message);
-                break;
-        }
-    });
+window.addEventListener('message', async function (evt) {
+    var message = evt.data;
+    switch (message.type) {
+        default:
+            this.console.log('message: %s', JSON.stringify(message));
+            break;
+        case 'ws':
+            wsBridge.receive(message.msg);
+            break;
+        case 'hide-frame-back':
+            setSubAppWindow(evt.source);
+            hideFrameBack(message.hash);
+            break;
+        case 'pop-app':
+            nav.navBack();
+            break;
+        case 'center-api':
+            await callCenterApiFromMessage(evt.source, message);
+            break;
+        case 'center-api-return':
+            bridgeCenterApiReturn(message);
+            break;
+        case 'app-api':
+            console.log("receive PostMessage: %s", JSON.stringify(message));
+            let ret = await onReceiveAppApiMessage(message.hash, message.apiName);
+            console.log("onReceiveAppApiMessage: %s", JSON.stringify(ret));
+            evt.source.postMessage({
+                type: 'app-api-return',
+                apiName: message.apiName,
+                url: ret.url,
+                urlDebug: ret.urlDebug,
+                token: ret.token
+            }, "*");
+            break;
+        case 'app-api-return':
+            console.log("app-api-return: %s", JSON.stringify(message));
+            console.log('await onAppApiReturn(message);');
+            await onAppApiReturn(message);
+            break;
+    }
 });
 function hideFrameBack(hash) {
     console.log('hideFrameBack %s', hash);
@@ -76,36 +66,32 @@ function hideFrameBack(hash) {
     if (el !== undefined)
         el.hidden = true;
 }
-function onReceiveAppApiMessage(hash, apiName) {
-    return __awaiter(this, void 0, void 0, function* () {
-        let appInFrame = appsInFrame[hash];
-        if (appInFrame === undefined)
-            return { name: apiName, url: undefined, urlDebug: undefined, token: undefined };
-        let { unit } = appInFrame;
-        let parts = apiName.split('/');
-        let ret = yield usqTokenApi.usq({ unit: unit, usqOwner: parts[0], usqName: parts[1] });
-        if (ret === undefined) {
-            console.log('apiTokenApi.api return undefined. api=%s, unit=%s', apiName, unit);
-            throw 'api not found';
-        }
-        return { name: apiName, url: ret.url, urlDebug: ret.urlDebug, token: ret.token };
-    });
+async function onReceiveAppApiMessage(hash, apiName) {
+    let appInFrame = appsInFrame[hash];
+    if (appInFrame === undefined)
+        return { name: apiName, url: undefined, urlDebug: undefined, token: undefined };
+    let { unit } = appInFrame;
+    let parts = apiName.split('/');
+    let ret = await usqTokenApi.usq({ unit: unit, usqOwner: parts[0], usqName: parts[1] });
+    if (ret === undefined) {
+        console.log('apiTokenApi.api return undefined. api=%s, unit=%s', apiName, unit);
+        throw 'api not found';
+    }
+    return { name: apiName, url: ret.url, urlDebug: ret.urlDebug, token: ret.token };
 }
-function onAppApiReturn(message) {
-    return __awaiter(this, void 0, void 0, function* () {
-        console.log('start await onAppApiReturn(message);');
-        let { apiName, url, urlDebug, token } = message;
-        let action = usqTokens[apiName];
-        if (action === undefined) {
-            throw 'error app api return';
-            //return;
-        }
-        console.log('async function onAppApiReturn(message:any) {');
-        let realUrl = yield getUrlOrDebug(url, urlDebug);
-        action.url = realUrl;
-        action.token = token;
-        action.resolve(action);
-    });
+async function onAppApiReturn(message) {
+    console.log('start await onAppApiReturn(message);');
+    let { apiName, url, urlDebug, token } = message;
+    let action = usqTokens[apiName];
+    if (action === undefined) {
+        throw 'error app api return';
+        //return;
+    }
+    console.log('async function onAppApiReturn(message:any) {');
+    let realUrl = await getUrlOrDebug(url, urlDebug);
+    action.url = realUrl;
+    action.token = token;
+    action.resolve(action);
 }
 export function setMeInFrame(appHash) {
     let parts = appHash.split('-');
@@ -140,65 +126,61 @@ export function appUrl(url, unitId, page, param) {
     }
     return { url: url, hash: u };
 }
-export function loadAppUsqs(appOwner, appName) {
-    return __awaiter(this, void 0, void 0, function* () {
-        let centerAppApi = new CenterAppApi('tv/', undefined);
-        let unit = meInFrame.unit;
-        return yield centerAppApi.usqs(unit, appOwner, appName);
-    });
+export async function loadAppUsqs(appOwner, appName) {
+    let centerAppApi = new CenterAppApi('tv/', undefined);
+    let unit = meInFrame.unit;
+    return await centerAppApi.usqs(unit, appOwner, appName);
 }
-export function appUsq(usq, usqOwner, usqName) {
-    return __awaiter(this, void 0, void 0, function* () {
-        let usqToken = usqTokens[usq];
-        if (usqToken !== undefined)
-            return usqToken;
-        if (!isBridged()) {
-            usqToken = yield usqTokenApi.usq({ unit: meInFrame.unit, usqOwner: usqOwner, usqName: usqName });
-            if (usqToken === undefined) {
-                let err = 'unauthorized call: usqTokenApi center return undefined!';
-                throw err;
-            }
-            if (usqToken.token === undefined)
-                usqToken.token = centerToken;
-            let { url, urlDebug } = usqToken;
-            let realUrl = yield getUrlOrDebug(url, urlDebug);
-            console.log('realUrl: %s', realUrl);
-            usqToken.url = realUrl;
-            usqTokens[usq] = usqToken;
-            return usqToken;
+export async function appUsq(usq, usqOwner, usqName) {
+    let usqToken = usqTokens[usq];
+    if (usqToken !== undefined)
+        return usqToken;
+    if (!isBridged()) {
+        usqToken = await usqTokenApi.usq({ unit: meInFrame.unit, usqOwner: usqOwner, usqName: usqName });
+        if (usqToken === undefined) {
+            let err = 'unauthorized call: usqTokenApi center return undefined!';
+            throw err;
         }
-        console.log("appApi parent send: %s", meInFrame.hash);
-        usqToken = {
-            name: usq,
-            url: undefined,
-            urlDebug: undefined,
-            token: undefined,
-            resolve: undefined,
-            reject: undefined,
-        };
+        if (usqToken.token === undefined)
+            usqToken.token = centerToken;
+        let { url, urlDebug } = usqToken;
+        let realUrl = await getUrlOrDebug(url, urlDebug);
+        console.log('realUrl: %s', realUrl);
+        usqToken.url = realUrl;
         usqTokens[usq] = usqToken;
-        return new Promise((resolve, reject) => {
-            usqToken.resolve = (at) => __awaiter(this, void 0, void 0, function* () {
-                let a = yield at;
-                console.log('return from parent window: %s', JSON.stringify(a));
-                usqToken.url = a.url;
-                usqToken.urlDebug = a.urlDebug;
-                usqToken.token = a.token;
-                resolve(usqToken);
-            });
-            usqToken.reject = reject;
-            (window.opener || window.parent).postMessage({
-                type: 'app-api',
-                apiName: usq,
-                hash: meInFrame.hash,
-            }, "*");
-        });
+        return usqToken;
+    }
+    console.log("appApi parent send: %s", meInFrame.hash);
+    usqToken = {
+        name: usq,
+        url: undefined,
+        urlDebug: undefined,
+        token: undefined,
+        resolve: undefined,
+        reject: undefined,
+    };
+    usqTokens[usq] = usqToken;
+    return new Promise((resolve, reject) => {
+        usqToken.resolve = async (at) => {
+            let a = await at;
+            console.log('return from parent window: %s', JSON.stringify(a));
+            usqToken.url = a.url;
+            usqToken.urlDebug = a.urlDebug;
+            usqToken.token = a.token;
+            resolve(usqToken);
+        };
+        usqToken.reject = reject;
+        (window.opener || window.parent).postMessage({
+            type: 'app-api',
+            apiName: usq,
+            hash: meInFrame.hash,
+        }, "*");
     });
 }
 const brideCenterApis = {};
 export function bridgeCenterApi(url, method, body) {
     console.log('bridgeCenterApi: url=%s, method=%s', url, method);
-    return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+    return new Promise(async (resolve, reject) => {
         let callId;
         for (;;) {
             callId = uid();
@@ -219,18 +201,16 @@ export function bridgeCenterApi(url, method, body) {
             method: method,
             body: body
         }, '*');
-    }));
-}
-function callCenterApiFromMessage(from, message) {
-    return __awaiter(this, void 0, void 0, function* () {
-        let { callId, url, method, body } = message;
-        let result = yield callCenterapi.directCall(url, method, body);
-        from.postMessage({
-            type: 'center-api-return',
-            callId: callId,
-            result: result,
-        }, '*');
     });
+}
+async function callCenterApiFromMessage(from, message) {
+    let { callId, url, method, body } = message;
+    let result = await callCenterapi.directCall(url, method, body);
+    from.postMessage({
+        type: 'center-api-return',
+        callId: callId,
+        result: result,
+    }, '*');
 }
 function bridgeCenterApiReturn(message) {
     let { callId, result } = message;

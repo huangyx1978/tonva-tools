@@ -1,9 +1,5 @@
 import * as React from 'react';
-import * as _ from 'lodash';
-import * as className from 'classnames';
-import {ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem,
-    Row, Col, Button, Form, FormGroup, Label, Input, 
-    FormText, FormFeedback} from 'reactstrap';
+import _ from 'lodash';
 import {nav, mobileHeaderStyle} from './nav';
 
 export interface TitleBarProps {
@@ -43,6 +39,7 @@ export class TitleBar extends React.Component<TitleBarProps, TitleBarState> {
         window.open(document.location.href);
     }
     private logoutClick = () => {
+        if (confirm('Really want to logout?') === false) return;
         let {logout} = this.props;
         if (typeof logout === 'function') {
             logout(); 
@@ -57,11 +54,15 @@ export class TitleBar extends React.Component<TitleBarProps, TitleBarState> {
             if (typeof logout === 'boolean' && logout === true
                 || typeof logout === 'function')
             {
-                debugLogout = <a className="dropdown-toggle btn btn-secondary btn-sm"
-                    role="button"
-                    onClick={this.logoutClick}>
-                    <i className="fa fa-sign-out" />
-                </a>
+                let {nick, name} = nav.user;
+                debugLogout = <div className="d-flex align-items-center">
+                    <small className="text-light">{nick || name}</small>
+                    <a className="dropdown-toggle btn btn-secondary btn-sm ml-2"
+                        role="button"
+                        onClick={this.logoutClick}>
+                        <i className="fa fa-sign-out" />
+                    </a>
+                </div>;
             }
         }
         if (b) {
