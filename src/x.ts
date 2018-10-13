@@ -25,7 +25,7 @@ export function x(res:any):ResX {
 }
 
 export function setXLang(appResX:ResX, lang:string, district:string) {
-    
+
     for (let rx of arr) {
         rx.$lang = lang;
         rx.$district = district;
@@ -44,6 +44,7 @@ export function setXLang(appResX:ResX, lang:string, district:string) {
         mergeProps(rx, d);
         let d$ = d.x;
         if (d$ !== undefined) mergeProps(rx.x, d$);
+        let s = null;
     }
 }
 
