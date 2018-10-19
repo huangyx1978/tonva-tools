@@ -6,7 +6,7 @@ import {Page} from './page';
 import {netToken} from '../net/netToken';
 import FetchErrorView from './fetchErrorView';
 import {FetchError} from '../fetchError';
-import {appUrl, setMeInFrame} from '../net/appBridge';
+import {appUrl, setMeInFrame, isBridged, logoutUsqTokens} from '../net/appBridge';
 import {LocalData} from '../local';
 import {logoutApis, setCenterUrl, setCenterToken, WSChannel, getCenterUrl, centerDebugHost} from '../net';
 import 'font-awesome/css/font-awesome.min.css';
@@ -174,6 +174,7 @@ export class NavView extends React.Component<Props, State> {
             if (p < 0) break;
             let item = this.stack[p];
             item.ceased = true;
+            
         }
     }
 
@@ -200,23 +201,23 @@ export class NavView extends React.Component<Props, State> {
         //console.log('pop: %s pages', stack.length);
     }
 
-    private removeCeased() {
+    removeCeased() {
         for (;;) {
             let p=this.stack.length-1;
             if (p < 0) break;
             let top = this.stack[p];
             if (top.ceased === false) break;
-            this.stack.pop();
+            let item = this.stack.pop();
+            let {disposer} = item;
+            this.dispose(disposer);
         }
+        this.refresh();
     }
 
     private popAndDispose() {
-        let item;
-        for (;;) {
-            item = this.stack.pop();
-            if (item === undefined) return;
-            if (item.ceased === false) break;
-        }
+        this.removeCeased();
+        let item = this.stack.pop();
+        if (item === undefined) return;
         let {disposer} = item;
         this.dispose(disposer);
         this.removeCeased();
@@ -231,7 +232,7 @@ export class NavView extends React.Component<Props, State> {
 
     clear() {
         let len = this.stack.length;
-        for (let i=0; i<len; i++) this.popAndDispose();
+        while (this.stack.length > 0) this.popAndDispose();
         this.refresh();
         if (len > 1) {
             //window.removeEventListener('popstate', this.navBack);
@@ -467,10 +468,6 @@ export class Nav {
 
     async logined(user: User) {
         let ws:WSChannel = this.ws = new WSChannel(this.wsHost, user.token);
-        ws.onWsReceiveAny(async (msg:any)=> {
-            console.log("websocket receive and post to frames: %s", JSON.stringify(msg));
-            (window.opener || window.parent).postMessage({type:'ws', msg:msg}, '*');
-        });
         ws.connect();
 
         console.log("logined: %s", JSON.stringify(user));
@@ -496,10 +493,12 @@ export class Nav {
         this.local.logoutClear();
         this.user = undefined; //{} as User;
         logoutApis();
+        logoutUsqTokens();
         setCenterToken(undefined);
+        this.ws = undefined;
         await this.showLogin();
     }
- 
+
     get level(): number {
         return this.nav.level;
     }
@@ -532,6 +531,9 @@ export class Nav {
     }
     ceaseTop(level?:number) {
         this.nav.ceaseTop(level);
+    }
+    removeCeased() {
+        this.nav.removeCeased();
     }
     async back(confirm:boolean = true) {
         await this.nav.back(confirm);

@@ -15,6 +15,9 @@ interface UsqTokenAction extends UsqToken {
     reject: (reason?: any) => void;
 }
 const usqTokens:{[usqName:string]: UsqTokenAction}  = {};
+export function logoutUsqTokens() {
+    for (let i in usqTokens) usqTokens[i] = undefined;
+}
 
 export interface AppInFrame {
     hash: string;

@@ -1,4 +1,4 @@
-export {x, setXLang, left0} from './x';
+export {left0} from './left0';
 export * from './user';
 export * from './net';
 export * from './ui';

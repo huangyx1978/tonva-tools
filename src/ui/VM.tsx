@@ -1,16 +1,32 @@
 import * as React from 'react';
+import _ from 'lodash';
+import {isDevelopment} from '../local';
 import {nav} from './nav';
 import {Page} from './page';
+
+export function resLang(res:any, lang:string, district:string):any {
+    let ret = {};
+    if (res === undefined) return ret;
+    _.merge(ret, res._);
+    let l = res[lang];
+    if (l === undefined) return ret;
+    _.merge(ret, l._);
+    let d = l[district];
+    if (d === undefined) return ret;
+    _.merge(ret, d);
+    return ret;
+}
 
 export abstract class Controller {
     readonly res: any;
     readonly x: any;
     icon: string|JSX.Element;
     label:string;
-    readonly isDev:boolean = process.env.NODE_ENV==='development';
+    readonly isDev:boolean = isDevelopment;
+    get user() {return nav.user}
 
     constructor(res:any) {
-        this.res = res || {}; // || entityUI.res;
+        this.res = res || {};
         this.x = this.res.x || {};
     }
 
@@ -108,6 +124,10 @@ export abstract class Controller {
         nav.ceaseTop(level);
     }
 
+    removeCeased() {
+        nav.removeCeased();
+    }
+
     regConfirmClose(confirmClose: ()=>Promise<boolean>) {
         nav.regConfirmClose(confirmClose);
     }
@@ -125,7 +145,7 @@ export abstract class View<C extends Controller> {
         this.x = controller.x;
     }
 
-    protected get isDev() {return this.controller.isDev}
+    protected get isDev() {return isDevelopment}
 
     abstract render(param?:any): JSX.Element;
 
@@ -176,6 +196,10 @@ export abstract class View<C extends Controller> {
 
     protected ceasePage(level?:number) {
         this.controller.ceasePage(level);
+    }
+
+    protected removeCeased() {
+        this.controller.removeCeased();
     }
 
     protected regConfirmClose(confirmClose: ()=>Promise<boolean>) {

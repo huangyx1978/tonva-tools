@@ -155,8 +155,6 @@ export class HttpChannel {
         let lang = language;
         if (culture) lang += '-' + culture;
         headers.append('Accept-Language', lang);
-        // headers.append('')
-        //headers.append('a', 'b');
         if (this.apiToken) { 
             headers.append('Authorization', this.apiToken); 
         }

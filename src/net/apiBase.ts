@@ -1,3 +1,4 @@
+import {isDevelopment} from '../local';
 import {HttpChannel} from './httpChannel';
 import {centerDebugHost} from './centerDebugHost';
 import {fetchLocalCheck} from './fetchLocalCheck';
@@ -45,6 +46,7 @@ export abstract class ApiBase {
 }
 
 export async function getUrlOrDebug(url:string, urlDebug:string):Promise<string> {
+    if (isDevelopment !== true) return url;
     try {
         if (urlDebug.endsWith('/') === false) urlDebug += '/';
         let hostString = '://centerhost:';
