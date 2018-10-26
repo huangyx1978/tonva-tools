@@ -50,7 +50,7 @@ export class UsqApi extends ApiBase {
 
 
     async update():Promise<string> {
-        return await this.get('update', {});
+        return await this.get('update');
     }
 
     async loadAccess():Promise<any> {
@@ -61,7 +61,7 @@ export class UsqApi extends ApiBase {
     }
 
     async schema(name:string):Promise<any> {
-        return await this.get('schema/' + name, undefined);
+        return await this.get('schema/' + name);
     }
 
     async schemas(names:string[]):Promise<any[]> {
@@ -69,11 +69,11 @@ export class UsqApi extends ApiBase {
     }
 
     async tuidGet(name:string, id:number):Promise<any> {
-        return await this.get('tuid/' + name + '/' + id, {});
+        return await this.get('tuid/' + name + '/' + id);
     }
 
     async tuidGetAll(name:string):Promise<any[]> {
-        return await this.get('tuid-all/' + name + '/', {});
+        return await this.get('tuid-all/' + name + '/');
     }
 
     async tuidSave(name:string, params):Promise<any> {
@@ -91,10 +91,10 @@ export class UsqApi extends ApiBase {
         return ret;
     }
     async tuidArrGet(name:string, arr:string, owner:number, id:number):Promise<any> {
-        return await this.get('tuid-arr/' + name + '/' + owner + '/' + arr + '/' + id, {});
+        return await this.get('tuid-arr/' + name + '/' + owner + '/' + arr + '/' + id);
     }
     async tuidArrGetAll(name:string, arr:string, owner:number):Promise<any[]> {
-        return await this.get('tuid-arr-all/' + name + '/' + owner + '/' + arr + '/', {});
+        return await this.get('tuid-arr-all/' + name + '/' + owner + '/' + arr + '/');
     }
     async tuidArrSave(name:string, arr:string, owner:number, params):Promise<any> {
         return await this.post('tuid-arr/' + name + '/' + owner + '/' + arr + '/', params);
@@ -122,7 +122,7 @@ export class UsqApi extends ApiBase {
     async proxied(name:string, proxy:string, id:number):Promise<any> {
         try {
             let url = 'tuid-proxy/' + name + '/' + proxy + '/' + id;
-            let ret = await this.get(url, undefined);
+            let ret = await this.get(url);
             return ret;
         }
         catch (e) {
@@ -143,11 +143,11 @@ export class UsqApi extends ApiBase {
     }
 
     async stateSheetCount(name:string):Promise<any> {
-        return await this.get('sheet/' + name + '/statecount', undefined);
+        return await this.get('sheet/' + name + '/statecount');
     }
 
     async getSheet(name:string, id:number):Promise<any> {
-        return await this.get('sheet/' + name + '/get/' + id, undefined);
+        return await this.get('sheet/' + name + '/get/' + id);
     }
 
     async sheetArchives(name:string, data:object):Promise<any> {
@@ -155,7 +155,7 @@ export class UsqApi extends ApiBase {
     }
 
     async sheetArchive(name:string, id:number):Promise<any> {
-        return await this.get('sheet/' + name + '/archive/' + id, undefined);
+        return await this.get('sheet/' + name + '/archive/' + id);
     }
 
     async action(name:string, data:object):Promise<any> {
@@ -191,7 +191,7 @@ export class UsqApi extends ApiBase {
     }
 */
     async user():Promise<any> {
-        return await this.get('user', undefined);
+        return await this.get('user');
     }
 }
 

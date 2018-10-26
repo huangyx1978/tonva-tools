@@ -433,9 +433,9 @@ export class Nav {
             if (mif !== undefined) {
                 this.ws = wsBridge;
                 console.log('this.ws = wsBridge in sub frame');
-                nav.user = {id:0} as User;
+                //nav.user = {id:0} as User;
                 if (self !== window.parent) {
-                    window.parent.postMessage({type:'hide-frame-back', hash: mif.hash}, '*');
+                    window.parent.postMessage({type:'sub-frame-started', hash: mif.hash}, '*');
                 }
                 await this.showAppView();
                 return;

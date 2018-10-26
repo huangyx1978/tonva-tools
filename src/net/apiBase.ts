@@ -24,7 +24,7 @@ export abstract class ApiBase {
         return await channel.callFetch(url, method, body);
     }
 
-    public async get(path:string, params:any): Promise<any> {
+    public async get(path:string, params:any=undefined): Promise<any> {
         let channel = await this.getHttpChannel();
         return await channel.get(this.path + path, params);
     }

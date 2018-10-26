@@ -3,5 +3,5 @@ export * from './user';
 export * from './net';
 export * from './ui';
 export * from './uid';
-export {PagedItems} from './pagedItems';
+export {PageItems} from './pageItems';
 export {CacheIds} from './cacheIds';

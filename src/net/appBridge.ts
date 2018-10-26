@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import {nav} from '../ui';
 import {uid} from '../uid';
 import {usqTokenApi, callCenterapi, CenterAppApi, AppUsq, centerToken, App} from './usqApi';
@@ -51,15 +52,14 @@ export function isBridged():boolean {
 window.addEventListener('message', async function(evt) {
     var message = evt.data;
     switch (message.type) {
-        default:
-            this.console.log('message: %s', JSON.stringify(message));
+        case 'sub-frame-started':
+            subFrameStarted(evt);
             break;
         case 'ws':
             wsBridge.receive(message.msg);
             break;
-        case 'hide-frame-back':
-            setSubAppWindow(evt.source as Window);
-            hideFrameBack(message.hash);
+        case 'init-sub-win':
+            initSubWin(message);
             break;
         case 'pop-app':
             nav.navBack();
@@ -86,15 +86,28 @@ window.addEventListener('message', async function(evt) {
             console.log('await onAppApiReturn(message);');
             await onAppApiReturn(message);
             break;
+        default:
+            this.console.log('message: %s', JSON.stringify(message));
+            break;
     }
 });
 
+function subFrameStarted(evt:any) {
+    var message = evt.data;
+    let subWin = evt.source as Window;
+    setSubAppWindow(subWin);
+    hideFrameBack(message.hash);
+    let msg:any = _.clone(nav.user);
+    msg.type = 'init-sub-win';
+    subWin.postMessage(msg, '*');
+}
 function hideFrameBack(hash:string) {
-    console.log('hideFrameBack %s', hash);
     let el = document.getElementById(hash);
     if (el !== undefined) el.hidden = true;
 }
-
+function initSubWin(message:any) {
+    nav.user = message; // message.user;
+}
 async function onReceiveAppApiMessage(hash: string, apiName: string): Promise<UsqToken> {
     let appInFrame = appsInFrame[hash];
     if (appInFrame === undefined) return {name:apiName, url:undefined, urlDebug:undefined, token:undefined};
