@@ -437,7 +437,8 @@ export class Nav {
                 if (self !== window.parent) {
                     window.parent.postMessage({type:'sub-frame-started', hash: mif.hash}, '*');
                 }
-                await this.showAppView();
+                // 下面这一句，已经移到 appBridge.ts 里面的 initSubWin，也就是响应从main frame获得user之后开始。
+                //await this.showAppView();
                 return;
             }
         }
@@ -456,7 +457,7 @@ export class Nav {
         await nav.logined(user);
     }
 
-    private async showAppView() {
+    async showAppView() {
         let {onLogined} = this.nav.props;
         if (onLogined === undefined) {
             nav.push(<div>NavView has no prop onLogined</div>);

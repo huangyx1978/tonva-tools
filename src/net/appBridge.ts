@@ -59,7 +59,7 @@ window.addEventListener('message', async function(evt) {
             wsBridge.receive(message.msg);
             break;
         case 'init-sub-win':
-            initSubWin(message);
+            await initSubWin(message);
             break;
         case 'pop-app':
             nav.navBack();
@@ -105,8 +105,10 @@ function hideFrameBack(hash:string) {
     let el = document.getElementById(hash);
     if (el !== undefined) el.hidden = true;
 }
-function initSubWin(message:any) {
+async function initSubWin(message:any) {
+    console.log('initSubWin: set nav.user', message);
     nav.user = message; // message.user;
+    await nav.showAppView();
 }
 async function onReceiveAppApiMessage(hash: string, apiName: string): Promise<UsqToken> {
     let appInFrame = appsInFrame[hash];
