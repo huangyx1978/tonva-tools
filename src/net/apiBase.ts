@@ -1,6 +1,6 @@
 import {isDevelopment} from '../local';
 import {HttpChannel} from './httpChannel';
-import {centerDebugHost} from './centerDebugHost';
+import {centerDebugHost, usqDebugHost} from './debugHost';
 import {fetchLocalCheck} from './fetchLocalCheck';
 
 export async function refetchApi(channel:HttpChannel, url, options, resolve, reject) {
@@ -45,10 +45,23 @@ export abstract class ApiBase {
     }
 }
 
+function replaceUrlHost(url:string, hostString:string, defaultHost:string, envHost:string) {
+    //let hostString = '://centerhost:';
+    let pos = url.indexOf(hostString);
+    if (pos > 0) {
+        let host = process.env[envHost] || defaultHost;
+        url = url.replace(hostString, '://' + host + ':');
+    }
+    return url;
+}
+
 export async function getUrlOrDebug(url:string, urlDebug:string):Promise<string> {
     if (isDevelopment !== true) return url;
     try {
         if (urlDebug.endsWith('/') === false) urlDebug += '/';
+        urlDebug = replaceUrlHost(urlDebug, '://centerhost:', centerDebugHost, 'REACT_APP_CENTER_DEBUG_HOST');
+        urlDebug = replaceUrlHost(urlDebug, '://usqhost:', usqDebugHost, 'REACT_APP_USQ_DEBUG_HOST');
+        /*
         let hostString = '://centerhost:';
         let pos = urlDebug.indexOf(hostString);
         console.log("let pos = urlDebug.indexOf(hostString); pos=%s, urlDebug=%s", pos, urlDebug);
@@ -57,6 +70,7 @@ export async function getUrlOrDebug(url:string, urlDebug:string):Promise<string>
             console.log("let centerHost = process.env.REACT_APP_CENTER_DEBUG_HOST || centerDebugHost;centerHost=%s", centerHost);
             urlDebug = urlDebug.replace(hostString, '://' + centerHost + ':');
         }
+        */
         let fetchUrl = urlDebug + 'hello';
         let fetchOptions = {
             method: "GET",

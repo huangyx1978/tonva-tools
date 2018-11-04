@@ -56,12 +56,6 @@ export abstract class PageItems<T> {
         this.reset();
         this.beforeLoad = false;
         this.param = param;
-        /*
-        this.loaded = false;
-        this._items.clear();
-        this.allLoaded = false;
-        this.setPageStart(undefined);
-        */
         await this.more();        
     }
 

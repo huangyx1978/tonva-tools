@@ -60,6 +60,10 @@ export class UsqApi extends ApiBase {
         return await this.get('access', {acc:acc});
     }
 
+    async loadEntities():Promise<any> {
+        return await this.get('entities');
+    }
+
     async schema(name:string):Promise<any> {
         return await this.get('schema/' + name);
     }
@@ -162,11 +166,15 @@ export class UsqApi extends ApiBase {
         return await this.post('action/' + name, data);
     }
 
-    async queryPage(queryApi:string, name:string, pageStart:any, pageSize:number, params:any):Promise<string> {
-        let p = _.clone(params||{});
+    async page(name:string, pageStart:any, pageSize:number, params:any):Promise<string> {
+        let p:any;
+        switch (typeof params) {
+            case 'undefined': p = {key: ''}; break;
+            default: p = _.clone(params); break;
+        }
         p['$pageStart'] = pageStart;
         p['$pageSize'] = pageSize;
-        return await this.post(queryApi + '/' + name, p);
+        return await this.post('query-page/' + name, p);
     }
 
     async query(name:string, params:any):Promise<any> {

@@ -51,7 +51,6 @@ class ScrollView extends React.Component<ScrollViewProps, null> {
         if (children === undefined)
             return;
         React.Children.forEach(children, (child, index) => {
-            debugger;
             let {_$scroll} = child as any;
             if (_$scroll) _$scroll(direct);
             console.log(child.toString());

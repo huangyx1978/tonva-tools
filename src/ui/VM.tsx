@@ -5,7 +5,7 @@ import {nav} from './nav';
 import {Page} from './page';
 
 export function resLang(res:any, lang:string, district:string):any {
-    let ret = {};
+    let ret:any = {};
     if (res === undefined) return ret;
     _.merge(ret, res._);
     let l = res[lang];
@@ -14,6 +14,12 @@ export function resLang(res:any, lang:string, district:string):any {
     let d = l[district];
     if (d === undefined) return ret;
     _.merge(ret, d);
+    let {entity} = ret;
+    if (entity !== undefined) {
+        for (let i in entity) {
+            entity[i.toLowerCase()] = entity[i];
+        }
+    }
     return ret;
 }
 
