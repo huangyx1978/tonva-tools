@@ -55,7 +55,7 @@ function replaceUrlHost(url:string, hostString:string, defaultHost:string, envHo
     return url;
 }
 
-export async function getUrlOrDebug(url:string, urlDebug:string, path?:string):Promise<string> {
+export async function getUrlOrDebug(url:string, urlDebug:string, path:string = 'hello'):Promise<string> {
     if (isDevelopment !== true) return url;
     try {
         if (urlDebug.endsWith('/') === false) urlDebug += '/';
@@ -71,7 +71,8 @@ export async function getUrlOrDebug(url:string, urlDebug:string, path?:string):P
             urlDebug = urlDebug.replace(hostString, '://' + centerHost + ':');
         }
         */
-        let fetchUrl = urlDebug + (path||'hello');
+        if (path === undefined) path = '';
+        let fetchUrl = urlDebug + path;
         let fetchOptions = {
             method: "GET",
             mode: "no-cors", // no-cors, cors, *same-origin
