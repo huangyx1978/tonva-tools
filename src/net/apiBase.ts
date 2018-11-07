@@ -58,9 +58,11 @@ function replaceUrlHost(url:string, hostString:string, defaultHost:string, envHo
 export async function getUrlOrDebug(url:string, urlDebug:string, path:string = 'hello'):Promise<string> {
     if (isDevelopment !== true) return url;
     try {
+        let orgDebug = urlDebug;
         if (urlDebug.endsWith('/') === false) urlDebug += '/';
         urlDebug = replaceUrlHost(urlDebug, '://centerhost:', centerDebugHost, 'REACT_APP_CENTER_DEBUG_HOST');
         urlDebug = replaceUrlHost(urlDebug, '://usqhost:', usqDebugHost, 'REACT_APP_USQ_DEBUG_HOST');
+        urlDebug = replaceUrlHost(urlDebug, '://unitxhost:', usqDebugHost, 'REACT_APP_USQ_DEBUG_HOST');
         /*
         let hostString = '://centerhost:';
         let pos = urlDebug.indexOf(hostString);
@@ -73,6 +75,7 @@ export async function getUrlOrDebug(url:string, urlDebug:string, path:string = '
         */
         if (path === undefined) path = '';
         let fetchUrl = urlDebug + path;
+        console.log('urlDebug: ' + orgDebug + ' ---- ' + urlDebug + ' === ' + fetchUrl);
         let fetchOptions = {
             method: "GET",
             mode: "no-cors", // no-cors, cors, *same-origin
@@ -81,11 +84,14 @@ export async function getUrlOrDebug(url:string, urlDebug:string, path:string = '
             },
         };
         let ret = await fetchLocalCheck(fetchUrl, fetchOptions);
+        console.log('fetch ret: ' + ret.statusText);
         let text = await ret.text();
+        console.log('fetched text: ' + text);
         return urlDebug;
     }
-    catch {
+    catch (error) {
         console.log('cannot connect %s, so use %s', urlDebug, url);
+        console.error(error);
         return url;
     }
 }

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import _ from 'lodash';
 import {isDevelopment} from '../local';
+import {User} from '../user';
 import {nav} from './nav';
 import {Page} from './page';
 
@@ -29,7 +30,7 @@ export abstract class Controller {
     icon: string|JSX.Element;
     label:string;
     readonly isDev:boolean = isDevelopment;
-    get user() {return nav.user}
+    get user():User {return nav.user}
 
     constructor(res:any) {
         this.res = res || {};
