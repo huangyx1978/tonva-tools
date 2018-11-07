@@ -32,6 +32,7 @@ export interface Props //extends React.Props<Nav>
     //view: JSX.Element | (()=>JSX.Element);
     start?: ()=>Promise<void>;
     onLogined: ()=>Promise<void>;
+    notLogined?: ()=>Promise<void>;
 };
 let stackKey = 1;
 export interface StackItem {
@@ -450,7 +451,13 @@ export class Nav {
             user = undefined;
         }
         if (user === undefined || user.device !== device) {
-            await nav.showLogin();
+            let {notLogined} = this.nav.props;
+            if (notLogined !== undefined) {
+                await notLogined();
+            }
+            else {
+                await nav.showLogin();
+            }
             return;
         }
 
