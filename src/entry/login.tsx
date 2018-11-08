@@ -22,7 +22,7 @@ export interface State {
     hasError: boolean;
     disabled: boolean;
 }*/
-export default class Login extends React.Component {
+export default class Login extends React.Component<{withBack?:boolean}> {
     private schema:FormSchema = new FormSchema({
         fields: [
             {
@@ -72,7 +72,12 @@ export default class Login extends React.Component {
                 如果没有账号，请注册
             </Button>
         </div>;
-        return <Page header={false} footer={footer}>
+        let header:string|boolean|JSX.Element = false;
+        debugger;
+        if (this.props.withBack === true) {
+            header = '登录';
+        }
+        return <Page header={header} footer={footer}>
             <div style={{
                 maxWidth:'400px',
                 margin: '20px auto',

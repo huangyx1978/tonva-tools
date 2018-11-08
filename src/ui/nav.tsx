@@ -374,7 +374,7 @@ async function loadCenterUrl():Promise<{url:string, ws:string}> {
 
 export class Nav {
     private nav:NavView;
-    private loginView: JSX.Element;
+    //private loginView: JSX.Element;
     private ws: WsBase;
     private wsHost: string;
     local: LocalData = new LocalData();
@@ -486,24 +486,25 @@ export class Nav {
         await this.showAppView();
     }
 
-    async showLogin() {
-        if (this.loginView === undefined) {
-            let lv = await import('../entry/login');
-            //this.loginView = <lv.default logo={logo} />;
-            this.loginView = <lv.default />;
-        }
+    async showLogin(withBack?:boolean) {
+        //if (this.loginView === undefined) {
+        let lv = await import('../entry/login');
+        //this.loginView = <lv.default logo={logo} />;
+        let loginView = <lv.default withBack={withBack} />;
+        //}
         this.nav.clear();
         this.pop();
-        this.nav.show(this.loginView);
+        this.nav.show(loginView);
     }
 
-    async logout() {
+    async logout(notShowLogin?:boolean) {
         this.local.logoutClear();
         this.user = undefined; //{} as User;
         logoutApis();
         logoutUsqTokens();
         setCenterToken(undefined);
         this.ws = undefined;
+        if (notShowLogin === true) return;
         await this.showLogin();
     }
 
