@@ -73,7 +73,6 @@ export default class Login extends React.Component<{withBack?:boolean}> {
             </Button>
         </div>;
         let header:string|boolean|JSX.Element = false;
-        debugger;
         if (this.props.withBack === true) {
             header = '登录';
         }

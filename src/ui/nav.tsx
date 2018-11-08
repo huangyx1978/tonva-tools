@@ -492,9 +492,12 @@ export class Nav {
         //this.loginView = <lv.default logo={logo} />;
         let loginView = <lv.default withBack={withBack} />;
         //}
-        this.nav.clear();
-        this.pop();
-        this.nav.show(loginView);
+        if (withBack !== true) {
+            this.nav.clear();
+            this.pop();
+        }
+        //this.nav.show(loginView);
+        this.nav.push(loginView);
     }
 
     async logout(notShowLogin?:boolean) {
