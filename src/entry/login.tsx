@@ -73,8 +73,10 @@ export default class Login extends React.Component<{withBack?:boolean}> {
             </Button>
         </div>;
         let header:string|boolean|JSX.Element = false;
+        let top = '登录用户';
         if (this.props.withBack === true) {
             header = '登录';
+            top = '同花';
         }
         return <Page header={header} footer={footer}>
             <div style={{
@@ -89,7 +91,7 @@ export default class Login extends React.Component<{withBack?:boolean}> {
                         alignSelf: 'center',
                         textAlign: 'center',
                         margin: '10px',
-                    }}>同花</span>
+                    }}>{top}</span>
                 </div>
                 <div style={{height:'20px'}} />
                 <ValidForm formSchema={this.schema} />
