@@ -47,7 +47,7 @@ export class HttpChannel {
         this.post('', {});
     }
 
-    get(url: string, params: any = undefined): Promise<any> {
+    async get(url: string, params: any = undefined): Promise<any> {
         if (params) {
             let keys = Object.keys(params);
             if (keys.length > 0) {
@@ -62,28 +62,28 @@ export class HttpChannel {
         }
         let options = this.buildOptions();
         options.method = 'GET';
-        return this.innerFetch(url, options);
+        return await this.innerFetch(url, options);
     }
 
-    post(url: string, params: any): Promise<any> {
+    async post(url: string, params: any): Promise<any> {
         let options = this.buildOptions();
         options.method = 'POST';
         options.body = JSON.stringify(params);
-        return this.innerFetch(url, options);
+        return await this.innerFetch(url, options);
     }
 
-    put(url: string, params: any): Promise<any> {
+    async put(url: string, params: any): Promise<any> {
         let options = this.buildOptions();
         options.method = 'PUT';
         options.body = JSON.stringify(params);
-        return this.innerFetch(url, options);
+        return await this.innerFetch(url, options);
     }
 
-    delete(url: string, params: any): Promise<any> {
+    async delete(url: string, params: any): Promise<any> {
         let options = this.buildOptions();
         options.method = 'DELETE';
         options.body = JSON.stringify(params);
-        return this.innerFetch(url, options);
+        return await this.innerFetch(url, options);
     }
     async fetch(url: string, options: any, resolve:(value?:any)=>any, reject:(reason?:any)=>void):Promise<void> {
         let that = this;
@@ -141,20 +141,20 @@ export class HttpChannel {
         };
     }
 
-    private innerFetch(url: string, options: any): Promise<any> {
+    private async innerFetch(url: string, options: any): Promise<any> {
         let u = this.hostUrl + url;
         if (this.isCenter === true && this.apiToken === undefined && isBridged())
-            return bridgeCenterApi(u, options.method, options.body);
-        return new Promise<any>(async (resolve, reject) => {
+            return await bridgeCenterApi(u, options.method, options.body);
+        return await new Promise<any>(async (resolve, reject) => {
             await this.fetch(u, options, resolve, reject);
         });
     }
 
-    callFetch(url:string, method:string, body:any):Promise<any> {
+    async callFetch(url:string, method:string, body:any):Promise<any> {
         let options = this.buildOptions();
         options.method = method;
         options.body = body;
-        return new Promise<any>(async (resolve, reject) => {
+        return await new Promise<any>(async (resolve, reject) => {
             await this.fetch(url, options, resolve, reject);
         });
     }

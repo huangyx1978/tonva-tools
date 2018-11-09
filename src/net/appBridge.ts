@@ -227,9 +227,9 @@ interface BridgeCenterApi {
     reject: (reason?:any)=>void;
 }
 const brideCenterApis:{[id:string]: BridgeCenterApi} = {};
-export function bridgeCenterApi(url:string, method:string, body:any):Promise<any> {
+export async function bridgeCenterApi(url:string, method:string, body:any):Promise<any> {
     console.log('bridgeCenterApi: url=%s, method=%s', url, method);
-    return new Promise<any>(async (resolve, reject) => {
+    return await new Promise<any>(async (resolve, reject) => {
         let callId:string;
         for (;;) {
             callId = uid();
