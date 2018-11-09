@@ -3,6 +3,18 @@ import {FetchError} from '../fetchError';
 import {HttpChannelUI} from './httpChannelUI';
 import {nav} from '../ui/nav';
 
+export async function httpGet(url:string, params?:any):Promise<any> {
+    let channel = new HttpChannel(false, url, undefined, undefined);
+    let ret = await channel.get('', params);
+    return ret;
+}
+
+export async function httpPost(url:string, params?:any):Promise<any> {
+    let channel = new HttpChannel(false, url, undefined, undefined);
+    let ret = await channel.post('', params);
+    return ret;
+}
+
 export class HttpChannel {
     private isCenter: boolean;
     private hostUrl: string;
@@ -150,7 +162,7 @@ export class HttpChannel {
     private buildOptions(): any {
         let {language, culture} = nav;
         let headers = new Headers();
-        headers.append('Access-Control-Allow-Origin', '*');
+        //headers.append('Access-Control-Allow-Origin', '*');
         headers.append('Content-Type', 'application/json;charset=UTF-8');
         let lang = language;
         if (culture) lang += '-' + culture;
