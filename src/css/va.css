@@ -239,7 +239,7 @@ div.red-dot>u.message-dot {
     justify-content: center;
   }
   ul.va>li.va-wait1 {
-    opacity: 0.2;
+    opacity: 0.1;
   }
   ul.va>li.va-wait2 {
     opacity: 0.5;

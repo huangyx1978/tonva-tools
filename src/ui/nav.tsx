@@ -330,9 +330,9 @@ interface UrlAndWs {
     ws: string;
 }
 
-function centerUrlAndWs():UrlAndWs {
-    let host = 'REACT_APP_CENTER_HOST';
-    let centerHost = process.env[host];
+function centerUrlAndWs(centerHost:string):UrlAndWs {
+    //let host = 'REACT_APP_CENTER_HOST';
+    //let centerHost = process.env[host];
     if (centerHost === undefined) return {url:undefined, ws:undefined};
     return {
         url: 'http://' + centerHost + '/',
@@ -340,17 +340,19 @@ function centerUrlAndWs():UrlAndWs {
     }
 }
 
+/*
 function centerDebugUrlAndWs():UrlAndWs {
     let centerHost = process.env.REACT_APP_CENTER_DEBUG_HOST || centerDebugHost;
     return {
-        url: 'http://' + centerHost + ':3000/',
-        ws: 'ws://' + centerHost + ':3000/tv/',
+        url: 'http://' + centerHost + '/',
+        ws: 'ws://' + centerHost + '/tv/',
     }
 }
+*/
 
 async function loadCenterUrl():Promise<{url:string, ws:string}> {
-    let urlAndWs:UrlAndWs = centerUrlAndWs();
-    let debugUrlAndWs:UrlAndWs = centerDebugUrlAndWs();
+    let urlAndWs:UrlAndWs = centerUrlAndWs(process.env['REACT_APP_CENTER_HOST']);
+    let debugUrlAndWs:UrlAndWs = centerUrlAndWs(process.env.REACT_APP_CENTER_DEBUG_HOST || centerDebugHost);
     let hash = document.location.hash;
     if (hash.includes('sheet_debug') === true) {
         return debugUrlAndWs;

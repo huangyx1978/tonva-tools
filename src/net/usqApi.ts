@@ -287,7 +287,6 @@ export class UsqTokenApi extends CenterApi {
 
 export const usqTokenApi = new UsqTokenApi('tv/tie/', undefined);
 
-
 export class CallCenterApi extends CenterApi {
     directCall(url:string, method:string, body:any):Promise<any> {
         return this.call(url, method, body);

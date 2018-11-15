@@ -1,6 +1,6 @@
 import {isDevelopment} from '../local';
 import {HttpChannel} from './httpChannel';
-import {centerDebugHost, usqDebugHost} from './debugHost';
+import {centerDebugHost, usqDebugHost, debugUsqlServer} from './debugHost';
 import {fetchLocalCheck} from './fetchLocalCheck';
 
 export async function refetchApi(channel:HttpChannel, url, options, resolve, reject) {
@@ -50,19 +50,21 @@ function replaceUrlHost(url:string, hostString:string, defaultHost:string, envHo
     let pos = url.indexOf(hostString);
     if (pos > 0) {
         let host = process.env[envHost] || defaultHost;
-        url = url.replace(hostString, '://' + host + ':');
+        url = url.replace(hostString, '://' + host + '/');
     }
     return url;
 }
 
 export async function getUrlOrDebug(url:string, urlDebug:string, path:string = 'hello'):Promise<string> {
     if (isDevelopment !== true) return url;
+    if (!urlDebug) return url;
     try {
         let orgDebug = urlDebug;
         if (urlDebug.endsWith('/') === false) urlDebug += '/';
-        urlDebug = replaceUrlHost(urlDebug, '://centerhost:', centerDebugHost, 'REACT_APP_CENTER_DEBUG_HOST');
-        urlDebug = replaceUrlHost(urlDebug, '://usqhost:', usqDebugHost, 'REACT_APP_USQ_DEBUG_HOST');
-        urlDebug = replaceUrlHost(urlDebug, '://unitxhost:', usqDebugHost, 'REACT_APP_USQ_DEBUG_HOST');
+        urlDebug = replaceUrlHost(urlDebug, '://centerhost/', centerDebugHost, 'REACT_APP_CENTER_DEBUG_HOST');
+        urlDebug = replaceUrlHost(urlDebug, '://usqhost/', usqDebugHost, 'REACT_APP_USQ_DEBUG_HOST');
+        urlDebug = replaceUrlHost(urlDebug, '://unitxhost/', usqDebugHost, 'REACT_APP_USQ_DEBUG_HOST');        
+        urlDebug = replaceUrlHost(urlDebug, '://usql-server/', debugUsqlServer, 'REACT_APP_DEBUG_USQL_SERVER');
         /*
         let hostString = '://centerhost:';
         let pos = urlDebug.indexOf(hostString);
@@ -84,9 +86,7 @@ export async function getUrlOrDebug(url:string, urlDebug:string, path:string = '
             },
         };
         let ret = await fetchLocalCheck(fetchUrl, fetchOptions);
-        console.log('fetch ret: ' + ret.statusText);
         let text = await ret.text();
-        console.log('fetched text: ' + text);
         return urlDebug;
     }
     catch (error) {

@@ -2,6 +2,7 @@ import {bridgeCenterApi, isBridged} from './appBridge';
 import {FetchError} from '../fetchError';
 import {HttpChannelUI} from './httpChannelUI';
 import {nav} from '../ui/nav';
+import { isDevelopment } from '../local';
 
 export async function httpGet(url:string, params?:any):Promise<any> {
     let channel = new HttpChannel(false, url, undefined, undefined);
@@ -20,26 +21,26 @@ export class HttpChannel {
     private hostUrl: string;
     private apiToken: string;
     private ui?: HttpChannelUI;
+    private timeout: number;
 
     constructor(isCenter: boolean, hostUrl: string, apiToken:string, ui?: HttpChannelUI) {
         this.isCenter = isCenter;
         this.hostUrl = hostUrl;
         this.apiToken = apiToken;
         this.ui = ui;
-        this.startWait = this.startWait.bind(this);
-        this.endWait = this.endWait.bind(this);
-        this.showError = this.showError.bind(this);
+        this.timeout = isDevelopment === true? 500000:5000;
     }
 
-    private startWait() {
+    private startWait = () => {
         if (this.ui !== undefined) this.ui.startWait();
     }
 
-    private endWait() {
+    private endWait = (url?:string, reject?:(reason?:any)=>void) => {
         if (this.ui !== undefined) this.ui.endWait();
+        if (reject !== undefined) reject('访问webapi超时 ' + url);
     }
 
-    private async showError(error:FetchError) {
+    private showError = async (error:FetchError) => {
         if (this.ui !== undefined) await this.ui.showError(error);
     }
 
@@ -101,16 +102,20 @@ export class HttpChannel {
         }
         try {
             console.log('%s %s', options.method, path);
+            let timeOutHandler = setTimeout(() => that.endWait(url, reject), this.timeout);
             let res = await fetch(path, options);
             //.then(async res => {
-            setTimeout(() => that.endWait(), 100);
             if (res.ok === false) {
+                clearTimeout(timeOutHandler);
+                that.endWait();
                 console.log('call error %s', res.statusText);
                 throw res.statusText;
             }
             let ct = res.headers.get('content-type');
             if (ct && ct.indexOf('json')>=0) {
                 return res.json().then(async retJson => {
+                    clearTimeout(timeOutHandler);
+                    that.endWait();
                     if (retJson.ok === true) {
                         return resolve(retJson.res);
                     }
@@ -127,7 +132,10 @@ export class HttpChannel {
                 });
             }
             else {
-                return res.text().then(text => resolve(text));
+                let text = await res.text();
+                clearTimeout(timeOutHandler);
+                that.endWait();
+                resolve(text);
             }
         }
         catch(error) {

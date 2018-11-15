@@ -100,7 +100,7 @@ export abstract class Controller {
         });
     }
 
-    return(value:any) {
+    returnCall(value:any) {
         let resolve = this._resolve_$.pop();
         if (resolve === undefined) {
             alert('the Coordinator call already returned, or not called');
@@ -173,8 +173,8 @@ export abstract class View<C extends Controller> {
         await this.controller.event(type, value);
     }
 
-    protected return(value:any) {
-        this.controller.return(value);
+    protected returnCall(value:any) {
+        this.controller.returnCall(value);
     }
 
     protected openPage(view: React.StatelessComponent<any>, param?:any) {
