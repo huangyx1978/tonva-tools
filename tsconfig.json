@@ -1,6 +1,7 @@
 {
     //"extends": "../tsproject.json",
     "compilerOptions": {
+        "baseUrl": "src/",
         "declaration": true,
         "composite": true,
         "outDir": "./dist",
@@ -10,8 +11,8 @@
         "moduleResolution": "node",
         "allowSyntheticDefaultImports": true,
         "preserveSymlinks": true,
-        "target": "es5",
-        "lib": ["es6", "dom"],
+        "target": "es6",
+        "lib": ["es2016", "dom"],
         "sourceMap": true,
         "jsx": "react",
         "forceConsistentCasingInFileNames": true,
@@ -22,7 +23,6 @@
         "suppressImplicitAnyIndexErrors": true,
         "noUnusedLocals": false,
         "experimentalDecorators": true,
-        "baseUrl": ".",
         "skipLibCheck": true    
     },
     "exclude": [
