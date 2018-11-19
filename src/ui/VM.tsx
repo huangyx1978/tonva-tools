@@ -76,12 +76,14 @@ export abstract class Controller {
     private onMessageReceive = async (message:any):Promise<void> => {
         await this.onMessage(message);
     }
-    protected async beforeStart() {
+    protected async beforeStart():Promise<boolean> {
         this.receiveHandlerId = nav.registerReceiveHandler(this.onMessageReceive);
+        return true;
     }
     protected abstract internalStart(param?:any):Promise<void>;
     async start(param?:any):Promise<void> {
-        await this.beforeStart();
+        let ret = await this.beforeStart();
+        if (ret === false) return;
         await this.internalStart(param);
     }
 

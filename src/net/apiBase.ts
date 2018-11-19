@@ -65,16 +65,7 @@ export async function getUrlOrDebug(url:string, urlDebug:string, path:string = '
         urlDebug = replaceUrlHost(urlDebug, '://usqhost/', usqDebugHost, 'REACT_APP_USQ_DEBUG_HOST');
         urlDebug = replaceUrlHost(urlDebug, '://unitxhost/', usqDebugHost, 'REACT_APP_USQ_DEBUG_HOST');        
         urlDebug = replaceUrlHost(urlDebug, '://usql-server/', debugUsqlServer, 'REACT_APP_DEBUG_USQL_SERVER');
-        /*
-        let hostString = '://centerhost:';
-        let pos = urlDebug.indexOf(hostString);
-        console.log("let pos = urlDebug.indexOf(hostString); pos=%s, urlDebug=%s", pos, urlDebug);
-        if (pos > 0) {
-            let centerHost = process.env.REACT_APP_CENTER_DEBUG_HOST || centerDebugHost;
-            console.log("let centerHost = process.env.REACT_APP_CENTER_DEBUG_HOST || centerDebugHost;centerHost=%s", centerHost);
-            urlDebug = urlDebug.replace(hostString, '://' + centerHost + ':');
-        }
-        */
+
         if (path === undefined) path = '';
         let fetchUrl = urlDebug + path;
         console.log('urlDebug: ' + orgDebug + ' ---- ' + urlDebug + ' === ' + fetchUrl);
