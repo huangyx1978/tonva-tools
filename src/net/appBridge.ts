@@ -56,7 +56,8 @@ window.addEventListener('message', async function(evt) {
             subFrameStarted(evt);
             break;
         case 'ws':
-            wsBridge.receive(message.msg);
+            //wsBridge.receive(message.msg);
+            await nav.onReceive(message.msg);
             break;
         case 'init-sub-win':
             await initSubWin(message);

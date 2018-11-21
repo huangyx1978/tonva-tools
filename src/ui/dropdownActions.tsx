@@ -1,3 +1,4 @@
+/*
 import * as React from 'react';
 import {ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem,
     Row, Col, Button} from 'reactstrap';
@@ -39,3 +40,4 @@ export class DropdownActions extends React.Component<DropdownActionsProps, Dropd
         </ButtonDropdown>
     }
 }
+*/

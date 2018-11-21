@@ -41,6 +41,10 @@ export abstract class Controller {
     private disposer = () => {
         // message listener的清理
         nav.unregisterReceiveHandler(this.receiveHandlerId);
+        this.onDispose();
+    }
+
+    protected onDispose() {
     }
 
     protected async showVPage(vp: new (coordinator: Controller)=>VPage<Controller>, param?:any):Promise<void> {

@@ -12,7 +12,15 @@ export function setSubAppWindow(win:Window) {
     subAppWindow = win;
 }
 
+export function postWsToTop(msg:any) {
+    window.top.postMessage({
+        type: 'ws',
+        msg: msg
+    }, '*');
+}
+
 export abstract class WsBase {
+    wsBaseId:string;
     private handlerSeed = 1;
     private anyHandlers:{[id:number]:(msg:any)=>Promise<void>} = {};
     private msgHandlers:{[id:number]:{type:string, handler:(msg:any)=>Promise<void>}} = {};
@@ -43,12 +51,15 @@ export abstract class WsBase {
     }
 }
 
+let wsBaseSeed = 1;
 export class WsBridge extends WsBase {
+    wsBaseId:string = 'WsBridge seed ' + wsBaseSeed++;
 }
 
 export const wsBridge = new WsBridge();
 
 export class WSChannel extends WsBase {
+    wsBaseId:string = 'WSChannel seed ' + wsBaseSeed++;
     static centerToken:string;
     private wsHost: string;
     private token: string;

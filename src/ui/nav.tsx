@@ -413,6 +413,11 @@ export class Nav {
         this.ws.endWsReceive(handlerId);
     }
 
+    async onReceive(msg:any) {
+        if (this.ws === undefined) return;
+        await this.ws.receive(msg);
+    }
+
     private isInFrame:boolean;
     async start() {
         nav.push(<Page header={false}>

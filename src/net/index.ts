@@ -1,4 +1,4 @@
-export {WSChannel, wsBridge} from './wsChannel';
+export {WSChannel, wsBridge, postWsToTop} from './wsChannel';
 export * from './apiBase';
 export * from './usqApi';
 export {meInFrame, loadAppUsqs, isBridged} from './appBridge';
