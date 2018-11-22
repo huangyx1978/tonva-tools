@@ -91,8 +91,11 @@ export abstract class Controller {
         await this.internalStart(param);
     }
 
-    private _resolve_$:((value:any) => void)[] = [];
+    get isCalling():boolean {return this._resolve_$ !== undefined}
+
+    private _resolve_$:((value:any) => void)[];
     async call(param?:any):Promise<any> {
+        if (this._resolve_$ === undefined) this._resolve_$ = [];
         return new Promise<any> (async (resolve, reject) => {
             this._resolve_$.push(resolve);
             await this.start(param);
@@ -100,6 +103,7 @@ export abstract class Controller {
     }
 
     async vCall(vp: new (coordinator: Controller)=>VPage<Controller>, param?:any):Promise<any> {
+        if (this._resolve_$ === undefined) this._resolve_$ = [];
         return new Promise<any> (async (resolve, reject) => {
             this._resolve_$.push(resolve);
             await (new vp(this)).showEntry(param);
@@ -107,6 +111,7 @@ export abstract class Controller {
     }
 
     returnCall(value:any) {
+        if (this._resolve_$ === undefined) return;
         let resolve = this._resolve_$.pop();
         if (resolve === undefined) {
             alert('the Coordinator call already returned, or not called');
