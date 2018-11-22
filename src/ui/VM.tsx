@@ -38,7 +38,9 @@ export abstract class Controller {
     }
 
     private receiveHandlerId:number;
-    private disposer = () => {
+    private disposer:()=>void;
+
+    private dispose() {
         // message listener的清理
         nav.unregisterReceiveHandler(this.receiveHandlerId);
         this.onDispose();
@@ -86,6 +88,7 @@ export abstract class Controller {
     }
     protected abstract internalStart(param?:any):Promise<void>;
     async start(param?:any):Promise<void> {
+        this.disposer = this.dispose.bind(this);
         let ret = await this.beforeStart();
         if (ret === false) return;
         await this.internalStart(param);
