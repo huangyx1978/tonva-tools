@@ -42,6 +42,12 @@ export class Controller {
         this.x = this.res.x || {};
     }
     get user() { return nav.user; }
+    get isLogined() {
+        let { user } = nav;
+        if (user === undefined)
+            return false;
+        return user.id > 0;
+    }
     dispose() {
         // message listener的清理
         nav.unregisterReceiveHandler(this.receiveHandlerId);

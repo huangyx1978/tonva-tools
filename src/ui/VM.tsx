@@ -31,7 +31,11 @@ export abstract class Controller {
     label:string;
     readonly isDev:boolean = isDevelopment;
     get user():User {return nav.user}
-
+    get isLogined():boolean {
+        let {user} = nav;
+        if (user === undefined) return false;
+        return user.id > 0;
+    }
     constructor(res:any) {
         this.res = res || {};
         this.x = this.res.x || {};

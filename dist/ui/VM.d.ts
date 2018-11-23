@@ -8,6 +8,7 @@ export declare abstract class Controller {
     label: string;
     readonly isDev: boolean;
     readonly user: User;
+    readonly isLogined: boolean;
     constructor(res: any);
     private receiveHandlerId;
     private disposer;
