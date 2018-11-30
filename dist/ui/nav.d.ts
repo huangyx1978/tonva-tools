@@ -37,11 +37,12 @@ export declare class NavView extends React.Component<Props, State> {
     startWait(): void;
     endWait(): void;
     onError(fetchError: FetchError): Promise<void>;
-    show(view: JSX.Element, disposer?: () => void): void;
-    push(view: JSX.Element, disposer?: () => void): void;
-    replace(view: JSX.Element, disposer?: () => void): void;
+    show(view: JSX.Element, disposer?: () => void): number;
+    push(view: JSX.Element, disposer?: () => void): number;
+    replace(view: JSX.Element, disposer?: () => void): number;
     ceaseTop(level?: number): void;
     pop(level?: number): void;
+    popTo(key: number): void;
     removeCeased(): void;
     private popAndDispose;
     private dispose;

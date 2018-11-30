@@ -37,7 +37,6 @@ const logo = require('../img/logo.svg');
 const logs = [];
 ;
 let stackKey = 1;
-//let ws:WSChannel;
 export class NavView extends React.Component {
     constructor(props) {
         super(props);
@@ -118,21 +117,23 @@ export class NavView extends React.Component {
     }
     show(view, disposer) {
         this.clear();
-        this.push(view, disposer);
+        return this.push(view, disposer);
     }
     push(view, disposer) {
         this.removeCeased();
         if (this.stack.length > 0) {
             window.history.pushState('forward', null, null);
         }
+        let key = stackKey++;
         this.stack.push({
-            key: stackKey++,
+            key: key,
             view: view,
             ceased: false,
             disposer: disposer
         });
         this.refresh();
         //console.log('push: %s pages', this.stack.length);
+        return key;
     }
     replace(view, disposer) {
         let item = undefined;
@@ -141,8 +142,9 @@ export class NavView extends React.Component {
             item = stack.pop();
             //this.popAndDispose();
         }
+        let key = stackKey++;
         this.stack.push({
-            key: stackKey++,
+            key: key,
             view: view,
             ceased: false,
             disposer: disposer
@@ -151,6 +153,7 @@ export class NavView extends React.Component {
             this.dispose(item.disposer);
         this.refresh();
         //console.log('replace: %s pages', this.stack.length);
+        return key;
     }
     ceaseTop(level = 1) {
         let p = this.stack.length - 1;
@@ -186,6 +189,9 @@ export class NavView extends React.Component {
             //window.addEventListener('popstate', this.navBack);
         }
         //console.log('pop: %s pages', stack.length);
+    }
+    popTo(key) {
+        throw new Error('to be designed');
     }
     removeCeased() {
         for (;;) {
@@ -309,15 +315,6 @@ function centerUrlAndWs(centerHost) {
         ws: 'ws://' + centerHost + '/tv/',
     };
 }
-/*
-function centerDebugUrlAndWs():UrlAndWs {
-    let centerHost = process.env.REACT_APP_CENTER_DEBUG_HOST || centerDebugHost;
-    return {
-        url: 'http://' + centerHost + '/',
-        ws: 'ws://' + centerHost + '/tv/',
-    }
-}
-*/
 function loadCenterUrl() {
     return __awaiter(this, void 0, void 0, function* () {
         let urlAndWs = centerUrlAndWs(process.env['REACT_APP_CENTER_HOST']);

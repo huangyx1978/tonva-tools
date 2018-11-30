@@ -48,7 +48,6 @@ export interface State {
     fetchError: FetchError
 }
 
-//let ws:WSChannel;
 export class NavView extends React.Component<Props, State> {
     private stack: StackItem[];
     private htmlTitle: string;
@@ -131,35 +130,38 @@ export class NavView extends React.Component<Props, State> {
         });
     }
 
-    show(view: JSX.Element, disposer?: ()=>void): void {
+    show(view: JSX.Element, disposer?: ()=>void): number {
         this.clear();
-        this.push(view, disposer);
+        return this.push(view, disposer);
     }
 
-    push(view: JSX.Element, disposer?: ()=>void): void {
+    push(view: JSX.Element, disposer?: ()=>void): number {
         this.removeCeased();
         if (this.stack.length > 0) {
             window.history.pushState('forward', null, null);
         }
+        let key = stackKey++;
         this.stack.push({
-            key: stackKey++, 
+            key: key,
             view: view, 
             ceased: false,
             disposer: disposer
         });
         this.refresh();
         //console.log('push: %s pages', this.stack.length);
+        return key;
     }
 
-    replace(view: JSX.Element, disposer?: ()=>void): void {
+    replace(view: JSX.Element, disposer?: ()=>void): number {
         let item:StackItem = undefined;
         let stack = this.stack;
         if (stack.length > 0) {
             item = stack.pop();
             //this.popAndDispose();
         }
+        let key = stackKey++;
         this.stack.push({
-            key: stackKey++, 
+            key: key, 
             view: view, 
             ceased: false,
             disposer: disposer
@@ -167,6 +169,7 @@ export class NavView extends React.Component<Props, State> {
         if (item !== undefined) this.dispose(item.disposer);
         this.refresh();
         //console.log('replace: %s pages', this.stack.length);
+        return key;
     }
 
     ceaseTop(level:number = 1) {
@@ -175,7 +178,6 @@ export class NavView extends React.Component<Props, State> {
             if (p < 0) break;
             let item = this.stack[p];
             item.ceased = true;
-            
         }
     }
 
@@ -200,6 +202,10 @@ export class NavView extends React.Component<Props, State> {
             //window.addEventListener('popstate', this.navBack);
         }
         //console.log('pop: %s pages', stack.length);
+    }
+
+    popTo(key: number) {
+        throw new Error('to be designed');
     }
 
     removeCeased() {
@@ -339,16 +345,6 @@ function centerUrlAndWs(centerHost:string):UrlAndWs {
         ws: 'ws://' + centerHost + '/tv/',
     }
 }
-
-/*
-function centerDebugUrlAndWs():UrlAndWs {
-    let centerHost = process.env.REACT_APP_CENTER_DEBUG_HOST || centerDebugHost;
-    return {
-        url: 'http://' + centerHost + '/',
-        ws: 'ws://' + centerHost + '/tv/',
-    }
-}
-*/
 
 async function loadCenterUrl():Promise<{url:string, ws:string}> {
     let urlAndWs:UrlAndWs = centerUrlAndWs(process.env['REACT_APP_CENTER_HOST']);
