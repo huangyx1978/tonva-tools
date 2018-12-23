@@ -7,28 +7,33 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import * as React from 'react';
-import { Button } from 'reactstrap';
-import { nav, Page, FormSchema } from '../ui';
+//import {Form, Input, Container, Button, Row, Col} from 'reactstrap';
+//import * as classNames from 'classnames';
+//import {User} from '../user';
+import { nav, Page, Form } from '../ui';
+//ValidForm, FormSchema, 
 import RegisterView from './register';
+//import RegisterSuccess from './regSuccess';
 import Forget from './forget';
 import userApi from './userApi';
-import { ValidForm } from '..';
+//import { ValidForm } from '..';
 const logo = require('../img/logo.svg');
-/*
-export interface Values {
-    username: string;
-    password: string;
-}
-
-export interface State {
-    values: Values;
-    hasError: boolean;
-    disabled: boolean;
-}*/
+const schema = [
+    { name: 'username', type: 'string', required: true },
+    { name: 'password', type: 'string', required: true },
+    { name: 'login', type: 'submit' },
+];
+const uiSchema = {
+    items: {
+        username: { placeholder: '用户名', maxLength: 100, label: '用户名' },
+        password: { widget: 'password', placeholder: '密码', maxLength: 100, label: '密码' },
+        login: { widget: 'button', className: 'btn btn-primary', label: '登录' },
+    }
+};
 export default class Login extends React.Component {
     constructor() {
-        super(...arguments);
-        this.schema = new FormSchema({
+        /*
+        private schema:FormSchema = new FormSchema({
             fields: [
                 {
                     type: 'string',
@@ -45,9 +50,10 @@ export default class Login extends React.Component {
             ],
             onSumit: this.onLoginSubmit.bind(this),
         });
-    }
-    onLoginSubmit(values) {
-        return __awaiter(this, void 0, void 0, function* () {
+        */
+        super(...arguments);
+        this.onLoginSubmit = (name, context) => __awaiter(this, void 0, void 0, function* () {
+            let values = context.form.data;
             let un = values['username'];
             let pwd = values['password'];
             if (pwd === undefined) {
@@ -58,16 +64,10 @@ export default class Login extends React.Component {
                 user: un,
                 pwd: pwd
             });
-            if (user === undefined) {
-                //this.failed();
-                this.schema.clear();
-                this.schema.errors.push('用户名或密码错！');
-            }
-            else {
-                console.log("onLoginSubmit: user=%s pwd:%s", user.name, user.token);
-                yield nav.logined(user);
-            }
-            return undefined;
+            if (user === undefined)
+                return '用户名或密码错！';
+            console.log("onLoginSubmit: user=%s pwd:%s", user.name, user.token);
+            yield nav.logined(user);
         });
     }
     click() {
@@ -75,7 +75,7 @@ export default class Login extends React.Component {
     }
     render() {
         let footer = React.createElement("div", { className: 'text-center' },
-            React.createElement(Button, { color: "link", style: { margin: '0px auto' }, onClick: () => nav.push(React.createElement(RegisterView, null)) }, "\u5982\u679C\u6CA1\u6709\u8D26\u53F7\uFF0C\u8BF7\u6CE8\u518C"));
+            React.createElement("button", { className: "btn btn-link", color: "link", style: { margin: '0px auto' }, onClick: () => nav.push(React.createElement(RegisterView, null)) }, "\u5982\u679C\u6CA1\u6709\u8D26\u53F7\uFF0C\u8BF7\u6CE8\u518C"));
         let header = false;
         let top = '同花';
         if (this.props.withBack === true) {
@@ -97,9 +97,9 @@ export default class Login extends React.Component {
                             margin: '10px',
                         } }, top)),
                 React.createElement("div", { style: { height: '20px' } }),
-                React.createElement(ValidForm, { formSchema: this.schema })),
+                React.createElement(Form, { schema: schema, uiSchema: uiSchema, onButtonClick: this.onLoginSubmit })),
             React.createElement("div", { className: 'constainer' },
-                React.createElement(Button, { color: "link", block: true, onClick: () => nav.push(React.createElement(Forget, null)) }, "\u5FD8\u8BB0\u5BC6\u7801")));
+                React.createElement("button", { className: "btn btn-link btn-block", onClick: () => nav.push(React.createElement(Forget, null)) }, "\u5FD8\u8BB0\u5BC6\u7801")));
     }
 }
 //# sourceMappingURL=login.js.map

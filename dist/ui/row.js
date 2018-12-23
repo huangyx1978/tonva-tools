@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Row, Col } from 'reactstrap';
 import * as classNames from 'classnames';
 export class LabelRow extends React.Component {
     constructor(props) {
@@ -17,12 +16,12 @@ export class LabelRow extends React.Component {
             this.props.action();
     }
     render() {
-        let c = classNames('label-row', this.props.className, {
+        let c = classNames('row', 'label-row', this.props.className, {
             pressed: this.state.isPressed
         });
-        return (React.createElement(Row, { className: c, onMouseDown: () => this.mouseDown(), onMouseUp: () => this.mouseUp() },
-            React.createElement(Col, { tag: 'label', xs: 3 }, this.props.label),
-            React.createElement(Col, { xs: 9 }, this.props.children)));
+        return (React.createElement("div", { className: c, onMouseDown: () => this.mouseDown(), onMouseUp: () => this.mouseUp() },
+            React.createElement("div", { className: "col-xs-3" }, this.props.label),
+            React.createElement("div", { className: "col-xs-9" }, this.props.children)));
     }
 }
 export class ActionRow extends React.Component {

@@ -1,28 +1,34 @@
 import * as React from 'react';
-import {Form, Input, Container, Button, Row, Col} from 'reactstrap';
-import * as classNames from 'classnames';
-import {User} from '../user';
-import {nav, Page, FormPage, FormSchema, SubmitReturn} from '../ui';
+//import {Form, Input, Container, Button, Row, Col} from 'reactstrap';
+//import * as classNames from 'classnames';
+//import {User} from '../user';
+import {nav, Page, Form, Schema, UiSchema, UiTextItem, UiPasswordItem, Context, UiButton} from '../ui';
+//ValidForm, FormSchema, 
+
 import RegisterView from './register';
-import RegisterSuccess from './regSuccess';
+//import RegisterSuccess from './regSuccess';
 import Forget from './forget';
 import userApi from './userApi';
-import { ValidForm } from '..';
+//import { ValidForm } from '..';
 
 const logo = require('../img/logo.svg');
 
-/*
-export interface Values {
-    username: string;
-    password: string;
+const schema: Schema = [
+    {name: 'username', type: 'string', required: true},
+    {name: 'password', type: 'string', required: true},
+    {name: 'login', type: 'submit'},
+]
+
+const uiSchema: UiSchema = {
+    items: {
+        username: {placeholder: '用户名', maxLength: 100, label: '用户名'} as UiTextItem, 
+        password: {widget: 'password', placeholder: '密码', maxLength: 100, label: '密码'} as UiPasswordItem,
+        login: {widget: 'button', className: 'btn btn-primary', label: '登录'} as UiButton,
+    }
 }
 
-export interface State {
-    values: Values;
-    hasError: boolean;
-    disabled: boolean;
-}*/
 export default class Login extends React.Component<{withBack?:boolean}> {
+    /*
     private schema:FormSchema = new FormSchema({
         fields: [
             {
@@ -40,8 +46,10 @@ export default class Login extends React.Component<{withBack?:boolean}> {
         ],
         onSumit: this.onLoginSubmit.bind(this),
     });
+    */
 
-    async onLoginSubmit(values:any):Promise<SubmitReturn|undefined> {
+    private onLoginSubmit = async (name:string, context:Context):Promise<string> => {
+        let values = context.form.data;
         let un = values['username'];
         let pwd = values['password'];
         if (pwd === undefined) {
@@ -52,25 +60,19 @@ export default class Login extends React.Component<{withBack?:boolean}> {
             user: un, 
             pwd: pwd
         });
-        if (user === undefined) {
-            //this.failed();
-            this.schema.clear();
-            this.schema.errors.push('用户名或密码错！');
-        } else {
-            console.log("onLoginSubmit: user=%s pwd:%s", user.name, user.token);
-            await nav.logined(user);
-        }
-        return undefined;
+        if (user === undefined) return '用户名或密码错！';
+        console.log("onLoginSubmit: user=%s pwd:%s", user.name, user.token);
+        await nav.logined(user);
     }
     click() {
         nav.replace(<RegisterView />);
     }
     render() {
         let footer = <div className='text-center'>
-            <Button color="link" style={{margin:'0px auto'}}
+            <button className="btn btn-link" color="link" style={{margin:'0px auto'}}
                 onClick={() => nav.push(<RegisterView />)}>
                 如果没有账号，请注册
-            </Button>
+            </button>
         </div>;
         let header:string|boolean|JSX.Element = false;
         let top = '同花';
@@ -94,13 +96,13 @@ export default class Login extends React.Component<{withBack?:boolean}> {
                     }}>{top}</span>
                 </div>
                 <div style={{height:'20px'}} />
-                <ValidForm formSchema={this.schema} />
+                <Form schema={schema} uiSchema={uiSchema} onButtonClick={this.onLoginSubmit} />
             </div>
             <div className='constainer'>
-                <Button color="link" block={true}
+                <button className="btn btn-link btn-block"
                     onClick={() => nav.push(<Forget />)}>
                     忘记密码
-                </Button>
+                </button>
             </div>
         </Page>;
     }

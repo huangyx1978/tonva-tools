@@ -3,7 +3,7 @@ import {InputSchema} from './inputSchema';
 export type Rule = string|((values:any)=>string);
 export type Rules = Rule[];
 
-export type Field = {
+export type DataField = {
     type:'int'|'dec'|'float'|'string'|'text'|'password'|'checkbox'|'radios'|'select'|'pick-id';
     name:string;
     label?:string;
@@ -20,7 +20,7 @@ export interface SubmitReturn {
     result?: any;
 }
 export type FormFields = {
-    fields: Field[];
+    fields: DataField[];
     rules?: Rules;
     fieldTag?: string;
     submitText?: string;

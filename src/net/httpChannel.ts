@@ -104,7 +104,6 @@ export class HttpChannel {
             console.log('%s %s', options.method, path);
             let timeOutHandler = setTimeout(() => that.endWait(url, reject), this.timeout);
             let res = await fetch(encodeURI(path), options);
-            //.then(async res => {
             if (res.ok === false) {
                 clearTimeout(timeOutHandler);
                 that.endWait();

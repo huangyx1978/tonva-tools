@@ -29,17 +29,17 @@ export class LabelRow extends React.Component<LabelRowProps, LabelRowState> {
         if (this.props.action) this.props.action();
     }
     render() {
-        let c = classNames('label-row', this.props.className, {
+        let c = classNames('row', 'label-row', this.props.className, {
             pressed: this.state.isPressed
         });
         return (
-        <Row
+        <div
             className={c}
             onMouseDown={()=>this.mouseDown()} 
             onMouseUp={()=>this.mouseUp()}>
-            <Col tag='label' xs={3}>{this.props.label}</Col>
-            <Col xs={9}>{this.props.children}</Col>
-        </Row>
+            <div className="col-xs-3">{this.props.label}</div>
+            <div className="col-xs-9">{this.props.children}</div>
+        </div>
         );
     }
 }

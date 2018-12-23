@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { Container, Form, Button, Input } from 'reactstrap';
-import * as classNames from 'classnames';
-import {nav, Page, FormPage, FormSchema, SubmitReturn, ValidForm} from '../ui';
+//import { Container, Form, Button, Input } from 'reactstrap';
+//import * as classNames from 'classnames';
+import {nav, Page, FormSchema, SubmitReturn, ValidForm} from '../ui';
 import LoginView from './login';
 import userApi from './userApi';
 import RegSuccess from './regSuccess';

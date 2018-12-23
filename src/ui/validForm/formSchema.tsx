@@ -4,7 +4,7 @@ import * as _ from 'lodash';
 import * as classNames from 'classnames';
 import {Page} from '../page';
 import {nav} from '../nav';
-import {Field, FormFields, Rule, Rules, SubmitReturn} from './field';
+import {DataField, FormFields, Rule, Rules, SubmitReturn} from './field';
 import {InputSchema, inputFactory, Err} from './inputSchema';
 import { FormEvent } from 'react';
 

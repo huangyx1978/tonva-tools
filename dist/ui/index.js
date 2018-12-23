@@ -6,6 +6,7 @@ export * from './page';
 export * from './rowIcon';
 export * from './row';
 //export * from './dropdownActions';
-export * from './form';
+export * from './validForm';
 export * from './VM';
+export * from './form';
 //# sourceMappingURL=index.js.map

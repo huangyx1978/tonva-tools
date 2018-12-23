@@ -7,6 +7,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import * as React from 'react';
+//import { Container, Form, Button, Input } from 'reactstrap';
+//import * as classNames from 'classnames';
 import { nav, Page, FormSchema, ValidForm } from '../ui';
 import LoginView from './login';
 import userApi from './userApi';
