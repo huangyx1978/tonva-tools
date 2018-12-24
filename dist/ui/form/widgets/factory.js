@@ -72,7 +72,7 @@ const widgetsFactory = {
     },
     color: {},
     checkbox: {
-        dataTypes: ['boolean'],
+        dataTypes: ['boolean', 'integer', 'number'],
         widget: CheckBoxWidget
     },
     checkboxes: {},

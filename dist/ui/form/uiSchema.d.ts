@@ -43,6 +43,11 @@ export interface UiRange extends UiInputItem {
     max?: number;
     step?: number;
 }
+export interface UiCheckItem extends UiItem {
+    widget: 'checkbox';
+    trueValue?: any;
+    falseValue?: any;
+}
 export interface UiSelectBase extends UiItem {
     rules?: FieldRule | FieldRule[];
     defaultValue: any;

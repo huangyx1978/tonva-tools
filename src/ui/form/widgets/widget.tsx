@@ -26,7 +26,7 @@ export abstract class Widget {
 
     constructor(context:Context, itemSchema:ItemSchema, fieldProps:FieldProps, children: React.ReactNode) {
         this.context = context;
-        let {name} = itemSchema;        
+        let {name} = itemSchema;
         this.name = name;
         this.itemSchema = itemSchema;
         this.fieldProps = fieldProps;

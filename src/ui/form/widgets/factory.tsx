@@ -81,7 +81,7 @@ const widgetsFactory: {[type: string]: {widget?: TypeWidget, dataTypes?: DataTyp
 
     },
     checkbox: {
-        dataTypes: ['boolean'],
+        dataTypes: ['boolean', 'integer', 'number'],
         widget: CheckBoxWidget
     },
     checkboxes: {
