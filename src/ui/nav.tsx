@@ -14,6 +14,7 @@ import '../css/va.css';
 import '../css/animation.css';
 import { WsBase, wsBridge } from '../net/wsChannel';
 import { uid } from '../uid';
+import { resOptions } from './res';
 
 const regEx = new RegExp('Android|webOS|iPhone|iPad|' +
     'BlackBerry|Windows Phone|'  +
@@ -381,6 +382,7 @@ export class Nav {
     culture: string;
 
     constructor() {
+        /*
         let language = navigator.languages && navigator.languages[0] || // Chrome / Firefox
                navigator.language; // ||   // All browsers
                //navigator.userLanguage; // IE <= 10
@@ -391,6 +393,11 @@ export class Nav {
         let parts = language.split('-');
         this.language = parts[0];
         if (parts.length > 1) this.culture = parts[1];
+        */
+
+        let {lang, district} = resOptions;
+        this.language = lang;
+        this.culture = district;
     }
     
     set(nav:NavView) {

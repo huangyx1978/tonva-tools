@@ -3,6 +3,7 @@ import { Schema, ItemSchema } from './schema';
 import { UiSchema } from './uiSchema';
 import 'font-awesome/css/font-awesome.min.css';
 import { FormContext, Context } from './context';
+import { FormRes } from './formRes';
 export declare type FormButtonClick = (name: string, context: Context) => Promise<any>;
 export interface FormProps {
     className?: string;
@@ -20,6 +21,7 @@ export interface FormProps {
     fieldLabelSize?: 2;
     requiredFlag?: boolean;
     beforeShow?: (formContext: FormContext) => void;
+    res?: FormRes;
 }
 export declare class Form extends React.Component<FormProps> {
     readonly schema: Schema;
@@ -34,6 +36,7 @@ export declare class Form extends React.Component<FormProps> {
     readonly RowContainer: (content: JSX.Element) => JSX.Element;
     readonly ButtonClass: string;
     readonly RowSeperator: JSX.Element;
+    readonly res?: FormRes;
     protected formContext: FormContext;
     private content;
     readonly data: any;
@@ -47,4 +50,5 @@ export declare class Form extends React.Component<FormProps> {
     protected DefaultRowContainer: (content: JSX.Element) => JSX.Element;
     protected DefaultButtonClass: string;
     protected DefaultRowSeperator: JSX.Element;
+    protected DefaultRes: FormRes;
 }

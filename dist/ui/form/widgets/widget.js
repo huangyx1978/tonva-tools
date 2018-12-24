@@ -60,7 +60,7 @@ export class Widget {
     init() {
         this.rules = [];
         if (this.itemSchema.required === true) {
-            this.rules.push(new RuleRequired);
+            this.rules.push(new RuleRequired(this.context.form.res));
         }
         this.buildRules();
         if (this.ui === undefined)

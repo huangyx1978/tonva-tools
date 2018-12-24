@@ -1,11 +1,12 @@
 import * as React from 'react';
 //import { Container, Form, Button, Input } from 'reactstrap';
 //import * as classNames from 'classnames';
-import {nav, Page, /*FormSchema, SubmitReturn, ValidForm, */Schema, UiSchema, UiTextItem, UiPasswordItem, UiButton, Form, Context} from '../ui';
+import {nav, Page, /*FormSchema, SubmitReturn, ValidForm, */Schema, UiSchema, UiTextItem, UiPasswordItem, UiButton, Form, Context, resLang} from '../ui';
 import LoginView from './login';
 import userApi from './userApi';
 import RegSuccess from './regSuccess';
 import '../css/va-form.css';
+import { RegisterRes, registerRes } from './res';
 const logo = require('../img/logo.svg');
 
 export interface Values {
@@ -24,16 +25,17 @@ const schema: Schema = [
     {name: 'register', type: 'submit'},
 ]
 
-const uiSchema: UiSchema = {
-    items: {
-        user: {placeholder: '用户名', maxLength: 100, label: '用户名'} as UiTextItem, 
-        pwd: {widget: 'password', placeholder: '密码', maxLength: 100, label: '密码'} as UiPasswordItem,
-        rePwd: {widget: 'password', placeholder: '重复密码', maxLength: 100, label: '重复密码'} as UiPasswordItem,
-        register: {widget: 'button', className: 'btn btn-primary btn-block mt-3', label: '注册新用户'} as UiButton,
-    }
-}
-
 export default class Register extends React.Component {
+    private res: RegisterRes = resLang(registerRes);
+    private uiSchema: UiSchema = {
+        items: {
+            user: {placeholder: '用户名', maxLength: 100, label: '用户名'} as UiTextItem, 
+            pwd: {widget: 'password', placeholder: '密码', maxLength: 100, label: '密码'} as UiPasswordItem,
+            rePwd: {widget: 'password', placeholder: '重复密码', maxLength: 100, label: '重复密码'} as UiPasswordItem,
+            register: {widget: 'button', className: 'btn btn-primary btn-block mt-3', label: '注册新用户'} as UiButton,
+        }
+    }
+        
     /*
     private schema:FormSchema = new FormSchema({
         fields: [
@@ -136,7 +138,7 @@ export default class Register extends React.Component {
                     }}>同花</span>
                 </div>
                 <div style={{height:'20px'}} />
-                <Form schema={schema} uiSchema={uiSchema} onButtonClick={this.onSubmit} requiredFlag={false} />
+                <Form schema={schema} uiSchema={this.uiSchema} onButtonClick={this.onSubmit} requiredFlag={false} />
             </div>
         </Page>;
     }

@@ -1,16 +1,6 @@
+import _ from 'lodash';
 import { Context } from '../context';
-import { formRes } from '../formRes';
-import { resLang } from '../../VM';
-import { nav } from '../../nav';
-
-let res:any;
-function getResText(caption: string) {
-    if (res === undefined) {
-        res = resLang(formRes, nav.language, nav.culture);
-    }
-    let ret = res[caption];
-    return ret || caption;
-}
+import { FormRes } from '../formRes';
 
 export abstract class Rule {
     abstract check(defy:string[], value:any):void;
@@ -36,7 +26,15 @@ export class RuleCustom extends Rule {
     }
 }
 
-export class RuleRequired extends Rule {
+export abstract class RulePredefined extends Rule {
+    protected res: FormRes;
+    constructor(res: FormRes) {
+        super();
+        this.res = res;
+    }
+}
+
+export class RuleRequired extends RulePredefined {
     check(defy:string[], value:any) {
         switch (typeof value) {
             default:
@@ -53,48 +51,48 @@ export class RuleRequired extends Rule {
             case 'undefined':
                 break;
         }
-        defy.push(getResText('required'));
+        defy.push(this.res.required);
     }
 }
 
-export class RuleNum extends Rule {
-    check(defy:string[], value:any) {
-        if (value === undefined || value === null) return;
-        let n = Number(value);
-        if (n === NaN) defy.push(getResText('number'));
+export class RuleNum extends RulePredefined {
+    private minMsg: _.TemplateExecutor;
+    private maxMsg: _.TemplateExecutor;
+    protected min: number;
+    protected max: number
+    constructor(res: FormRes, min?: number, max?: number) {
+        super(res);
+        this.minMsg = _.template(res.min);
+        this.maxMsg = _.template(res.max);
+        this.min = min;
+        this.max = max;
     }
-}
-
-export class RuleInt extends Rule {
     check(defy:string[], value:any) {
         if (value === undefined || value === null) return;
         let n = Number(value);
-        if (Number.isNaN(n) === true || Number.isInteger(n) === false) {
-            defy.push(getResText('integer'));
+        if (n === NaN) {
+            defy.push(this.res.number);
+        }
+        else {
+            this.checkMore(defy, n);
+        }
+    }
+
+    protected checkMore(defy:string[], value: number) {
+        if (this.min !== undefined && Number(value) < this.min) {
+            defy.push(this.minMsg({min:this.min}));
+        }
+        if (this.max !== undefined && Number(value) > this.max) {
+            defy.push(this.maxMsg({max:this.max}));
         }
     }
 }
 
-export class RuleMin extends RuleNum {
-    constructor(min: number) {
-        super();
-        this.min = min;
-    }
-    min: number;
-    check(defy:string[], value:any) {
-        super.check(defy, value);
-        if (Number(value) < this.min) defy.push(getResText('min') + this.min);
-    }
-}
-
-export class RuleMax extends RuleNum {
-    constructor(max: number) {
-        super();
-        this.max = max;
-    }
-    max: number;
-    check(defy:string[], value:any) {
-        super.check(defy, value);
-        if (Number(value) > this.max) defy.push(getResText('max') + this.max);
+export class RuleInt extends RuleNum {
+    protected checkMore(defy:string[], n: number) {
+        super.checkMore(defy, n);
+        if (Number.isInteger(n) === false) {
+            defy.push(this.res.integer);
+        }
     }
 }

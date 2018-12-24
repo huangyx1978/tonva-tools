@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { TextWidget } from './textWidget';
-import { RuleNum, RuleInt, RuleMin, RuleMax } from '../rules';
+import { RuleNum, RuleInt } from '../rules';
 import { NumBaseSchema } from '../schema';
 
 export class NumberWidget extends TextWidget {
@@ -9,13 +9,21 @@ export class NumberWidget extends TextWidget {
 
     protected buildRules() {
         super.buildRules();
-        this.rules.push(new RuleNum);
+        let res = this.context.form.res;
+        let {min, max} = this.itemSchema;
+        this.rules.push(
+            this.itemSchema.type === 'integer'?
+                new RuleNum(res, min, max) :
+                new RuleInt(res, min, max)
+        );
+        /*
         if (this.itemSchema.type === 'integer') {
             this.rules.push(new RuleInt);
         }
         let {min, max} = this.itemSchema;
         if (min !== undefined) this.rules.push(new RuleMin(min));
         if (max !== undefined) this.rules.push(new RuleMax(max));
+        */
     }
 
     protected parse(value:any):any {

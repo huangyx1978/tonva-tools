@@ -7,31 +7,28 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import * as React from 'react';
-//import {Form, Input, Container, Button, Row, Col} from 'reactstrap';
-//import * as classNames from 'classnames';
-//import {User} from '../user';
-import { nav, Page, Form } from '../ui';
-//ValidForm, FormSchema, 
+import { nav, Page, Form, resLang } from '../ui';
 import RegisterView from './register';
-//import RegisterSuccess from './regSuccess';
 import Forget from './forget';
 import userApi from './userApi';
-//import { ValidForm } from '..';
+import { loginRes } from './res';
 const logo = require('../img/logo.svg');
 const schema = [
     { name: 'username', type: 'string', required: true },
     { name: 'password', type: 'string', required: true },
     { name: 'login', type: 'submit' },
 ];
-const uiSchema = {
-    items: {
-        username: { placeholder: '用户名', maxLength: 100, label: '用户名' },
-        password: { widget: 'password', placeholder: '密码', maxLength: 100, label: '密码' },
-        login: { widget: 'button', className: 'btn btn-primary btn-block mt-3', label: '登录' },
-    }
-};
 export default class Login extends React.Component {
     constructor() {
+        super(...arguments);
+        this.res = resLang(loginRes);
+        this.uiSchema = {
+            items: {
+                username: { placeholder: '用户名', maxLength: 100, label: '用户' },
+                password: { widget: 'password', placeholder: '密码', maxLength: 100, label: '密码' },
+                login: { widget: 'button', className: 'btn btn-primary btn-block mt-3', label: '登录' },
+            }
+        };
         /*
         private schema:FormSchema = new FormSchema({
             fields: [
@@ -51,7 +48,6 @@ export default class Login extends React.Component {
             onSumit: this.onLoginSubmit.bind(this),
         });
         */
-        super(...arguments);
         this.onSubmit = (name, context) => __awaiter(this, void 0, void 0, function* () {
             let values = context.form.data;
             let un = values['username'];
@@ -97,7 +93,7 @@ export default class Login extends React.Component {
                             margin: '10px',
                         } }, top)),
                 React.createElement("div", { style: { height: '20px' } }),
-                React.createElement(Form, { schema: schema, uiSchema: uiSchema, onButtonClick: this.onSubmit, requiredFlag: false }),
+                React.createElement(Form, { schema: schema, uiSchema: this.uiSchema, onButtonClick: this.onSubmit, requiredFlag: false }),
                 React.createElement("button", { className: "btn btn-link btn-block", onClick: () => nav.push(React.createElement(Forget, null)) }, "\u5FD8\u8BB0\u5BC6\u7801")));
     }
 }

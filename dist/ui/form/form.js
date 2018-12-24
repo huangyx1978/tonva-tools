@@ -10,6 +10,8 @@ import classNames from 'classnames';
 import { factory } from './widgets';
 import 'font-awesome/css/font-awesome.min.css';
 import { ContextContainer, FormContext } from './context';
+import { formRes } from './formRes';
+import { resLang } from '../res';
 export class Form extends React.Component {
     constructor(props) {
         super(props);
@@ -67,14 +69,16 @@ export class Form extends React.Component {
         };
         this.DefaultButtonClass = 'text-center py-2';
         this.DefaultRowSeperator = React.createElement("div", { className: "border border-gray border-top" });
+        this.DefaultRes = resLang(formRes);
         let { schema, uiSchema, formData, Container, FieldContainer, FieldClass, ArrContainer, RowContainer, //ArrFieldContainer, 
-        ButtonClass, RowSeperator } = props;
+        ButtonClass, RowSeperator, res, } = props;
         this.Container = Container || this.DefaultContainer;
         this.FieldContainer = FieldContainer || this.DefaultFieldContainer;
         this.FieldClass = FieldClass !== undefined && FieldClass !== '' && FieldClass !== null ? FieldClass : this.DefaultFieldClass;
         this.ArrContainer = ArrContainer || this.DefaultArrContainer;
         this.RowContainer = RowContainer || this.DefaultRowContainer;
         //this.ArrFieldContainer = ArrFieldContainer || this.DefaultArrFieldContainer;
+        this.res = res || this.DefaultRes;
         this.ButtonClass = ButtonClass || this.DefaultButtonClass;
         this.RowSeperator = RowSeperator || this.DefaultRowSeperator;
         this.schema = schema;

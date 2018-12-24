@@ -26,6 +26,7 @@ import '../css/va.css';
 import '../css/animation.css';
 import { wsBridge } from '../net/wsChannel';
 import { uid } from '../uid';
+import { resOptions } from './res';
 const regEx = new RegExp('Android|webOS|iPhone|iPad|' +
     'BlackBerry|Windows Phone|' +
     'Opera Mini|IEMobile|Mobile', 'i');
@@ -342,19 +343,23 @@ function loadCenterUrl() {
 }
 export class Nav {
     constructor() {
-        this.local = new LocalData();
-        this.user = undefined; // = {id:undefined, name:undefined, token:undefined};
+        /*
         let language = navigator.languages && navigator.languages[0] || // Chrome / Firefox
-            navigator.language; // ||   // All browsers
-        //navigator.userLanguage; // IE <= 10
+               navigator.language; // ||   // All browsers
+               //navigator.userLanguage; // IE <= 10
         if (!language) {
             this.language = 'zh';
             this.culture = 'CN';
         }
         let parts = language.split('-');
         this.language = parts[0];
-        if (parts.length > 1)
-            this.culture = parts[1];
+        if (parts.length > 1) this.culture = parts[1];
+        */
+        this.local = new LocalData();
+        this.user = undefined; // = {id:undefined, name:undefined, token:undefined};
+        let { lang, district } = resOptions;
+        this.language = lang;
+        this.culture = district;
     }
     set(nav) {
         //this.logo = logo;

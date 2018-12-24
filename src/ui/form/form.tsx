@@ -6,6 +6,8 @@ import { UiSchema, TempletType } from './uiSchema';
 import { factory } from './widgets';
 import 'font-awesome/css/font-awesome.min.css';
 import { ContextContainer, FormContext, Context, RowContext } from './context';
+import { FormRes, formRes } from './formRes';
+import { resLang } from '../res';
 
 export type FormButtonClick = (name:string, context: Context) => Promise<any>;
 
@@ -27,6 +29,7 @@ export interface FormProps {
     fieldLabelSize?: 2;                 // col-sm-2 for label
     requiredFlag?: boolean;             // default=true
     beforeShow?: (formContext:FormContext) => void;
+    res?: FormRes;
 }
 
 export class Form extends React.Component<FormProps> {
@@ -41,6 +44,7 @@ export class Form extends React.Component<FormProps> {
     //readonly ArrFieldContainer: (label:any, content:JSX.Element, context:RowContext) => JSX.Element;
     readonly ButtonClass: string;
     readonly RowSeperator: JSX.Element;
+    readonly res?: FormRes;
     protected formContext: FormContext;
     private content: any;
     @observable readonly data:any;
@@ -50,7 +54,8 @@ export class Form extends React.Component<FormProps> {
         let {schema, uiSchema, formData, 
             Container, FieldContainer, FieldClass, 
             ArrContainer, RowContainer, //ArrFieldContainer, 
-            ButtonClass, RowSeperator
+            ButtonClass, RowSeperator,
+            res,
         } = props;
         this.Container = Container || this.DefaultContainer;
         this.FieldContainer = FieldContainer || this.DefaultFieldContainer;
@@ -58,6 +63,7 @@ export class Form extends React.Component<FormProps> {
         this.ArrContainer = ArrContainer || this.DefaultArrContainer;
         this.RowContainer = RowContainer || this.DefaultRowContainer;
         //this.ArrFieldContainer = ArrFieldContainer || this.DefaultArrFieldContainer;
+        this.res = res || this.DefaultRes;
         this.ButtonClass = ButtonClass || this.DefaultButtonClass;
         this.RowSeperator = RowSeperator || this.DefaultRowSeperator;
         this.schema = schema;
@@ -227,4 +233,5 @@ export class Form extends React.Component<FormProps> {
     }
     protected DefaultButtonClass = 'text-center py-2';
     protected DefaultRowSeperator = <div className="border border-gray border-top" />;
+    protected DefaultRes:FormRes = resLang<FormRes>(formRes);
 }

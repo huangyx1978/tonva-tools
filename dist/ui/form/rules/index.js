@@ -1,14 +1,4 @@
-import { formRes } from '../formRes';
-import { resLang } from '../../VM';
-import { nav } from '../../nav';
-let res;
-function getResText(caption) {
-    if (res === undefined) {
-        res = resLang(formRes, nav.language, nav.culture);
-    }
-    let ret = res[caption];
-    return ret || caption;
-}
+import _ from 'lodash';
 export class Rule {
 }
 export class RuleCustom extends Rule {
@@ -31,7 +21,13 @@ export class RuleCustom extends Rule {
         }
     }
 }
-export class RuleRequired extends Rule {
+export class RulePredefined extends Rule {
+    constructor(res) {
+        super();
+        this.res = res;
+    }
+}
+export class RuleRequired extends RulePredefined {
     check(defy, value) {
         switch (typeof value) {
             default:
@@ -51,48 +47,43 @@ export class RuleRequired extends Rule {
             case 'undefined':
                 break;
         }
-        defy.push(getResText('required'));
+        defy.push(this.res.required);
     }
 }
-export class RuleNum extends Rule {
-    check(defy, value) {
-        if (value === undefined || value === null)
-            return;
-        let n = Number(value);
-        if (n === NaN)
-            defy.push(getResText('number'));
-    }
-}
-export class RuleInt extends Rule {
-    check(defy, value) {
-        if (value === undefined || value === null)
-            return;
-        let n = Number(value);
-        if (Number.isNaN(n) === true || Number.isInteger(n) === false) {
-            defy.push(getResText('integer'));
-        }
-    }
-}
-export class RuleMin extends RuleNum {
-    constructor(min) {
-        super();
+export class RuleNum extends RulePredefined {
+    constructor(res, min, max) {
+        super(res);
+        this.minMsg = _.template(res.min);
+        this.maxMsg = _.template(res.max);
         this.min = min;
-    }
-    check(defy, value) {
-        super.check(defy, value);
-        if (Number(value) < this.min)
-            defy.push(getResText('min') + this.min);
-    }
-}
-export class RuleMax extends RuleNum {
-    constructor(max) {
-        super();
         this.max = max;
     }
     check(defy, value) {
-        super.check(defy, value);
-        if (Number(value) > this.max)
-            defy.push(getResText('max') + this.max);
+        if (value === undefined || value === null)
+            return;
+        let n = Number(value);
+        if (n === NaN) {
+            defy.push(this.res.number);
+        }
+        else {
+            this.checkMore(defy, n);
+        }
+    }
+    checkMore(defy, value) {
+        if (this.min !== undefined && Number(value) < this.min) {
+            defy.push(this.minMsg({ min: this.min }));
+        }
+        if (this.max !== undefined && Number(value) > this.max) {
+            defy.push(this.maxMsg({ max: this.max }));
+        }
+    }
+}
+export class RuleInt extends RuleNum {
+    checkMore(defy, n) {
+        super.checkMore(defy, n);
+        if (Number.isInteger(n) === false) {
+            defy.push(this.res.integer);
+        }
     }
 }
 //# sourceMappingURL=index.js.map

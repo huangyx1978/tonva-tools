@@ -5,25 +5,6 @@ import {User} from '../user';
 import {nav} from './nav';
 import {Page} from './page';
 
-export function resLang(res:any, lang:string, district:string):any {
-    let ret:any = {};
-    if (res === undefined) return ret;
-    _.merge(ret, res._);
-    let l = res[lang];
-    if (l === undefined) return ret;
-    _.merge(ret, l._);
-    let d = l[district];
-    if (d === undefined) return ret;
-    _.merge(ret, d);
-    let {entity} = ret;
-    if (entity !== undefined) {
-        for (let i in entity) {
-            entity[i.toLowerCase()] = entity[i];
-        }
-    }
-    return ret;
-}
-
 export abstract class Controller {
     readonly res: any;
     readonly x: any;

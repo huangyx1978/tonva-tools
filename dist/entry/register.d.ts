@@ -10,6 +10,8 @@ export interface Values {
     email?: string;
 }
 export default class Register extends React.Component {
+    private res;
+    private uiSchema;
     onSubmit(name: string, context: Context): Promise<string>;
     click(): void;
     render(): JSX.Element;

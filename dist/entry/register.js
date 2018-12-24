@@ -9,11 +9,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import * as React from 'react';
 //import { Container, Form, Button, Input } from 'reactstrap';
 //import * as classNames from 'classnames';
-import { nav, Page, Form } from '../ui';
+import { nav, Page, Form, resLang } from '../ui';
 import LoginView from './login';
 import userApi from './userApi';
 import RegSuccess from './regSuccess';
 import '../css/va-form.css';
+import { registerRes } from './res';
 const logo = require('../img/logo.svg');
 const schema = [
     { name: 'user', type: 'string', required: true },
@@ -21,15 +22,19 @@ const schema = [
     { name: 'rePwd', type: 'string', required: true },
     { name: 'register', type: 'submit' },
 ];
-const uiSchema = {
-    items: {
-        user: { placeholder: '用户名', maxLength: 100, label: '用户名' },
-        pwd: { widget: 'password', placeholder: '密码', maxLength: 100, label: '密码' },
-        rePwd: { widget: 'password', placeholder: '重复密码', maxLength: 100, label: '重复密码' },
-        register: { widget: 'button', className: 'btn btn-primary btn-block mt-3', label: '注册新用户' },
-    }
-};
 export default class Register extends React.Component {
+    constructor() {
+        super(...arguments);
+        this.res = resLang(registerRes);
+        this.uiSchema = {
+            items: {
+                user: { placeholder: '用户名', maxLength: 100, label: '用户名' },
+                pwd: { widget: 'password', placeholder: '密码', maxLength: 100, label: '密码' },
+                rePwd: { widget: 'password', placeholder: '重复密码', maxLength: 100, label: '重复密码' },
+                register: { widget: 'button', className: 'btn btn-primary btn-block mt-3', label: '注册新用户' },
+            }
+        };
+    }
     /*
     private schema:FormSchema = new FormSchema({
         fields: [
@@ -132,7 +137,7 @@ export default class Register extends React.Component {
                             margin: '10px',
                         } }, "\u540C\u82B1")),
                 React.createElement("div", { style: { height: '20px' } }),
-                React.createElement(Form, { schema: schema, uiSchema: uiSchema, onButtonClick: this.onSubmit, requiredFlag: false })));
+                React.createElement(Form, { schema: schema, uiSchema: this.uiSchema, onButtonClick: this.onSubmit, requiredFlag: false })));
     }
 }
 // <ValidForm formSchema={this.schema}  />

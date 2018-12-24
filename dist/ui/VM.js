@@ -7,31 +7,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import * as React from 'react';
-import _ from 'lodash';
 import { isDevelopment } from '../local';
 import { nav } from './nav';
 import { Page } from './page';
-export function resLang(res, lang, district) {
-    let ret = {};
-    if (res === undefined)
-        return ret;
-    _.merge(ret, res._);
-    let l = res[lang];
-    if (l === undefined)
-        return ret;
-    _.merge(ret, l._);
-    let d = l[district];
-    if (d === undefined)
-        return ret;
-    _.merge(ret, d);
-    let { entity } = ret;
-    if (entity !== undefined) {
-        for (let i in entity) {
-            entity[i.toLowerCase()] = entity[i];
-        }
-    }
-    return ret;
-}
 export class Controller {
     constructor(res) {
         this.isDev = isDevelopment;

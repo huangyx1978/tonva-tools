@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { User } from '../user';
-export declare function resLang(res: any, lang: string, district: string): any;
 export declare abstract class Controller {
     readonly res: any;
     readonly x: any;

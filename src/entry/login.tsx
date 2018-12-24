@@ -1,15 +1,9 @@
 import * as React from 'react';
-//import {Form, Input, Container, Button, Row, Col} from 'reactstrap';
-//import * as classNames from 'classnames';
-//import {User} from '../user';
-import {nav, Page, Form, Schema, UiSchema, UiTextItem, UiPasswordItem, Context, UiButton} from '../ui';
-//ValidForm, FormSchema, 
-
+import {nav, Page, Form, Schema, UiSchema, UiTextItem, UiPasswordItem, Context, UiButton, resLang} from '../ui';
 import RegisterView from './register';
-//import RegisterSuccess from './regSuccess';
 import Forget from './forget';
 import userApi from './userApi';
-//import { ValidForm } from '..';
+import { LoginRes, loginRes } from './res';
 
 const logo = require('../img/logo.svg');
 
@@ -17,17 +11,18 @@ const schema: Schema = [
     {name: 'username', type: 'string', required: true},
     {name: 'password', type: 'string', required: true},
     {name: 'login', type: 'submit'},
-]
-
-const uiSchema: UiSchema = {
-    items: {
-        username: {placeholder: '用户名', maxLength: 100, label: '用户名'} as UiTextItem, 
-        password: {widget: 'password', placeholder: '密码', maxLength: 100, label: '密码'} as UiPasswordItem,
-        login: {widget: 'button', className: 'btn btn-primary btn-block mt-3', label: '登录'} as UiButton,
-    }
-}
+];
 
 export default class Login extends React.Component<{withBack?:boolean}> {
+    private res: LoginRes = resLang(loginRes);
+    private uiSchema: UiSchema = {
+        items: {
+            username: {placeholder: '用户名', maxLength: 100, label: '用户'} as UiTextItem, 
+            password: {widget: 'password', placeholder: '密码', maxLength: 100, label: '密码'} as UiPasswordItem,
+            login: {widget: 'button', className: 'btn btn-primary btn-block mt-3', label: '登录'} as UiButton,
+        }
+    }
+    
     /*
     private schema:FormSchema = new FormSchema({
         fields: [
@@ -96,7 +91,7 @@ export default class Login extends React.Component<{withBack?:boolean}> {
                     }}>{top}</span>
                 </div>
                 <div style={{height:'20px'}} />
-                <Form schema={schema} uiSchema={uiSchema} onButtonClick={this.onSubmit} requiredFlag={false} />
+                <Form schema={schema} uiSchema={this.uiSchema} onButtonClick={this.onSubmit} requiredFlag={false} />
                 <button className="btn btn-link btn-block"
                     onClick={() => nav.push(<Forget />)}>
                     忘记密码
