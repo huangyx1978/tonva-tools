@@ -18,6 +18,7 @@ export interface FormProps {
     ButtonClass?: string;
     RowSeperator?: JSX.Element;
     fieldLabelSize?: 2;
+    requiredFlag?: boolean;
     beforeShow?: (formContext: FormContext) => void;
 }
 export declare class Form extends React.Component<FormProps> {

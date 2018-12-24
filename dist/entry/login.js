@@ -27,7 +27,7 @@ const uiSchema = {
     items: {
         username: { placeholder: '用户名', maxLength: 100, label: '用户名' },
         password: { widget: 'password', placeholder: '密码', maxLength: 100, label: '密码' },
-        login: { widget: 'button', className: 'btn btn-primary', label: '登录' },
+        login: { widget: 'button', className: 'btn btn-primary btn-block mt-3', label: '登录' },
     }
 };
 export default class Login extends React.Component {
@@ -52,7 +52,7 @@ export default class Login extends React.Component {
         });
         */
         super(...arguments);
-        this.onLoginSubmit = (name, context) => __awaiter(this, void 0, void 0, function* () {
+        this.onSubmit = (name, context) => __awaiter(this, void 0, void 0, function* () {
             let values = context.form.data;
             let un = values['username'];
             let pwd = values['password'];
@@ -84,9 +84,9 @@ export default class Login extends React.Component {
         }
         return React.createElement(Page, { header: header, footer: footer },
             React.createElement("div", { style: {
-                    maxWidth: '400px',
-                    margin: '20px auto',
-                    padding: '0 30px',
+                    maxWidth: '25em',
+                    margin: '3em auto',
+                    padding: '0 3em',
                 } },
                 React.createElement("div", { className: 'container', style: { display: 'flex', position: 'relative' } },
                     React.createElement("img", { className: 'App-logo', src: logo, style: { height: '60px', position: 'absolute' } }),
@@ -97,8 +97,7 @@ export default class Login extends React.Component {
                             margin: '10px',
                         } }, top)),
                 React.createElement("div", { style: { height: '20px' } }),
-                React.createElement(Form, { schema: schema, uiSchema: uiSchema, onButtonClick: this.onLoginSubmit })),
-            React.createElement("div", { className: 'constainer' },
+                React.createElement(Form, { schema: schema, uiSchema: uiSchema, onButtonClick: this.onSubmit, requiredFlag: false }),
                 React.createElement("button", { className: "btn btn-link btn-block", onClick: () => nav.push(React.createElement(Forget, null)) }, "\u5FD8\u8BB0\u5BC6\u7801")));
     }
 }

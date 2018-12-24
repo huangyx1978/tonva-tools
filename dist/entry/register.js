@@ -9,41 +9,54 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import * as React from 'react';
 //import { Container, Form, Button, Input } from 'reactstrap';
 //import * as classNames from 'classnames';
-import { nav, Page, FormSchema, ValidForm } from '../ui';
+import { nav, Page, Form } from '../ui';
 import LoginView from './login';
 import userApi from './userApi';
 import RegSuccess from './regSuccess';
 import '../css/va-form.css';
 const logo = require('../img/logo.svg');
-export default class Register extends React.Component {
-    constructor() {
-        super(...arguments);
-        this.schema = new FormSchema({
-            fields: [
-                {
-                    type: 'string',
-                    name: 'user',
-                    placeholder: '用户名',
-                    rules: ['required', 'maxlength:100']
-                },
-                {
-                    type: 'password',
-                    name: 'pwd',
-                    placeholder: '密码',
-                    rules: ['required', 'maxlength:100']
-                },
-                {
-                    type: 'password',
-                    name: 'rePwd',
-                    placeholder: '重复密码',
-                    rules: ['required', 'maxlength:100']
-                },
-            ],
-            submitText: '注册新用户',
-            onSumit: this.onLoginSubmit.bind(this),
-        });
+const schema = [
+    { name: 'user', type: 'string', required: true },
+    { name: 'pwd', type: 'string', required: true },
+    { name: 'rePwd', type: 'string', required: true },
+    { name: 'register', type: 'submit' },
+];
+const uiSchema = {
+    items: {
+        user: { placeholder: '用户名', maxLength: 100, label: '用户名' },
+        pwd: { widget: 'password', placeholder: '密码', maxLength: 100, label: '密码' },
+        rePwd: { widget: 'password', placeholder: '重复密码', maxLength: 100, label: '重复密码' },
+        register: { widget: 'button', className: 'btn btn-primary btn-block mt-3', label: '注册新用户' },
     }
-    onLoginSubmit(values) {
+};
+export default class Register extends React.Component {
+    /*
+    private schema:FormSchema = new FormSchema({
+        fields: [
+            {
+                type: 'string',
+                name: 'user',
+                placeholder: '用户名',
+                rules: ['required', 'maxlength:100']
+            },
+            {
+                type: 'password',
+                name: 'pwd',
+                placeholder: '密码',
+                rules: ['required', 'maxlength:100']
+            },
+            {
+                type: 'password',
+                name: 'rePwd',
+                placeholder: '重复密码',
+                rules: ['required', 'maxlength:100']
+            },
+        ],
+        submitText: '注册新用户',
+        onSumit: this.onSubmit.bind(this),
+    });
+    */
+    onSubmit(name, context) {
         return __awaiter(this, void 0, void 0, function* () {
             /*
             let user = await userApi.login({
@@ -59,12 +72,16 @@ export default class Register extends React.Component {
             }
             return undefined;*/
             //const {user, pwd, rePwd, country, mobile, email} = this.state.values;
+            let values = context.form.data;
             let { user, pwd, rePwd, country, mobile, email } = values;
             if (pwd !== rePwd) {
-                this.schema.errors.push('密码不对，请重新输入密码！');
-                this.schema.inputs['pwd'].clear();
-                this.schema.inputs['rePwd'].clear();
-                return undefined;
+                context.setValue('pwd', '');
+                context.setValue('rePwd', '');
+                return '密码不对，请重新输入密码！';
+                //this.schema.errors.push('密码不对，请重新输入密码！');
+                //this.schema.inputs['pwd'].clear();
+                //this.schema.inputs['rePwd'].clear();
+                //return undefined;
             }
             let ret = yield userApi.register({
                 nick: undefined,
@@ -91,8 +108,8 @@ export default class Register extends React.Component {
                     msg = '电子邮件 ' + email;
                     break;
             }
-            this.schema.errors.push(msg + ' 已经被注册过了');
-            return undefined;
+            return msg + ' 已经被注册过了';
+            //return undefined;
         });
     }
     click() {
@@ -102,9 +119,9 @@ export default class Register extends React.Component {
     render() {
         return React.createElement(Page, { header: '\u6CE8\u518C' },
             React.createElement("div", { style: {
-                    maxWidth: '400px',
-                    margin: '20px auto',
-                    padding: '0 30px',
+                    maxWidth: '25em',
+                    margin: '3em auto',
+                    padding: '0 3em',
                 } },
                 React.createElement("div", { className: 'container', style: { display: 'flex', position: 'relative' } },
                     React.createElement("img", { className: 'App-logo', src: logo, style: { height: '60px', position: 'absolute' } }),
@@ -115,7 +132,8 @@ export default class Register extends React.Component {
                             margin: '10px',
                         } }, "\u540C\u82B1")),
                 React.createElement("div", { style: { height: '20px' } }),
-                React.createElement(ValidForm, { formSchema: this.schema })));
+                React.createElement(Form, { schema: schema, uiSchema: uiSchema, onButtonClick: this.onSubmit, requiredFlag: false })));
     }
 }
+// <ValidForm formSchema={this.schema}  />
 //# sourceMappingURL=register.js.map

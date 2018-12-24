@@ -32,9 +32,9 @@ export class TextWidget extends Widget {
         let renderTemplet = this.renderTemplet();
         if (renderTemplet !== undefined) return renderTemplet;
         let cn = {
-            'form-control': true,
+            //'form-control': true,
         };
-        if (this.hasError) {
+        if (this.hasError === true) {
             cn['is-invalid'] = true;
         }
         else {

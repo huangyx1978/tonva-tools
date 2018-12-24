@@ -23,7 +23,7 @@ const uiSchema: UiSchema = {
     items: {
         username: {placeholder: '用户名', maxLength: 100, label: '用户名'} as UiTextItem, 
         password: {widget: 'password', placeholder: '密码', maxLength: 100, label: '密码'} as UiPasswordItem,
-        login: {widget: 'button', className: 'btn btn-primary', label: '登录'} as UiButton,
+        login: {widget: 'button', className: 'btn btn-primary btn-block mt-3', label: '登录'} as UiButton,
     }
 }
 
@@ -48,7 +48,7 @@ export default class Login extends React.Component<{withBack?:boolean}> {
     });
     */
 
-    private onLoginSubmit = async (name:string, context:Context):Promise<string> => {
+    private onSubmit = async (name:string, context:Context):Promise<string> => {
         let values = context.form.data;
         let un = values['username'];
         let pwd = values['password'];
@@ -82,9 +82,9 @@ export default class Login extends React.Component<{withBack?:boolean}> {
         }
         return <Page header={header} footer={footer}>
             <div style={{
-                maxWidth:'400px',
-                margin: '20px auto',
-                padding: '0 30px',
+                maxWidth:'25em',
+                margin: '3em auto',
+                padding: '0 3em',
             }}>
                 <div className='container' style={{display:'flex', position:'relative'}}>
                     <img className='App-logo' src={logo} style={{height:'60px', position:'absolute'}}/>
@@ -96,9 +96,7 @@ export default class Login extends React.Component<{withBack?:boolean}> {
                     }}>{top}</span>
                 </div>
                 <div style={{height:'20px'}} />
-                <Form schema={schema} uiSchema={uiSchema} onButtonClick={this.onLoginSubmit} />
-            </div>
-            <div className='constainer'>
+                <Form schema={schema} uiSchema={uiSchema} onButtonClick={this.onSubmit} requiredFlag={false} />
                 <button className="btn btn-link btn-block"
                     onClick={() => nav.push(<Forget />)}>
                     忘记密码

@@ -1,7 +1,7 @@
 import * as React from 'react';
 //import { Container, Form, Button, Input } from 'reactstrap';
 //import * as classNames from 'classnames';
-import {nav, Page, FormSchema, SubmitReturn, ValidForm} from '../ui';
+import {nav, Page, /*FormSchema, SubmitReturn, ValidForm, */Schema, UiSchema, UiTextItem, UiPasswordItem, UiButton, Form, Context} from '../ui';
 import LoginView from './login';
 import userApi from './userApi';
 import RegSuccess from './regSuccess';
@@ -17,7 +17,24 @@ export interface Values {
     email?: string;
 }
 
+const schema: Schema = [
+    {name: 'user', type: 'string', required: true},
+    {name: 'pwd', type: 'string', required: true},
+    {name: 'rePwd', type: 'string', required: true},
+    {name: 'register', type: 'submit'},
+]
+
+const uiSchema: UiSchema = {
+    items: {
+        user: {placeholder: '用户名', maxLength: 100, label: '用户名'} as UiTextItem, 
+        pwd: {widget: 'password', placeholder: '密码', maxLength: 100, label: '密码'} as UiPasswordItem,
+        rePwd: {widget: 'password', placeholder: '重复密码', maxLength: 100, label: '重复密码'} as UiPasswordItem,
+        register: {widget: 'button', className: 'btn btn-primary btn-block mt-3', label: '注册新用户'} as UiButton,
+    }
+}
+
 export default class Register extends React.Component {
+    /*
     private schema:FormSchema = new FormSchema({
         fields: [
             {
@@ -40,10 +57,10 @@ export default class Register extends React.Component {
             },
         ],
         submitText: '注册新用户',
-        onSumit: this.onLoginSubmit.bind(this),
+        onSumit: this.onSubmit.bind(this),
     });
-
-    async onLoginSubmit(values:any):Promise<SubmitReturn|undefined> {
+    */
+    async onSubmit(name:string, context:Context):Promise<string> {
         /*
         let user = await userApi.login({
             user: values['username'], 
@@ -58,12 +75,16 @@ export default class Register extends React.Component {
         }
         return undefined;*/
         //const {user, pwd, rePwd, country, mobile, email} = this.state.values;
+        let values = context.form.data;
         let {user, pwd, rePwd, country, mobile, email} = values;
         if (pwd !== rePwd) {
-            this.schema.errors.push('密码不对，请重新输入密码！');
-            this.schema.inputs['pwd'].clear();
-            this.schema.inputs['rePwd'].clear();
-            return undefined;
+            context.setValue('pwd', '');
+            context.setValue('rePwd', '');
+            return '密码不对，请重新输入密码！';
+            //this.schema.errors.push('密码不对，请重新输入密码！');
+            //this.schema.inputs['pwd'].clear();
+            //this.schema.inputs['rePwd'].clear();
+            //return undefined;
         }
         let ret = await userApi.register({
             nick: undefined,
@@ -73,7 +94,7 @@ export default class Register extends React.Component {
             mobile: undefined,
             email: undefined,
         });
-        let msg;
+        let msg:any;
         switch (ret) {
             default: throw 'unknown return';
             case 0:
@@ -90,8 +111,8 @@ export default class Register extends React.Component {
                 msg = '电子邮件 ' + email;
                 break;
         }
-        this.schema.errors.push(msg + ' 已经被注册过了');
-        return undefined;
+        return msg + ' 已经被注册过了';
+        //return undefined;
     }
     click() {
         nav.replace(<LoginView />);
@@ -101,9 +122,9 @@ export default class Register extends React.Component {
     render() {
         return <Page header='注册'>
             <div style={{
-                maxWidth:'400px',
-                margin: '20px auto',
-                padding: '0 30px',
+                maxWidth:'25em',
+                margin: '3em auto',
+                padding: '0 3em',
             }}>
                 <div className='container' style={{display:'flex', position:'relative'}}>
                     <img className='App-logo' src={logo} style={{height:'60px', position:'absolute'}}/>
@@ -115,8 +136,9 @@ export default class Register extends React.Component {
                     }}>同花</span>
                 </div>
                 <div style={{height:'20px'}} />
-                <ValidForm formSchema={this.schema}  />
+                <Form schema={schema} uiSchema={uiSchema} onButtonClick={this.onSubmit} requiredFlag={false} />
             </div>
         </Page>;
     }
 }
+// <ValidForm formSchema={this.schema}  />

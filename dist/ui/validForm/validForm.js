@@ -7,7 +7,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 import * as React from 'react';
 import * as classNames from 'classnames';
 import { observer } from 'mobx-react';
-let ValidForm = class ValidForm extends React.Component {
+let ValidForm1 = class ValidForm1 extends React.Component {
     componentDidMount() {
         this.props.formSchema.setInputValues();
     }
@@ -37,8 +37,8 @@ let ValidForm = class ValidForm extends React.Component {
             React.createElement("form", { onSubmit: formSchema.onSubmit }, content));
     }
 };
-ValidForm = __decorate([
+ValidForm1 = __decorate([
     observer
-], ValidForm);
-export { ValidForm };
+], ValidForm1);
+export { ValidForm1 };
 //# sourceMappingURL=validForm.js.map

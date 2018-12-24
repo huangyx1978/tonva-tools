@@ -4,7 +4,7 @@ export interface FormProps {
     className?: string;
     formSchema: FormSchema;
 }
-export declare class ValidForm extends React.Component<FormProps, {}> {
+export declare class ValidForm1 extends React.Component<FormProps, {}> {
     componentDidMount(): void;
     render(): JSX.Element;
 }

@@ -2,7 +2,7 @@ import * as React from 'react';
 import {ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem,
     Row, Col, Button} from 'reactstrap';
 import {Page} from '../page';
-import {ValidForm} from './validForm';
+import {ValidForm1} from './validForm';
 import {FormSchema} from './formSchema';
 
 export interface MenuItem {
@@ -22,7 +22,7 @@ export interface FormPageState {
     dropdownOpen: boolean;
 }
 
-export class FormPage extends React.Component<FormPageProps, FormPageState> {
+export class FormPage1 extends React.Component<FormPageProps, FormPageState> {
     constructor(props) {
         super(props);
         this.toggle = this.toggle.bind(this);
@@ -51,7 +51,7 @@ export class FormPage extends React.Component<FormPageProps, FormPageState> {
     render() {
         let {back, header, rightMenu, footer, formSchema, children} = this.props;
         return <Page header={header} back={back} right={this.renderMenu(rightMenu)} footer={footer}>
-            <ValidForm formSchema={formSchema} children={children} />
+            <ValidForm1 formSchema={formSchema} children={children} />
         </Page>;
     }
 }

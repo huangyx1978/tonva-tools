@@ -14,7 +14,7 @@ export interface FormPageProps {
 export interface FormPageState {
     dropdownOpen: boolean;
 }
-export declare class FormPage extends React.Component<FormPageProps, FormPageState> {
+export declare class FormPage1 extends React.Component<FormPageProps, FormPageState> {
     constructor(props: any);
     toggle(): void;
     renderMenu(menuItems: MenuItem[]): JSX.Element;

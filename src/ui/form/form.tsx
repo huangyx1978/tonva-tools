@@ -25,6 +25,7 @@ export interface FormProps {
     ButtonClass?: string;
     RowSeperator?: JSX.Element;
     fieldLabelSize?: 2;                 // col-sm-2 for label
+    requiredFlag?: boolean;             // default=true
     beforeShow?: (formContext:FormContext) => void;
 }
 

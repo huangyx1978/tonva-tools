@@ -159,7 +159,7 @@ export class Widget {
                 label = null;
             label = uiLabel || this.name;
         }
-        if (this.itemSchema.required === true) {
+        if (this.itemSchema.required === true && form.props.requiredFlag !== false) {
             if (label !== null)
                 label = React.createElement(React.Fragment, null,
                     label,

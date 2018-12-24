@@ -9,7 +9,7 @@ export interface FormProps {
 }
 
 @observer 
-export class ValidForm extends React.Component<FormProps, {}> {
+export class ValidForm1 extends React.Component<FormProps, {}> {
     componentDidMount() {
         this.props.formSchema.setInputValues();
     }

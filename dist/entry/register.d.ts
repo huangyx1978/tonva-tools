@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SubmitReturn } from '../ui';
+import { Context } from '../ui';
 import '../css/va-form.css';
 export interface Values {
     user: string;
@@ -10,8 +10,7 @@ export interface Values {
     email?: string;
 }
 export default class Register extends React.Component {
-    private schema;
-    onLoginSubmit(values: any): Promise<SubmitReturn | undefined>;
+    onSubmit(name: string, context: Context): Promise<string>;
     click(): void;
     render(): JSX.Element;
 }

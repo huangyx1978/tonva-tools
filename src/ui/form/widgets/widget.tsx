@@ -175,7 +175,7 @@ export abstract class Widget {
             if (uiLabel === null) label = null;
             label = uiLabel || this.name;
         }
-        if (this.itemSchema.required === true) {
+        if (this.itemSchema.required === true && form.props.requiredFlag !== false) {
             if (label !== null) label = <>{label}&nbsp;<span className="text-danger">*</span></>;
         }
         return form.FieldContainer(label, this.render());

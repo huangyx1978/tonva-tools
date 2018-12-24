@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { Page } from '../page';
-import { ValidForm } from './validForm';
-export class FormPage extends React.Component {
+import { ValidForm1 } from './validForm';
+export class FormPage1 extends React.Component {
     constructor(props) {
         super(props);
         this.toggle = this.toggle.bind(this);
@@ -27,7 +27,7 @@ export class FormPage extends React.Component {
     render() {
         let { back, header, rightMenu, footer, formSchema, children } = this.props;
         return React.createElement(Page, { header: header, back: back, right: this.renderMenu(rightMenu), footer: footer },
-            React.createElement(ValidForm, { formSchema: formSchema, children: children }));
+            React.createElement(ValidForm1, { formSchema: formSchema, children: children }));
     }
 }
 //# sourceMappingURL=formPage.js.map
