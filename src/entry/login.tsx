@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {nav, Page, Form, Schema, UiSchema, UiTextItem, UiPasswordItem, Context, UiButton, resLang} from '../ui';
+import {nav, Page, Form, Schema, UiSchema, UiTextItem, UiPasswordItem, Context, UiButton, resLang, StringSchema} from '../ui';
 import RegisterView from './register';
 import Forget from './forget';
 import userApi from './userApi';
@@ -8,8 +8,8 @@ import { LoginRes, loginRes } from './res';
 const logo = require('../img/logo.svg');
 
 const schema: Schema = [
-    {name: 'username', type: 'string', required: true},
-    {name: 'password', type: 'string', required: true},
+    {name: 'username', type: 'string', required: true, maxLength: 100} as StringSchema,
+    {name: 'password', type: 'string', required: true, maxLength: 100} as StringSchema,
     {name: 'login', type: 'submit'},
 ];
 
@@ -17,8 +17,8 @@ export default class Login extends React.Component<{withBack?:boolean}> {
     private res: LoginRes = resLang(loginRes);
     private uiSchema: UiSchema = {
         items: {
-            username: {placeholder: '用户名', maxLength: 100, label: '用户'} as UiTextItem, 
-            password: {widget: 'password', placeholder: '密码', maxLength: 100, label: '密码'} as UiPasswordItem,
+            username: {placeholder: '用户名', label: '用户'} as UiTextItem, 
+            password: {widget: 'password', placeholder: '密码', label: '密码'} as UiPasswordItem,
             login: {widget: 'button', className: 'btn btn-primary btn-block mt-3', label: '登录'} as UiButton,
         }
     }

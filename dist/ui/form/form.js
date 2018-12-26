@@ -26,34 +26,22 @@ export class Form extends React.Component {
             //return this.InnerFieldContainer(itemName, content, context);
             let { fieldLabelSize } = this.props;
             if (fieldLabelSize > 0) {
-                let labelCol = 'col-sm-' + fieldLabelSize;
+                let labelView;
+                if (label === null) {
+                    fieldLabelSize = 0;
+                }
+                else {
+                    labelView = React.createElement("label", { className: classNames('col-sm-' + fieldLabelSize, 'col-form-label') }, label);
+                }
                 let fieldCol = 'col-sm-' + (12 - fieldLabelSize);
                 return React.createElement("div", { className: "form-group row" },
-                    label === null ? null : React.createElement("label", { className: classNames(labelCol, 'col-form-label') }, label),
+                    labelView,
                     React.createElement("div", { className: fieldCol }, content));
             }
             return React.createElement("div", { className: "form-group" },
                 label === null ? null : React.createElement("label", { className: "col-form-label" }, label),
                 content);
         };
-        /*
-        private InnerFieldContainer = (itemName:string, content:JSX.Element, context:Context): JSX.Element => {
-            let itemSchema = context.getItemSchema(itemName);
-            let {required} = itemSchema;
-            let ui = context.getUiItem(itemName);
-            let label:string;
-            if (ui === undefined) {
-                label = itemName;
-            }
-            else {
-                label = ui.label || itemName;
-            }
-            return <div className="form-group">
-                <label>{label}&nbsp;{required===true&&<span className="text-danger">*</span>}</label>
-                {content}
-            </div>;
-        }
-        */
         this.DefaultFieldClass = undefined;
         this.DefaultArrContainer = (label, content) => {
             return React.createElement("div", null,
@@ -159,33 +147,6 @@ export class Form extends React.Component {
             beforeShow(this.formContext);
     }
     render() {
-        /*
-        let {children} = this.props;
-        let content:JSX.Element; //, inNode:boolean;
-        //let formContext: FormContext;
-        if (children !== undefined) {
-            //inNode = true;
-            content = <>{children}</>;
-            //this.formContext = formContext = new FormContext(this, inNode);
-        }
-        else {
-            let Templet: React.StatelessComponent|JSX.Element;
-            if (this.uiSchema !== undefined) {
-                Templet = this.uiSchema.Templet;
-            }
-            if (Templet !== undefined) {
-                // inNode = true;
-                content = typeof(Templet) === 'function'? <Templet /> : Templet;
-                //this.formContext = formContext = new FormContext(this, inNode);
-            }
-            else {
-                // inNode = false;
-                //this.formContext = formContext = new FormContext(this, inNode);
-                content = <>{this.schema.map((v, index) => {
-                    return <React.Fragment key={index}>{factory(this.formContext, v, children)}</React.Fragment>
-                })}</>;
-            }
-        }*/
         return React.createElement(ContextContainer.Provider, { value: this.formContext },
             React.createElement(this.formContext.renderErrors, null),
             this.Container(this.content));

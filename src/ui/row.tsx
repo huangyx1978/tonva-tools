@@ -1,7 +1,4 @@
 import * as React from 'react';
-import {ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem,
-    Row, Col, Button, Form, FormGroup, Label, Input, 
-    FormText, FormFeedback} from 'reactstrap';
 import * as classNames from 'classnames';
 
 export interface LabelRowProps {

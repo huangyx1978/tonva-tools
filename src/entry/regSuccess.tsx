@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Container, Button, Form } from 'reactstrap';
 import { nav, Page } from '../ui';
 import userApi from './userApi';
 import '../css/va-form.css';
@@ -30,20 +29,16 @@ export default class RegSuccess extends React.Component<Props, null> {
         const {user, pwd} = this.props;
         return (
         <Page header={false}>
-            <Container className="entry-form">
-                <Form>
+            <div className="container entry-form">
+                <form>
                     <span className="info">
                         用户 <strong>{user} </strong> 注册成功！
                     </span>
-                    <Button
-                        color="success"
-                        block={true}
-                        onClick={() => this.login()}
-                    >
+                    <button className="btn btn-success btn-block" onClick={() => this.login()}>
                         直接登录
-                    </Button>
-                </Form>
-            </Container>
+                    </button>
+                </form>
+            </div>
         </Page>
         );
     }

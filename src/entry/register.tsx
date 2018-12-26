@@ -1,7 +1,5 @@
 import * as React from 'react';
-//import { Container, Form, Button, Input } from 'reactstrap';
-//import * as classNames from 'classnames';
-import {nav, Page, /*FormSchema, SubmitReturn, ValidForm, */Schema, UiSchema, UiTextItem, UiPasswordItem, UiButton, Form, Context, resLang} from '../ui';
+import {nav, Page, Schema, UiSchema, UiTextItem, UiPasswordItem, UiButton, Form, Context, resLang, StringSchema} from '../ui';
 import LoginView from './login';
 import userApi from './userApi';
 import RegSuccess from './regSuccess';
@@ -19,9 +17,9 @@ export interface Values {
 }
 
 const schema: Schema = [
-    {name: 'user', type: 'string', required: true},
-    {name: 'pwd', type: 'string', required: true},
-    {name: 'rePwd', type: 'string', required: true},
+    {name: 'user', type: 'string', required: true, maxLength: 100} as StringSchema,
+    {name: 'pwd', type: 'string', required: true, maxLength: 100} as StringSchema,
+    {name: 'rePwd', type: 'string', required: true, maxLength: 100} as StringSchema,
     {name: 'register', type: 'submit'},
 ]
 
@@ -29,9 +27,9 @@ export default class Register extends React.Component {
     private res: RegisterRes = resLang(registerRes);
     private uiSchema: UiSchema = {
         items: {
-            user: {placeholder: '用户名', maxLength: 100, label: '用户名'} as UiTextItem, 
-            pwd: {widget: 'password', placeholder: '密码', maxLength: 100, label: '密码'} as UiPasswordItem,
-            rePwd: {widget: 'password', placeholder: '重复密码', maxLength: 100, label: '重复密码'} as UiPasswordItem,
+            user: {placeholder: '用户名', label: '用户名'} as UiTextItem, 
+            pwd: {widget: 'password', placeholder: '密码', label: '密码'} as UiPasswordItem,
+            rePwd: {widget: 'password', placeholder: '重复密码', label: '重复密码'} as UiPasswordItem,
             register: {widget: 'button', className: 'btn btn-primary btn-block mt-3', label: '注册新用户'} as UiButton,
         }
     }

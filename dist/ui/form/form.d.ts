@@ -18,7 +18,7 @@ export interface FormProps {
     RowContainer?: (content: JSX.Element) => JSX.Element;
     ButtonClass?: string;
     RowSeperator?: JSX.Element;
-    fieldLabelSize?: 2;
+    fieldLabelSize?: number;
     requiredFlag?: boolean;
     beforeShow?: (formContext: FormContext) => void;
     res?: FormRes;

@@ -22,6 +22,7 @@ import { appUrl, setMeInFrame, logoutUsqTokens } from '../net/appBridge';
 import { LocalData } from '../local';
 import { logoutApis, setCenterUrl, setCenterToken, WSChannel, getCenterUrl, centerDebugHost } from '../net';
 import 'font-awesome/css/font-awesome.min.css';
+import '../css/va-form.css';
 import '../css/va.css';
 import '../css/animation.css';
 import { wsBridge } from '../net/wsChannel';
@@ -437,6 +438,7 @@ export class Nav {
                 nav.push(React.createElement("div", null, "NavView has no prop onLogined"));
                 return;
             }
+            nav.clear();
             yield onLogined();
             console.log('logined: AppView shown');
         });

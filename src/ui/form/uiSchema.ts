@@ -38,7 +38,7 @@ export interface UiInputItem extends UiItem {
 
 export interface UiTextItem extends UiInputItem {
     widget: 'text';
-    maxLength?: number;
+    //maxLength?: number;
 }
 
 export interface UiTextAreaItem extends UiInputItem {
@@ -48,7 +48,7 @@ export interface UiTextAreaItem extends UiInputItem {
 
 export interface UiPasswordItem extends UiInputItem {
     widget: 'password';
-    maxLength?: number;
+    //maxLength?: number;
 }
 
 export interface UiRange extends UiInputItem {

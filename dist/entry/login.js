@@ -14,8 +14,8 @@ import userApi from './userApi';
 import { loginRes } from './res';
 const logo = require('../img/logo.svg');
 const schema = [
-    { name: 'username', type: 'string', required: true },
-    { name: 'password', type: 'string', required: true },
+    { name: 'username', type: 'string', required: true, maxLength: 100 },
+    { name: 'password', type: 'string', required: true, maxLength: 100 },
     { name: 'login', type: 'submit' },
 ];
 export default class Login extends React.Component {
@@ -24,8 +24,8 @@ export default class Login extends React.Component {
         this.res = resLang(loginRes);
         this.uiSchema = {
             items: {
-                username: { placeholder: '用户名', maxLength: 100, label: '用户' },
-                password: { widget: 'password', placeholder: '密码', maxLength: 100, label: '密码' },
+                username: { placeholder: '用户名', label: '用户' },
+                password: { widget: 'password', placeholder: '密码', label: '密码' },
                 login: { widget: 'button', className: 'btn btn-primary btn-block mt-3', label: '登录' },
             }
         };

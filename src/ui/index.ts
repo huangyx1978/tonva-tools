@@ -10,3 +10,4 @@ export * from './row';
 export * from './VM';
 export * from './form';
 export * from './res';
+export * from './tabs';

@@ -26,7 +26,7 @@ export interface FormProps {
     //ArrFieldContainer?: (itemName:string, content:JSX.Element, context:RowContext) => JSX.Element;
     ButtonClass?: string;
     RowSeperator?: JSX.Element;
-    fieldLabelSize?: 2;                 // col-sm-2 for label
+    fieldLabelSize?: number;            // col-sm-2 for label
     requiredFlag?: boolean;             // default=true
     beforeShow?: (formContext:FormContext) => void;
     res?: FormRes;
@@ -140,34 +140,6 @@ export class Form extends React.Component<FormProps> {
     }
 
     render() {
-        /*
-        let {children} = this.props;
-        let content:JSX.Element; //, inNode:boolean;
-        //let formContext: FormContext;
-        if (children !== undefined) {
-            //inNode = true;
-            content = <>{children}</>;
-            //this.formContext = formContext = new FormContext(this, inNode);
-        }
-        else {
-            let Templet: React.StatelessComponent|JSX.Element;
-            if (this.uiSchema !== undefined) {
-                Templet = this.uiSchema.Templet;
-            }
-            if (Templet !== undefined) {
-                // inNode = true;
-                content = typeof(Templet) === 'function'? <Templet /> : Templet;
-                //this.formContext = formContext = new FormContext(this, inNode);
-            }
-            else {
-                // inNode = false;
-                //this.formContext = formContext = new FormContext(this, inNode);
-                content = <>{this.schema.map((v, index) => {
-                    return <React.Fragment key={index}>{factory(this.formContext, v, children)}</React.Fragment>
-                })}</>;
-            }
-        }*/
-
         return <ContextContainer.Provider value={this.formContext}>
             <this.formContext.renderErrors />
             {this.Container(this.content)}
@@ -186,11 +158,18 @@ export class Form extends React.Component<FormProps> {
     protected DefaultFieldContainer = (label:string|JSX.Element, content:JSX.Element): JSX.Element => {
         //return this.InnerFieldContainer(itemName, content, context);
         let {fieldLabelSize} = this.props;
+
         if (fieldLabelSize > 0) {
-            let labelCol = 'col-sm-' + fieldLabelSize;
+            let labelView:any;
+            if (label === null) {
+                fieldLabelSize = 0;
+            }
+            else {
+                labelView = <label className={classNames('col-sm-' + fieldLabelSize, 'col-form-label')}>{label}</label>
+            }
             let fieldCol = 'col-sm-' + (12 - fieldLabelSize);
             return <div className="form-group row">
-                {label===null? null:<label className={classNames(labelCol, 'col-form-label')}>{label}</label>}
+                {labelView}
                 <div className={fieldCol}>{content}</div>
             </div>;
         }
@@ -199,24 +178,6 @@ export class Form extends React.Component<FormProps> {
             {content}
         </div>;
     }
-    /*
-    private InnerFieldContainer = (itemName:string, content:JSX.Element, context:Context): JSX.Element => {
-        let itemSchema = context.getItemSchema(itemName);
-        let {required} = itemSchema;
-        let ui = context.getUiItem(itemName);
-        let label:string;
-        if (ui === undefined) {
-            label = itemName;
-        }
-        else {
-            label = ui.label || itemName;
-        }
-        return <div className="form-group">
-            <label>{label}&nbsp;{required===true&&<span className="text-danger">*</span>}</label>
-            {content}
-        </div>;
-    }
-    */
     protected DefaultFieldClass:string = undefined;
     protected DefaultArrContainer = (label:any, content:JSX.Element): JSX.Element => {
         return <div>
