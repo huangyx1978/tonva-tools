@@ -8,6 +8,18 @@ import * as React from 'react';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';
 import classNames from 'classnames';
+class Tab {
+    get content() {
+        if (this.selected !== true)
+            return this._content;
+        if (this._content !== undefined)
+            return this._content;
+        return this._content = this.contentBuilder();
+    }
+}
+__decorate([
+    observable
+], Tab.prototype, "selected", void 0);
 export const TabCaptionComponent = (label, icon, color) => React.createElement("div", { className: 'd-flex justify-content-center align-items-center flex-column cursor-pointer ' + color },
     React.createElement("div", null,
         React.createElement("i", { className: 'fa fa-lg fa-' + icon })),
@@ -35,16 +47,16 @@ let Tabs = class Tabs extends React.Component {
                 break;
         }
         this.tabs.push(...tabs.map(v => {
-            return {
-                name: v.name,
-                selected: false,
-                caption: v.caption,
-                content: v.content,
-                notify: v.notify,
-            };
+            let tab = new Tab();
+            tab.name = v.name;
+            tab.selected = false;
+            tab.caption = v.caption;
+            tab.contentBuilder = v.content;
+            tab.notify = v.notify;
+            return tab;
         }));
         this.tabBack = tabBack || 'bg-light';
-        this.contentBack = contentBack || 'bg-white';
+        this.contentBack = contentBack;
         this.sep = sep || 'border-top border-gray';
         if (selected !== undefined) {
             this.selectedTab = this.tabs.find(v => v.name === selected);
@@ -59,7 +71,7 @@ let Tabs = class Tabs extends React.Component {
                 let style = {
                     display: v.selected === true ? undefined : 'none'
                 };
-                return React.createElement("div", { key: index, style: style }, v.content());
+                return React.createElement("div", { key: index, style: style }, v.content);
             })),
             React.createElement("div", { className: classNames(this.tabBack, this.sep), style: { height: this.size } }, this.tabs.map((v, index) => {
                 let { selected, caption, notify } = v;

@@ -5,7 +5,7 @@ import { FieldProps } from '../field';
 import { Context } from '../context';
 import { ItemSchema } from '../schema';
 import { Rule, RuleRequired, RuleCustom, FieldRule } from '../rules';
-import { computed, observable } from 'mobx';
+import { computed, observable, reaction } from 'mobx';
 
 export abstract class Widget {
     protected name: string;
@@ -194,8 +194,14 @@ export abstract class Widget {
     protected renderErrors() {
         let errorList:string[] = [...this.errors, ...this.contextErrors];
         if (errorList.length === 0) return null;
-        return errorList.map(err => <span key={err} className="text-danger inline-block my-1 ml-3">
-            <i className="fa fa-exclamation-circle" /> &nbsp;{err}
-        </span>)
+        let {inNode} = this.context;
+        let tag = inNode === true? 'span' : 'div';
+        return errorList.map(err => React.createElement(tag, 
+            {
+                key: err, 
+                className: 'text-danger d-inline-block my-2 ml-3'
+            },
+            <><i className="fa fa-exclamation-circle" /> &nbsp;{err}</>
+        ));
     }
 }

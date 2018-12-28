@@ -11,4 +11,5 @@ export * from './VM';
 export * from './form';
 export * from './res';
 export * from './tabs';
+export * from './loading';
 //# sourceMappingURL=index.js.map

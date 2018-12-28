@@ -46,5 +46,8 @@ export declare abstract class Widget {
     protected abstract render(): JSX.Element;
     renderContainer(): JSX.Element;
     protected renderTemplet(): JSX.Element | undefined;
-    protected renderErrors(): JSX.Element[];
+    protected renderErrors(): React.ReactElement<{
+        key: string;
+        className: string;
+    }>[];
 }

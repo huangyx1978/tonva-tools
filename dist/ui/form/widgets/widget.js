@@ -183,10 +183,15 @@ export class Widget {
         let errorList = [...this.errors, ...this.contextErrors];
         if (errorList.length === 0)
             return null;
-        return errorList.map(err => React.createElement("span", { key: err, className: "text-danger inline-block my-1 ml-3" },
+        let { inNode } = this.context;
+        let tag = inNode === true ? 'span' : 'div';
+        return errorList.map(err => React.createElement(tag, {
+            key: err,
+            className: 'text-danger d-inline-block my-2 ml-3'
+        }, React.createElement(React.Fragment, null,
             React.createElement("i", { className: "fa fa-exclamation-circle" }),
             " \u00A0",
-            err));
+            err)));
     }
 }
 __decorate([

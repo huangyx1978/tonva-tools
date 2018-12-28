@@ -28,6 +28,7 @@ import '../css/animation.css';
 import { wsBridge } from '../net/wsChannel';
 import { uid } from '../uid';
 import { resOptions } from './res';
+import { Loading } from './loading';
 const regEx = new RegExp('Android|webOS|iPhone|iPad|' +
     'BlackBerry|Windows Phone|' +
     'Opera Mini|IEMobile|Mobile', 'i');
@@ -388,8 +389,7 @@ export class Nav {
     start() {
         return __awaiter(this, void 0, void 0, function* () {
             nav.push(React.createElement(Page, { header: false },
-                React.createElement("div", { style: { height: '100%' }, className: "d-flex flex-fill align-items-center justify-content-center" },
-                    React.createElement("div", { className: "d-flex align-items-center justify-content-center slide text-info", style: { width: '5em', height: '2em' } }, "\u52A0\u8F7D\u4E2D..."))));
+                React.createElement(Loading, null)));
             let { url, ws } = yield loadCenterUrl();
             setCenterUrl(url);
             this.wsHost = ws;

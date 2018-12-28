@@ -16,6 +16,7 @@ import '../css/animation.css';
 import { WsBase, wsBridge } from '../net/wsChannel';
 import { uid } from '../uid';
 import { resOptions } from './res';
+import { Loading } from './loading';
 
 const regEx = new RegExp('Android|webOS|iPhone|iPad|' +
     'BlackBerry|Windows Phone|'  +
@@ -424,13 +425,7 @@ export class Nav {
 
     private isInFrame:boolean;
     async start() {
-        nav.push(<Page header={false}>
-            <div style={{height:'100%'}} className="d-flex flex-fill align-items-center justify-content-center">
-            <div className="d-flex align-items-center justify-content-center slide text-info" style={{width:'5em', height:'2em'}}>
-                加载中...
-            </div>
-            </div>
-        </Page>);
+        nav.push(<Page header={false}><Loading /></Page>);
 
         let {url, ws} = await loadCenterUrl();
         setCenterUrl(url);
