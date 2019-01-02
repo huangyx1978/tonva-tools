@@ -23,7 +23,7 @@ export class Data {
 export class LocalData {
     constructor() {
         this.user = new Data('user');
-        this.device = new Data('device');
+        this.guest = new Data('guest');
         this.homeTabCur = new Data('homeTabCur');
     }
     logoutClear() {

@@ -35,6 +35,7 @@ export declare class Page extends React.Component<PageProps, PageState> {
     constructor(props: PageProps);
     componentDidMount(): Promise<void>;
     private onTabClick;
+    private onTouchStart;
     private renderTabs;
     private renderSingle;
     render(): JSX.Element;

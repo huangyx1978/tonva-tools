@@ -62,9 +62,17 @@ export class Controller {
     }
     beforeStart() {
         return __awaiter(this, void 0, void 0, function* () {
+            /*
+            console.log('this.receiveHandlerId = nav.registerReceiveHandler(this.onMessageReceive);');
             this.receiveHandlerId = nav.registerReceiveHandler(this.onMessageReceive);
+            console.log('return true');
+            */
+            this.registerReceiveHandler();
             return true;
         });
+    }
+    registerReceiveHandler() {
+        this.receiveHandlerId = nav.registerReceiveHandler(this.onMessageReceive);
     }
     start(param) {
         return __awaiter(this, void 0, void 0, function* () {

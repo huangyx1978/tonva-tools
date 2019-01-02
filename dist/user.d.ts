@@ -1,9 +1,13 @@
-export interface User {
+export interface Guest {
+    id: number;
+    guest: number;
+    token: string;
+}
+export interface User extends Guest {
     id: number;
     name: string;
-    token: string;
-    device: string;
     nick?: string;
     icon?: string;
 }
-export declare function decodeToken(token: string): User;
+export declare function decodeUserToken(token: string): User;
+export declare function decodeGuestToken(token: string): Guest;

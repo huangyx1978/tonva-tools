@@ -68,9 +68,18 @@ export abstract class Controller {
         await this.onMessage(message);
     }
     protected async beforeStart():Promise<boolean> {
+        /*
+        console.log('this.receiveHandlerId = nav.registerReceiveHandler(this.onMessageReceive);');
         this.receiveHandlerId = nav.registerReceiveHandler(this.onMessageReceive);
+        console.log('return true');
+        */
+        this.registerReceiveHandler();
         return true;
     }
+    protected registerReceiveHandler() {
+        this.receiveHandlerId = nav.registerReceiveHandler(this.onMessageReceive);
+    }
+
     protected abstract internalStart(param?:any):Promise<void>;
     async start(param?:any):Promise<void> {
         this.disposer = this.dispose.bind(this);

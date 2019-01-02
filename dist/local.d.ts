@@ -1,4 +1,4 @@
-import { User } from './user';
+import { User, Guest } from './user';
 export declare const isDevelopment: boolean;
 export interface ClearableData {
     clear(): void;
@@ -13,7 +13,7 @@ export declare class Data<T> implements ClearableData {
 }
 export declare class LocalData {
     user: Data<User>;
-    device: Data<string>;
+    guest: Data<Guest>;
     homeTabCur: Data<number>;
     logoutClear(): void;
 }

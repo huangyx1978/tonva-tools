@@ -1,20 +1,19 @@
 import * as React from 'react';
 import {observable} from 'mobx';
 import {fetchLocalCheck} from '../net/fetchLocalCheck';
-import {User, decodeToken} from '../user';
+import {User, decodeUserToken, Guest} from '../user';
 import {Page} from './page';
 import {netToken} from '../net/netToken';
 import FetchErrorView from './fetchErrorView';
 import {FetchError} from '../fetchError';
 import {appUrl, setMeInFrame, isBridged, logoutUsqTokens} from '../net/appBridge';
 import {LocalData} from '../local';
-import {logoutApis, setCenterUrl, setCenterToken, WSChannel, getCenterUrl, centerDebugHost} from '../net';
+import {guestApi, logoutApis, setCenterUrl, setCenterToken, WSChannel, getCenterUrl, centerDebugHost} from '../net';
 import 'font-awesome/css/font-awesome.min.css';
 import '../css/va-form.css';
 import '../css/va.css';
 import '../css/animation.css';
 import { WsBase, wsBridge } from '../net/wsChannel';
-import { uid } from '../uid';
 import { resOptions } from './res';
 import { Loading } from './loading';
 
@@ -28,12 +27,13 @@ export const mobileHeaderStyle = isMobile? {
 } : undefined;
 
 const logo = require('../img/logo.svg');
+let logMark: number;
 const logs:string[] = [];
 
 export interface Props //extends React.Props<Nav>
 {
     //view: JSX.Element | (()=>JSX.Element);
-    start?: ()=>Promise<void>;
+    //start?: ()=>Promise<void>;
     onLogined: ()=>Promise<void>;
     notLogined?: ()=>Promise<void>;
 };
@@ -75,13 +75,15 @@ export class NavView extends React.Component<Props, State> {
     async componentDidMount()
     {
         nav.set(this);
+        /*
         let start = this.props.start;
         if (start !== undefined) {
             await start();
         }
         else {
+        */
             await nav.start();
-        }
+        //}
     }
 
     get level(): number {
@@ -375,33 +377,27 @@ async function loadCenterUrl():Promise<{url:string, ws:string}> {
 
 export class Nav {
     private nav:NavView;
-    //private loginView: JSX.Element;
     private ws: WsBase;
     private wsHost: string;
-    local: LocalData = new LocalData();
+    private local: LocalData = new LocalData();
     @observable user: User = undefined; // = {id:undefined, name:undefined, token:undefined};
     language: string;
     culture: string;
 
     constructor() {
-        /*
-        let language = navigator.languages && navigator.languages[0] || // Chrome / Firefox
-               navigator.language; // ||   // All browsers
-               //navigator.userLanguage; // IE <= 10
-        if (!language) {
-            this.language = 'zh';
-            this.culture = 'CN';
-        }
-        let parts = language.split('-');
-        this.language = parts[0];
-        if (parts.length > 1) this.culture = parts[1];
-        */
-
         let {lang, district} = resOptions;
         this.language = lang;
         this.culture = district;
     }
-    
+
+    get guest(): number {
+        let guest = this.local.guest;
+        if (guest === undefined) return 0;
+        let g = guest.get();
+        if (g === undefined) return 0;
+        return g.guest;
+    }
+
     set(nav:NavView) {
         //this.logo = logo;
         this.nav = nav;
@@ -430,6 +426,12 @@ export class Nav {
         let {url, ws} = await loadCenterUrl();
         setCenterUrl(url);
         this.wsHost = ws;
+        
+        let guest:Guest = this.local.guest.get();
+        if (guest === undefined) {
+            guest = await guestApi.guest();
+        }
+        nav.setGuest(guest);
 
         let hash = document.location.hash;
         // document.title = document.location.origin;
@@ -449,14 +451,16 @@ export class Nav {
                 return;
             }
         }
-        let device: string = this.local.device.get();
+        //let device: string = this.local.device.get();
         let user: User = this.local.user.get();
+        /*
         if (device === undefined) {
             device = uid();
             this.local.device.set(device);
             user = undefined;
         }
-        if (user === undefined || user.device !== device) {
+        */
+        if (user === undefined/* || user.guest !== device*/) {
             let {notLogined} = this.nav.props;
             if (notLogined !== undefined) {
                 await notLogined();
@@ -479,6 +483,11 @@ export class Nav {
         nav.clear();
         await onLogined();
         console.log('logined: AppView shown');
+    }
+
+    setGuest(guest: Guest) {
+        this.local.guest.set(guest);
+        netToken.set(guest.token);
     }
 
     async logined(user: User) {
@@ -512,7 +521,8 @@ export class Nav {
         this.user = undefined; //{} as User;
         logoutApis();
         logoutUsqTokens();
-        setCenterToken(undefined);
+        let guest = this.local.guest.get();
+        setCenterToken(guest && guest.token);
         this.ws = undefined;
         if (notShowLogin === true) return;
         await this.showLogin();
@@ -586,6 +596,14 @@ export class Nav {
     get logs() {return logs};
     log(msg:string) {
         logs.push(msg);
-    } 
+    }
+    logMark() {
+        let date = new Date();
+        logMark = date.getTime();
+        logs.push('log-mark: ' + date.toTimeString());
+    }
+    logStep(step:string) {
+        logs.push(step + ': ' + (new Date().getTime() - logMark));
+    }
 }
 export const nav: Nav = new Nav();

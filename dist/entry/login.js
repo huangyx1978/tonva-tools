@@ -53,12 +53,12 @@ export default class Login extends React.Component {
             let un = values['username'];
             let pwd = values['password'];
             if (pwd === undefined) {
-                alert('something wrong, pwd is undefined');
-                return;
+                return 'something wrong, pwd is undefined';
             }
             let user = yield userApi.login({
                 user: un,
-                pwd: pwd
+                pwd: pwd,
+                guest: nav.guest,
             });
             if (user === undefined)
                 return '用户名或密码错！';

@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { User } from '../user';
+import { User, Guest } from '../user';
 import { FetchError } from '../fetchError';
-import { LocalData } from '../local';
 import 'font-awesome/css/font-awesome.min.css';
 import '../css/va-form.css';
 import '../css/va.css';
@@ -10,7 +9,6 @@ export declare const mobileHeaderStyle: {
     minHeight: string;
 };
 export interface Props {
-    start?: () => Promise<void>;
     onLogined: () => Promise<void>;
     notLogined?: () => Promise<void>;
 }
@@ -61,11 +59,12 @@ export declare class Nav {
     private nav;
     private ws;
     private wsHost;
-    local: LocalData;
+    private local;
     user: User;
     language: string;
     culture: string;
     constructor();
+    readonly guest: number;
     set(nav: NavView): void;
     registerReceiveHandler(handler: (message: any) => Promise<void>): number;
     unregisterReceiveHandler(handlerId: number): void;
@@ -73,6 +72,7 @@ export declare class Nav {
     private isInFrame;
     start(): Promise<void>;
     showAppView(): Promise<void>;
+    setGuest(guest: Guest): void;
     logined(user: User): Promise<void>;
     showLogin(withBack?: boolean): Promise<void>;
     logout(notShowLogin?: boolean): Promise<void>;
@@ -95,5 +95,7 @@ export declare class Nav {
     navToSite(url: string): void;
     readonly logs: string[];
     log(msg: string): void;
+    logMark(): void;
+    logStep(step: string): void;
 }
 export declare const nav: Nav;

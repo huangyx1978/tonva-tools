@@ -7,19 +7,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { CenterApi } from '../net';
-import { decodeToken } from '../user';
-import { nav } from '../ui';
+import { decodeUserToken } from '../user';
+//import { nav } from '../ui';
 export class UserApi extends CenterApi {
     login(params) {
         return __awaiter(this, void 0, void 0, function* () {
-            params.device = nav.local.device.get();
+            //(params as any).device = nav.local.device.get();
             let ret = yield this.get('login', params);
             switch (typeof ret) {
                 default: return;
-                case 'string': return decodeToken(ret);
+                case 'string': return decodeUserToken(ret);
                 case 'object':
                     let token = ret.token;
-                    let user = decodeToken(token);
+                    let user = decodeUserToken(token);
                     let { nick, icon } = ret;
                     if (nick)
                         user.nick = nick;

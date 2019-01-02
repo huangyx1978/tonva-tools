@@ -20,13 +20,12 @@ import { netToken } from '../net/netToken';
 import FetchErrorView from './fetchErrorView';
 import { appUrl, setMeInFrame, logoutUsqTokens } from '../net/appBridge';
 import { LocalData } from '../local';
-import { logoutApis, setCenterUrl, setCenterToken, WSChannel, getCenterUrl, centerDebugHost } from '../net';
+import { guestApi, logoutApis, setCenterUrl, setCenterToken, WSChannel, getCenterUrl, centerDebugHost } from '../net';
 import 'font-awesome/css/font-awesome.min.css';
 import '../css/va-form.css';
 import '../css/va.css';
 import '../css/animation.css';
 import { wsBridge } from '../net/wsChannel';
-import { uid } from '../uid';
 import { resOptions } from './res';
 import { Loading } from './loading';
 const regEx = new RegExp('Android|webOS|iPhone|iPad|' +
@@ -37,6 +36,7 @@ export const mobileHeaderStyle = isMobile ? {
     minHeight: '3em'
 } : undefined;
 const logo = require('../img/logo.svg');
+let logMark;
 const logs = [];
 ;
 let stackKey = 1;
@@ -65,13 +65,15 @@ export class NavView extends React.Component {
     componentDidMount() {
         return __awaiter(this, void 0, void 0, function* () {
             nav.set(this);
+            /*
             let start = this.props.start;
             if (start !== undefined) {
-                yield start();
+                await start();
             }
             else {
-                yield nav.start();
-            }
+            */
+            yield nav.start();
+            //}
         });
     }
     get level() {
@@ -345,23 +347,20 @@ function loadCenterUrl() {
 }
 export class Nav {
     constructor() {
-        /*
-        let language = navigator.languages && navigator.languages[0] || // Chrome / Firefox
-               navigator.language; // ||   // All browsers
-               //navigator.userLanguage; // IE <= 10
-        if (!language) {
-            this.language = 'zh';
-            this.culture = 'CN';
-        }
-        let parts = language.split('-');
-        this.language = parts[0];
-        if (parts.length > 1) this.culture = parts[1];
-        */
         this.local = new LocalData();
         this.user = undefined; // = {id:undefined, name:undefined, token:undefined};
         let { lang, district } = resOptions;
         this.language = lang;
         this.culture = district;
+    }
+    get guest() {
+        let guest = this.local.guest;
+        if (guest === undefined)
+            return 0;
+        let g = guest.get();
+        if (g === undefined)
+            return 0;
+        return g.guest;
     }
     set(nav) {
         //this.logo = logo;
@@ -393,6 +392,11 @@ export class Nav {
             let { url, ws } = yield loadCenterUrl();
             setCenterUrl(url);
             this.wsHost = ws;
+            let guest = this.local.guest.get();
+            if (guest === undefined) {
+                guest = yield guestApi.guest();
+            }
+            nav.setGuest(guest);
             let hash = document.location.hash;
             // document.title = document.location.origin;
             console.log("url=%s hash=%s", document.location.origin, hash);
@@ -411,14 +415,16 @@ export class Nav {
                     return;
                 }
             }
-            let device = this.local.device.get();
+            //let device: string = this.local.device.get();
             let user = this.local.user.get();
+            /*
             if (device === undefined) {
                 device = uid();
                 this.local.device.set(device);
                 user = undefined;
             }
-            if (user === undefined || user.device !== device) {
+            */
+            if (user === undefined /* || user.guest !== device*/) {
                 let { notLogined } = this.nav.props;
                 if (notLogined !== undefined) {
                     yield notLogined();
@@ -442,6 +448,10 @@ export class Nav {
             yield onLogined();
             console.log('logined: AppView shown');
         });
+    }
+    setGuest(guest) {
+        this.local.guest.set(guest);
+        netToken.set(guest.token);
     }
     logined(user) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -476,7 +486,8 @@ export class Nav {
             this.user = undefined; //{} as User;
             logoutApis();
             logoutUsqTokens();
-            setCenterToken(undefined);
+            let guest = this.local.guest.get();
+            setCenterToken(guest && guest.token);
             this.ws = undefined;
             if (notShowLogin === true)
                 return;
@@ -552,6 +563,14 @@ export class Nav {
     ;
     log(msg) {
         logs.push(msg);
+    }
+    logMark() {
+        let date = new Date();
+        logMark = date.getTime();
+        logs.push('log-mark: ' + date.toTimeString());
+    }
+    logStep(step) {
+        logs.push(step + ': ' + (new Date().getTime() - logMark));
     }
 }
 __decorate([

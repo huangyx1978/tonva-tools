@@ -15,7 +15,7 @@ export default class RegSuccess extends React.Component<Props, null> {
     login() {
         const {user, pwd} = this.props;
         userApi
-            .login({user: user, pwd: pwd})
+            .login({user: user, pwd: pwd, guest: nav.guest})
             .then(async retUser => {
                 if (retUser === undefined) {
                     this.failed();

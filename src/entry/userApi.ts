@@ -1,17 +1,17 @@
 import {CenterApi} from '../net';
-import {User, decodeToken} from '../user';
-import { nav } from '../ui';
+import {User, decodeUserToken} from '../user';
+//import { nav } from '../ui';
 
 export class UserApi extends CenterApi {
-    async login(params: {user: string, pwd: string}): Promise<any> {
-        (params as any).device = nav.local.device.get();
+    async login(params: {user: string, pwd: string, guest: number}): Promise<any> {
+        //(params as any).device = nav.local.device.get();
         let ret = await this.get('login', params);
         switch (typeof ret) {
             default: return;
-            case 'string': return decodeToken(ret);
+            case 'string': return decodeUserToken(ret);
             case 'object':
                 let token = ret.token;
-                let user = decodeToken(token);
+                let user = decodeUserToken(token);
                 let {nick, icon} = ret;
                 if (nick) user.nick = nick;
                 if (icon) user.icon = icon;

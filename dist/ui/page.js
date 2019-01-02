@@ -133,6 +133,8 @@ let Page = class Page extends React.Component {
             });
         });
     }
+    onTouchStart(evt) {
+    }
     renderTabs(footer) {
         const { header, back, right, keepHeader } = this.props;
         let cur = this.state.cur;
@@ -179,7 +181,7 @@ let Page = class Page extends React.Component {
         let titleBar;
         if (header !== false)
             titleBar = React.createElement(TitleBar, { back: back, center: header, right: right, logout: this.props.logout });
-        return (React.createElement("article", { className: 'page-container' },
+        return (React.createElement("article", { className: 'page-container', onTouchStart: this.onTouchStart },
             titleBar,
             React.createElement("section", null,
                 React.createElement(ScrollView, { onScroll: onScroll, onScrollTop: onScrollTop, onScrollBottom: onScrollBottom }, children)),

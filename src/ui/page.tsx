@@ -153,13 +153,16 @@ export class Page extends React.Component<PageProps, PageState> {
         });
     }
 
+    private onTouchStart(evt: React.TouchEvent<HTMLElement>) {
+    }
+
     private renderTabs(footer: JSX.Element) {
         const {header, back, right, keepHeader} = this.props;
         let cur = this.state.cur;
         let tabs = <div>{
                 this.state.tabs.map((tab, index) => {
                     const {icon, isSelected, title, redDot} = tab;
-                    let img, redDotView, cn;
+                    let img:any, redDotView:any, cn:any;
                     if (icon !== undefined) img = <img src={icon} />;
                     if (redDot !== undefined) {
                         let v = redDot.get();
@@ -223,7 +226,7 @@ export class Page extends React.Component<PageProps, PageState> {
                 logout={this.props.logout}
             />;
         return (
-            <article className='page-container'>
+            <article className='page-container' onTouchStart={this.onTouchStart}>
                 {titleBar}
                 <section>
                     <ScrollView

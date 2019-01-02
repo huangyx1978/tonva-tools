@@ -22,6 +22,7 @@ export declare abstract class Controller {
     protected onMessage(message: any): Promise<void>;
     private onMessageReceive;
     protected beforeStart(): Promise<boolean>;
+    protected registerReceiveHandler(): void;
     protected abstract internalStart(param?: any): Promise<void>;
     start(param?: any): Promise<void>;
     readonly isCalling: boolean;
