@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { User, Guest } from '../user';
+import { User, Guest, UserInNav } from '../user';
 import { FetchError } from '../fetchError';
 import 'font-awesome/css/font-awesome.min.css';
 import '../css/va-form.css';
@@ -60,7 +60,7 @@ export declare class Nav {
     private ws;
     private wsHost;
     private local;
-    user: User;
+    user: UserInNav;
     language: string;
     culture: string;
     constructor();
@@ -69,6 +69,7 @@ export declare class Nav {
     registerReceiveHandler(handler: (message: any) => Promise<void>): number;
     unregisterReceiveHandler(handlerId: number): void;
     onReceive(msg: any): Promise<void>;
+    private getUnitName;
     private loadUnit;
     private isInFrame;
     start(): Promise<void>;

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {observable} from 'mobx';
 import {fetchLocalCheck} from '../net/fetchLocalCheck';
-import {User, decodeUserToken, Guest} from '../user';
+import {User, decodeUserToken, Guest, UserInNav} from '../user';
 import {Page} from './page';
 import {netToken} from '../net/netToken';
 import FetchErrorView from './fetchErrorView';
@@ -380,7 +380,7 @@ export class Nav {
     private ws: WsBase;
     private wsHost: string;
     private local: LocalData = new LocalData();
-    @observable user: User = undefined; // = {id:undefined, name:undefined, token:undefined};
+    @observable user: UserInNav = undefined;
     language: string;
     culture: string;
 
@@ -419,22 +419,30 @@ export class Nav {
         await this.ws.receive(msg);
     }
 
-    private async loadUnit() {
-        async function getUnitName() {
+    private async getUnitName() {
+        try {
             let unitRes = await fetch('unit.json', {});
-            let a = await unitRes.json();
-            return a.unit;
+            //if (unitRes)
+            let res = await unitRes.json();
+            return res.unit;
         }
+        catch (err) {
+            this.local.unit.clear();
+            return;
+        }
+    }
+
+    private async loadUnit() {
         let unitName:string;
         let unit = this.local.unit.get();
         if (unit !== undefined) {
             if (isDevelopment !== true) return unit.id;
-            unitName = await getUnitName();
+            unitName = await this.getUnitName();
             if (unitName === undefined) return;
             if (unit.name === unitName) return unit.id;
         }
         else {
-            unitName = await getUnitName();
+            unitName = await this.getUnitName();
             if (unitName === undefined) return;
         }
         let unitId = await guestApi.unitFromName(unitName);
@@ -481,13 +489,6 @@ export class Nav {
         }
         //let device: string = this.local.device.get();
         let user: User = this.local.user.get();
-        /*
-        if (device === undefined) {
-            device = uid();
-            this.local.device.set(device);
-            user = undefined;
-        }
-        */
         if (user === undefined/* || user.guest !== device*/) {
             let {notLogined} = this.nav.props;
             if (notLogined !== undefined) {
@@ -525,7 +526,7 @@ export class Nav {
         console.log("logined: %s", JSON.stringify(user));
         this.local.user.set(user);
         netToken.set(user.token);
-        this.user = user;
+        this.user = new UserInNav(user);
         console.log('ws.connect() in app main frame');
         await this.showAppView();
     }

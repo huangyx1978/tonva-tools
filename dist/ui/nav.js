@@ -15,6 +15,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import * as React from 'react';
 import { observable } from 'mobx';
 import { fetchLocalCheck } from '../net/fetchLocalCheck';
+import { UserInNav } from '../user';
 import { Page } from './page';
 import { netToken } from '../net/netToken';
 import FetchErrorView from './fetchErrorView';
@@ -348,7 +349,7 @@ function loadCenterUrl() {
 export class Nav {
     constructor() {
         this.local = new LocalData();
-        this.user = undefined; // = {id:undefined, name:undefined, token:undefined};
+        this.user = undefined;
         let { lang, district } = resOptions;
         this.language = lang;
         this.culture = district;
@@ -385,28 +386,35 @@ export class Nav {
             yield this.ws.receive(msg);
         });
     }
+    getUnitName() {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                let unitRes = yield fetch('unit.json', {});
+                //if (unitRes)
+                let res = yield unitRes.json();
+                return res.unit;
+            }
+            catch (err) {
+                this.local.unit.clear();
+                return;
+            }
+        });
+    }
     loadUnit() {
         return __awaiter(this, void 0, void 0, function* () {
-            function getUnitName() {
-                return __awaiter(this, void 0, void 0, function* () {
-                    let unitRes = yield fetch('unit.json', {});
-                    let a = yield unitRes.json();
-                    return a.unit;
-                });
-            }
             let unitName;
             let unit = this.local.unit.get();
             if (unit !== undefined) {
                 if (isDevelopment !== true)
                     return unit.id;
-                unitName = yield getUnitName();
+                unitName = yield this.getUnitName();
                 if (unitName === undefined)
                     return;
                 if (unit.name === unitName)
                     return unit.id;
             }
             else {
-                unitName = yield getUnitName();
+                unitName = yield this.getUnitName();
                 if (unitName === undefined)
                     return;
             }
@@ -451,13 +459,6 @@ export class Nav {
             }
             //let device: string = this.local.device.get();
             let user = this.local.user.get();
-            /*
-            if (device === undefined) {
-                device = uid();
-                this.local.device.set(device);
-                user = undefined;
-            }
-            */
             if (user === undefined /* || user.guest !== device*/) {
                 let { notLogined } = this.nav.props;
                 if (notLogined !== undefined) {
@@ -494,7 +495,7 @@ export class Nav {
             console.log("logined: %s", JSON.stringify(user));
             this.local.user.set(user);
             netToken.set(user.token);
-            this.user = user;
+            this.user = new UserInNav(user);
             console.log('ws.connect() in app main frame');
             yield this.showAppView();
         });
