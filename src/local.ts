@@ -1,4 +1,4 @@
-import {User, Guest} from './user';
+import {User, Guest, Unit} from './user';
 
 export const isDevelopment = process.env.NODE_ENV === 'development';
 
@@ -29,6 +29,7 @@ export class Data<T> implements ClearableData {
 export class LocalData {
     user = new Data<User>('user');
     guest = new Data<Guest>('guest');
+    unit = new Data<Unit>('unit');
     homeTabCur = new Data<number>('homeTabCur');
 
     logoutClear() {

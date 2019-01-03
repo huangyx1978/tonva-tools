@@ -69,6 +69,7 @@ export declare class Nav {
     registerReceiveHandler(handler: (message: any) => Promise<void>): number;
     unregisterReceiveHandler(handlerId: number): void;
     onReceive(msg: any): Promise<void>;
+    private loadUnit;
     private isInFrame;
     start(): Promise<void>;
     showAppView(): Promise<void>;

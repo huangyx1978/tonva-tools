@@ -7,8 +7,8 @@ import {netToken} from '../net/netToken';
 import FetchErrorView from './fetchErrorView';
 import {FetchError} from '../fetchError';
 import {appUrl, setMeInFrame, isBridged, logoutUsqTokens} from '../net/appBridge';
-import {LocalData} from '../local';
-import {guestApi, logoutApis, setCenterUrl, setCenterToken, WSChannel, getCenterUrl, centerDebugHost} from '../net';
+import {LocalData, isDevelopment} from '../local';
+import {guestApi, logoutApis, setCenterUrl, setCenterToken, WSChannel, getCenterUrl, centerDebugHost, CenterApi, meInFrame} from '../net';
 import 'font-awesome/css/font-awesome.min.css';
 import '../css/va-form.css';
 import '../css/va.css';
@@ -419,6 +419,31 @@ export class Nav {
         await this.ws.receive(msg);
     }
 
+    private async loadUnit() {
+        async function getUnitName() {
+            let unitRes = await fetch('unit.json', {});
+            let a = await unitRes.json();
+            return a.unit;
+        }
+        let unitName:string;
+        let unit = this.local.unit.get();
+        if (unit !== undefined) {
+            if (isDevelopment !== true) return unit.id;
+            unitName = await getUnitName();
+            if (unitName === undefined) return;
+            if (unit.name === unitName) return unit.id;
+        }
+        else {
+            unitName = await getUnitName();
+            if (unitName === undefined) return;
+        }
+        let unitId = await guestApi.unitFromName(unitName);
+        if (unitId !== undefined) {
+            this.local.unit.set({id: unitId, name: unitName});
+        }
+        return unitId;
+    }
+
     private isInFrame:boolean;
     async start() {
         nav.push(<Page header={false}><Loading /></Page>);
@@ -427,6 +452,9 @@ export class Nav {
         setCenterUrl(url);
         this.wsHost = ws;
         
+        let unit = await this.loadUnit();
+        meInFrame.unit = unit;
+
         let guest:Guest = this.local.guest.get();
         if (guest === undefined) {
             guest = await guestApi.guest();
@@ -525,7 +553,8 @@ export class Nav {
         setCenterToken(guest && guest.token);
         this.ws = undefined;
         if (notShowLogin === true) return;
-        await this.showLogin();
+        //await this.showLogin();
+        await nav.start();
     }
 
     get level(): number {

@@ -22,6 +22,12 @@ export class GuestApi extends CenterApi {
             }
         });
     }
+    unitFromName(unitName) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let ret = yield this.get(unitName);
+            return ret && ret.unit;
+        });
+    }
 }
 export const guestApi = new GuestApi('tv/guest/', undefined);
 //# sourceMappingURL=guestApi.js.map

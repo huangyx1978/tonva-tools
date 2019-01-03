@@ -19,8 +19,8 @@ import { Page } from './page';
 import { netToken } from '../net/netToken';
 import FetchErrorView from './fetchErrorView';
 import { appUrl, setMeInFrame, logoutUsqTokens } from '../net/appBridge';
-import { LocalData } from '../local';
-import { guestApi, logoutApis, setCenterUrl, setCenterToken, WSChannel, getCenterUrl, centerDebugHost } from '../net';
+import { LocalData, isDevelopment } from '../local';
+import { guestApi, logoutApis, setCenterUrl, setCenterToken, WSChannel, getCenterUrl, centerDebugHost, meInFrame } from '../net';
 import 'font-awesome/css/font-awesome.min.css';
 import '../css/va-form.css';
 import '../css/va.css';
@@ -385,6 +385,38 @@ export class Nav {
             yield this.ws.receive(msg);
         });
     }
+    loadUnit() {
+        return __awaiter(this, void 0, void 0, function* () {
+            function getUnitName() {
+                return __awaiter(this, void 0, void 0, function* () {
+                    let unitRes = yield fetch('unit.json', {});
+                    let a = yield unitRes.json();
+                    return a.unit;
+                });
+            }
+            let unitName;
+            let unit = this.local.unit.get();
+            if (unit !== undefined) {
+                if (isDevelopment !== true)
+                    return unit.id;
+                unitName = yield getUnitName();
+                if (unitName === undefined)
+                    return;
+                if (unit.name === unitName)
+                    return unit.id;
+            }
+            else {
+                unitName = yield getUnitName();
+                if (unitName === undefined)
+                    return;
+            }
+            let unitId = yield guestApi.unitFromName(unitName);
+            if (unitId !== undefined) {
+                this.local.unit.set({ id: unitId, name: unitName });
+            }
+            return unitId;
+        });
+    }
     start() {
         return __awaiter(this, void 0, void 0, function* () {
             nav.push(React.createElement(Page, { header: false },
@@ -392,6 +424,8 @@ export class Nav {
             let { url, ws } = yield loadCenterUrl();
             setCenterUrl(url);
             this.wsHost = ws;
+            let unit = yield this.loadUnit();
+            meInFrame.unit = unit;
             let guest = this.local.guest.get();
             if (guest === undefined) {
                 guest = yield guestApi.guest();
@@ -491,7 +525,8 @@ export class Nav {
             this.ws = undefined;
             if (notShowLogin === true)
                 return;
-            yield this.showLogin();
+            //await this.showLogin();
+            yield nav.start();
         });
     }
     get level() {

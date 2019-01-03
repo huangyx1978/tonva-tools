@@ -24,6 +24,7 @@ export class LocalData {
     constructor() {
         this.user = new Data('user');
         this.guest = new Data('guest');
+        this.unit = new Data('unit');
         this.homeTabCur = new Data('homeTabCur');
     }
     logoutClear() {

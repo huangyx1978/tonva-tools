@@ -13,6 +13,11 @@ export class GuestApi extends CenterApi {
                 return guest;
         }
     }
+
+    async unitFromName(unitName:string): Promise<number> {
+        let ret = await this.get(unitName);
+        return ret && ret.unit;
+    }
 }
 
 export const guestApi = new GuestApi('tv/guest/', undefined);

@@ -1,5 +1,10 @@
 import jwtDecode from 'jwt-decode';
 
+export interface Unit {
+    id: number;
+    name: string;
+}
+
 export interface Guest {
     id: number;             // id = 0
     guest: number;
