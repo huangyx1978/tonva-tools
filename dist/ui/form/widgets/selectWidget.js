@@ -11,7 +11,7 @@ import { Widget } from './widget';
 export class SelectWidget extends Widget {
     constructor() {
         super(...arguments);
-        this.onChange = (evt) => {
+        this.onInputChange = (evt) => {
             this.setDataValue(evt.target.value);
         };
     }
@@ -24,7 +24,7 @@ export class SelectWidget extends Widget {
             let title = (option === undefined) ? '(???)' : option.title;
             return React.createElement("span", { className: "form-control w-min-6c" }, title);
         }
-        return React.createElement("select", { ref: (select) => this.select = select, className: classNames(this.className, 'form-control'), defaultValue: this.defaultValue, onChange: this.onChange }, this.ui.list.map((v, index) => {
+        return React.createElement("select", { ref: (select) => this.select = select, className: classNames(this.className, 'form-control'), defaultValue: this.defaultValue, onChange: this.onInputChange }, this.ui.list.map((v, index) => {
             let { title, value } = v;
             let cn;
             //if (value === undefined || value === null) cn = 'text-light small';

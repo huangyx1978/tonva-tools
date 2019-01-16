@@ -7,7 +7,7 @@ export declare class TextAreaWidget extends Widget {
     protected input: HTMLTextAreaElement;
     protected ui: UiTextAreaItem;
     protected setElementValue(value: any): void;
-    protected onChange: (evt: React.ChangeEvent<HTMLTextAreaElement>) => void;
+    protected onInputChange: (evt: React.ChangeEvent<HTMLTextAreaElement>) => void;
     setReadOnly(value: boolean): void;
     setDisabled(value: boolean): void;
     render(): JSX.Element;

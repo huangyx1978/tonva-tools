@@ -8,21 +8,24 @@ import { observable, computed } from 'mobx';
 import { ContextRule } from './rules';
 import { observer } from 'mobx-react';
 
-export abstract class Context {    
+export abstract class Context {
+    private subContexts:{[name:string]:{[rowKey:string]:Context}};
     readonly form: Form;
     readonly uiSchema: UiSchema;
-    readonly data: any;
+    readonly initData: any;
     readonly inNode: boolean;           // true: 在</> 流中定义Field
     readonly widgets: {[name:string]: Widget} = {};
     readonly rules: ContextRule[];
+    readonly isRow: boolean;
     @observable errors: string[] = [];
     @observable errorWidgets:Widget[] = [];
 
-    constructor(form: Form, uiSchema: UiSchema, data: any, inNode: boolean) {
+    constructor(form: Form, uiSchema: UiSchema, data: any, inNode: boolean, isRow: boolean) {
         this.form = form;
         this.uiSchema = uiSchema;
-        this.data = data;
+        this.initData = data;
         this.inNode = inNode;
+        this.isRow = isRow;
         if (uiSchema !== undefined) {
             let {rules} = uiSchema;
             if (rules !== undefined) {
@@ -35,13 +38,19 @@ export abstract class Context {
         }
     }
 
-    abstract get isRow():boolean;
+    getArrRowContexts(arrName: string) {
+        if (this.subContexts === undefined) this.subContexts = {};
+        let arrRowContexts = this.subContexts[name];
+        if (arrRowContexts === undefined) this.subContexts[name] = arrRowContexts = {};
+        return arrRowContexts;
+    }
+
     abstract getItemSchema(itemName:string):ItemSchema;
     abstract getUiItem(itemName:string):UiItem;
     get arrName():string {return undefined}
-    getValue(itemName:string):any {return this.data[itemName]}
+    getValue(itemName:string):any {return this.initData[itemName]}
     setValue(itemName:string, value:any) {
-        this.data[itemName] = value;
+        this.initData[itemName] = value;
         let widget = this.widgets[itemName];
         if (widget !== undefined) widget.setValue(value);
     }
@@ -77,6 +86,13 @@ export abstract class Context {
         for (let i in this.widgets) {
             this.widgets[i].checkRules();
         }
+        if (this.subContexts === undefined) return;
+        for (let i in this.subContexts) {
+            let arrRowContexts = this.subContexts[i];
+            for (let j in arrRowContexts) {
+                arrRowContexts[j].checkFieldRules();
+            }
+        }
     }
 
     checkContextRules() {
@@ -93,6 +109,15 @@ export abstract class Context {
             }
             else {
                 for (let i in ret as object) this.setError(i, ret[i]);
+            }
+        }
+        if (this.subContexts === undefined) return;
+        for (let i in this.subContexts) {
+            let arrRowContexts = this.subContexts[i];
+            for (let j in arrRowContexts) {
+                let rowContext = arrRowContexts[j];
+                rowContext.removeErrors();
+                rowContext.checkContextRules();
             }
         }
     }
@@ -123,7 +148,16 @@ export abstract class Context {
     }
 
     protected checkHasError():boolean {
-        return (this.errorWidgets.length + this.errors.length) > 0
+        let ret = (this.errorWidgets.length + this.errors.length) > 0;
+        if (ret === true) return true;
+        if (this.subContexts === undefined) return false;
+        for (let i in this.subContexts) {
+            let arrRowContexts = this.subContexts[i];
+            for (let j in arrRowContexts) {
+                if (arrRowContexts[j].hasError === true) return true;
+            }
+        }
+        return false;
     }
 
     @computed get hasError():boolean {
@@ -152,24 +186,22 @@ export abstract class Context {
 }
 
 export class RowContext extends Context {
-    readonly formContext: FormContext;
+    readonly parentContext: Context;
     readonly arrSchema: ArrSchema;
     readonly uiSchema: UiArr;
     readonly row: ArrRow;
-    constructor(formContext:FormContext, arrSchema: ArrSchema, data: any, inNode: boolean, row:ArrRow) {
+    constructor(parentContext:Context, arrSchema: ArrSchema, data: any, inNode: boolean, row:ArrRow) {
         let uiArr:UiArr;
-        let {form} = formContext;
-        let {uiSchema} = form;
+        let {uiSchema} = parentContext;
         if (uiSchema !== undefined) {
             let {items} = uiSchema;
             if (items !== undefined) uiArr = items[arrSchema.name] as UiArr;
         }
-        super(formContext.form, uiArr, data, inNode);
-        this.formContext = formContext;
+        super(parentContext.form, uiArr, data, inNode, true);
+        this.parentContext = parentContext;
         this.arrSchema = arrSchema;
         this.row = row;
     }
-    get isRow():boolean {return true};
     getItemSchema(itemName:string):ItemSchema {return this.arrSchema.itemSchemas[itemName]}
     getUiItem(itemName:string):UiItem {
         if (this.uiSchema === undefined) return undefined;
@@ -178,14 +210,17 @@ export class RowContext extends Context {
         return items[itemName]
     }
     get arrName():string {return this.arrSchema.name}
+    get data() {return this.row.data;}
+    removeErrors() {
+        super.removeErrors();
+        this.parentContext.removeErrors();
+    }
 }
 
 export class FormContext extends Context {
-    rowContexts:{[name:string]:{[rowKey:string]:RowContext}} = {};
     constructor(form:Form, inNode:boolean) {
-        super(form, form.uiSchema, form.data, inNode);
+        super(form, form.uiSchema, form.data, inNode, false);
     }
-    get isRow():boolean {return false};
     getItemSchema(itemName:string):ItemSchema {return this.form.itemSchemas[itemName]}
     getUiItem(itemName:string):UiItem {
         let {uiSchema} = this.form;
@@ -194,36 +229,6 @@ export class FormContext extends Context {
         if (items === undefined) return undefined;
         return items[itemName]
     }
-    checkFieldRules() {
-        super.checkFieldRules();
-        for (let i in this.rowContexts) {
-            let arrRowContexts = this.rowContexts[i];
-            for (let j in arrRowContexts) {
-                arrRowContexts[j].checkFieldRules();
-            }
-        }
-    }
-    checkContextRules() {
-        super.checkContextRules();
-        for (let i in this.rowContexts) {
-            let arrRowContexts = this.rowContexts[i];
-            for (let j in arrRowContexts) {
-                let rowContext = arrRowContexts[j];
-                rowContext.removeErrors();
-                rowContext.checkContextRules();
-            }
-        }
-    }
-    @computed get hasError():boolean {
-        if (super.checkHasError() === true) return true;
-        for (let i in this.rowContexts) {
-            let arrRowContexts = this.rowContexts[i];
-            for (let j in arrRowContexts) {
-                if (arrRowContexts[j].hasError === true) return true;
-            }
-        }
-        return false;
-    };
 }
 
 export const ContextContainer = React.createContext<Context>({} as any);

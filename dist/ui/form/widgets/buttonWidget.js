@@ -51,7 +51,7 @@ export class ButtonWidget extends Widget {
             if (this.children !== undefined)
                 content = this.children;
             else if (typeof Templet === 'function')
-                content = Templet(context, name);
+                content = Templet();
             else if (Templet !== undefined)
                 content = Templet;
             else

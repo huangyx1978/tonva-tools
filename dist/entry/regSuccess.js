@@ -29,11 +29,11 @@ export default class RegSuccess extends React.Component {
     render() {
         const { user, pwd } = this.props;
         return (React.createElement(Page, { header: false },
-            React.createElement("div", { className: "container entry-form" },
-                React.createElement("form", null,
-                    React.createElement("span", { className: "info" },
+            React.createElement("div", { className: "container w-max-30c" },
+                React.createElement("form", { className: "my-5" },
+                    React.createElement("div", { className: "py-5" },
                         "\u7528\u6237 ",
-                        React.createElement("strong", null,
+                        React.createElement("strong", { className: "text-primary" },
                             user,
                             " "),
                         " \u6CE8\u518C\u6210\u529F\uFF01"),

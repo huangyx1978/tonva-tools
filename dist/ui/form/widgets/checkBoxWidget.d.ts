@@ -10,6 +10,7 @@ export declare class CheckBoxWidget extends Widget {
     protected setElementValue(value: any): void;
     setReadOnly(value: boolean): void;
     setDisabled(value: boolean): void;
-    protected onChange: (evt: React.ChangeEvent<HTMLInputElement>) => void;
+    protected onInputChange: (evt: React.ChangeEvent<HTMLInputElement>) => void;
+    protected onClick: () => void;
     render(): JSX.Element;
 }

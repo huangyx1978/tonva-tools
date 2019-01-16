@@ -8,7 +8,7 @@ import * as React from 'react';
 import { observable, computed } from 'mobx';
 import { observer } from 'mobx-react';
 export class Context {
-    constructor(form, uiSchema, data, inNode) {
+    constructor(form, uiSchema, data, inNode, isRow) {
         this.widgets = {};
         this.errors = [];
         this.errorWidgets = [];
@@ -23,8 +23,9 @@ export class Context {
         });
         this.form = form;
         this.uiSchema = uiSchema;
-        this.data = data;
+        this.initData = data;
         this.inNode = inNode;
+        this.isRow = isRow;
         if (uiSchema !== undefined) {
             let { rules } = uiSchema;
             if (rules !== undefined) {
@@ -36,10 +37,18 @@ export class Context {
             }
         }
     }
+    getArrRowContexts(arrName) {
+        if (this.subContexts === undefined)
+            this.subContexts = {};
+        let arrRowContexts = this.subContexts[name];
+        if (arrRowContexts === undefined)
+            this.subContexts[name] = arrRowContexts = {};
+        return arrRowContexts;
+    }
     get arrName() { return undefined; }
-    getValue(itemName) { return this.data[itemName]; }
+    getValue(itemName) { return this.initData[itemName]; }
     setValue(itemName, value) {
-        this.data[itemName] = value;
+        this.initData[itemName] = value;
         let widget = this.widgets[itemName];
         if (widget !== undefined)
             widget.setValue(value);
@@ -81,6 +90,14 @@ export class Context {
         for (let i in this.widgets) {
             this.widgets[i].checkRules();
         }
+        if (this.subContexts === undefined)
+            return;
+        for (let i in this.subContexts) {
+            let arrRowContexts = this.subContexts[i];
+            for (let j in arrRowContexts) {
+                arrRowContexts[j].checkFieldRules();
+            }
+        }
     }
     checkContextRules() {
         if (this.rules === undefined)
@@ -99,6 +116,16 @@ export class Context {
             else {
                 for (let i in ret)
                     this.setError(i, ret[i]);
+            }
+        }
+        if (this.subContexts === undefined)
+            return;
+        for (let i in this.subContexts) {
+            let arrRowContexts = this.subContexts[i];
+            for (let j in arrRowContexts) {
+                let rowContext = arrRowContexts[j];
+                rowContext.removeErrors();
+                rowContext.checkContextRules();
             }
         }
     }
@@ -128,7 +155,19 @@ export class Context {
             this.errorWidgets.splice(pos, 1);
     }
     checkHasError() {
-        return (this.errorWidgets.length + this.errors.length) > 0;
+        let ret = (this.errorWidgets.length + this.errors.length) > 0;
+        if (ret === true)
+            return true;
+        if (this.subContexts === undefined)
+            return false;
+        for (let i in this.subContexts) {
+            let arrRowContexts = this.subContexts[i];
+            for (let j in arrRowContexts) {
+                if (arrRowContexts[j].hasError === true)
+                    return true;
+            }
+        }
+        return false;
     }
     get hasError() {
         return this.checkHasError();
@@ -155,22 +194,19 @@ __decorate([
     computed
 ], Context.prototype, "hasError", null);
 export class RowContext extends Context {
-    constructor(formContext, arrSchema, data, inNode, row) {
+    constructor(parentContext, arrSchema, data, inNode, row) {
         let uiArr;
-        let { form } = formContext;
-        let { uiSchema } = form;
+        let { uiSchema } = parentContext;
         if (uiSchema !== undefined) {
             let { items } = uiSchema;
             if (items !== undefined)
                 uiArr = items[arrSchema.name];
         }
-        super(formContext.form, uiArr, data, inNode);
-        this.formContext = formContext;
+        super(parentContext.form, uiArr, data, inNode, true);
+        this.parentContext = parentContext;
         this.arrSchema = arrSchema;
         this.row = row;
     }
-    get isRow() { return true; }
-    ;
     getItemSchema(itemName) { return this.arrSchema.itemSchemas[itemName]; }
     getUiItem(itemName) {
         if (this.uiSchema === undefined)
@@ -181,14 +217,16 @@ export class RowContext extends Context {
         return items[itemName];
     }
     get arrName() { return this.arrSchema.name; }
+    get data() { return this.row.data; }
+    removeErrors() {
+        super.removeErrors();
+        this.parentContext.removeErrors();
+    }
 }
 export class FormContext extends Context {
     constructor(form, inNode) {
-        super(form, form.uiSchema, form.data, inNode);
-        this.rowContexts = {};
+        super(form, form.uiSchema, form.data, inNode, false);
     }
-    get isRow() { return false; }
-    ;
     getItemSchema(itemName) { return this.form.itemSchemas[itemName]; }
     getUiItem(itemName) {
         let { uiSchema } = this.form;
@@ -199,42 +237,6 @@ export class FormContext extends Context {
             return undefined;
         return items[itemName];
     }
-    checkFieldRules() {
-        super.checkFieldRules();
-        for (let i in this.rowContexts) {
-            let arrRowContexts = this.rowContexts[i];
-            for (let j in arrRowContexts) {
-                arrRowContexts[j].checkFieldRules();
-            }
-        }
-    }
-    checkContextRules() {
-        super.checkContextRules();
-        for (let i in this.rowContexts) {
-            let arrRowContexts = this.rowContexts[i];
-            for (let j in arrRowContexts) {
-                let rowContext = arrRowContexts[j];
-                rowContext.removeErrors();
-                rowContext.checkContextRules();
-            }
-        }
-    }
-    get hasError() {
-        if (super.checkHasError() === true)
-            return true;
-        for (let i in this.rowContexts) {
-            let arrRowContexts = this.rowContexts[i];
-            for (let j in arrRowContexts) {
-                if (arrRowContexts[j].hasError === true)
-                    return true;
-            }
-        }
-        return false;
-    }
-    ;
 }
-__decorate([
-    computed
-], FormContext.prototype, "hasError", null);
 export const ContextContainer = React.createContext({});
 //# sourceMappingURL=context.js.map

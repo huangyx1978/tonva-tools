@@ -41,7 +41,8 @@ export declare abstract class Widget {
     setDisabled(value: boolean): void;
     setVisible(value: boolean): void;
     private isChanging;
-    protected onChange: (evt: React.ChangeEvent<any>) => void;
+    protected onInputChange: (evt: React.ChangeEvent<any>) => void;
+    protected changeValue(newValue: any, fromElement: boolean): void;
     protected readonly className: string;
     protected abstract render(): JSX.Element;
     renderContainer(): JSX.Element;

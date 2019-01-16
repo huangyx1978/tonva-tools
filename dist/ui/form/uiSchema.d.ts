@@ -1,7 +1,11 @@
 /// <reference types="react" />
 import { Context } from './context';
 import { FieldRule, ContextRule } from './rules';
-export declare type UiType = 'form' | 'arr' | 'group' | 'button' | 'submit' | 'id' | 'text' | 'textarea' | 'password' | 'date' | 'datetime' | 'select' | 'url' | 'email' | 'updown' | 'color' | 'checkbox' | 'checkboxes' | 'radio' | 'range';
+import { ItemSchema } from './schema';
+import { FieldProps } from './field';
+import { Widget } from './widgets';
+export declare type TypeWidget = new (context: Context, itemSchema: ItemSchema, fieldProps: FieldProps, children: React.ReactNode) => Widget;
+export declare type UiType = 'form' | 'arr' | 'group' | 'button' | 'submit' | 'custom' | 'id' | 'text' | 'textarea' | 'password' | 'date' | 'datetime' | 'select' | 'url' | 'email' | 'updown' | 'color' | 'checkbox' | 'checkboxes' | 'radio' | 'range';
 export declare type ChangingHandler = (context: Context, value: any, prev: any) => boolean;
 export declare type ChangedHandler = (context: Context, value: any, prev: any) => void;
 export interface UiItem {
@@ -15,6 +19,10 @@ export interface UiItem {
     onChanged?: ChangedHandler;
     rules?: (ContextRule | FieldRule) | (ContextRule | FieldRule)[];
     Templet?: TempletType;
+}
+export interface UiCustom extends UiItem {
+    widget: 'custom';
+    WidgetClass: TypeWidget;
 }
 export interface UiIdItem extends UiItem {
     widget: 'id';
@@ -63,7 +71,7 @@ export interface UiRadio extends UiSelectBase {
 export interface UiItemCollection {
     [field: string]: UiItem;
 }
-export declare type TempletType = ((context?: Context, name?: string, value?: number) => JSX.Element) | JSX.Element;
+export declare type TempletType = ((item?: any) => JSX.Element) | JSX.Element;
 export interface UiSchema {
     items?: UiItemCollection;
     Templet?: TempletType;
@@ -78,6 +86,9 @@ export interface UiSchema {
 export interface UiArr extends UiSchema, UiItem {
     widget: 'arr';
     rules?: ContextRule | ContextRule[];
+    ArrContainer?: (label: any, content: JSX.Element) => JSX.Element;
+    RowContainer?: (content: JSX.Element) => JSX.Element;
+    RowSeperator?: JSX.Element;
 }
 export interface UiGroup extends UiItem {
     widget: 'group';

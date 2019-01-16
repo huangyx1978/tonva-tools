@@ -55,7 +55,7 @@ export class IdWidget extends Widget {
             content = React.createElement(React.Fragment, null, this.value);
         }
         else if (typeof Templet === 'function') {
-            content = Templet(this.context, this.name, this.value);
+            content = Templet(this.value);
         }
         else {
             content = Templet;

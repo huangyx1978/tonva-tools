@@ -11,17 +11,14 @@ export interface FormProps {
     uiSchema?: UiSchema;
     formData?: any;
     onButtonClick?: FormButtonClick;
-    Container?: (content: JSX.Element) => JSX.Element;
-    FieldContainer?: (label: string | JSX.Element, content: JSX.Element) => JSX.Element;
-    FieldClass?: string;
-    ArrContainer?: (label: any, content: JSX.Element) => JSX.Element;
-    RowContainer?: (content: JSX.Element) => JSX.Element;
-    ButtonClass?: string;
-    RowSeperator?: JSX.Element;
     fieldLabelSize?: number;
     requiredFlag?: boolean;
     beforeShow?: (formContext: FormContext) => void;
     res?: FormRes;
+    Container?: (content: JSX.Element) => JSX.Element;
+    FieldContainer?: (label: string | JSX.Element, content: JSX.Element) => JSX.Element;
+    FieldClass?: string;
+    ButtonClass?: string;
 }
 export declare class Form extends React.Component<FormProps> {
     readonly schema: Schema;
@@ -29,26 +26,25 @@ export declare class Form extends React.Component<FormProps> {
         [name: string]: ItemSchema;
     };
     readonly uiSchema: UiSchema;
-    readonly Container: (content: JSX.Element) => JSX.Element;
-    readonly FieldContainer: (label: any, content: JSX.Element) => JSX.Element;
-    readonly FieldClass: string;
-    readonly ArrContainer: (label: any, content: JSX.Element) => JSX.Element;
-    readonly RowContainer: (content: JSX.Element) => JSX.Element;
-    readonly ButtonClass: string;
-    readonly RowSeperator: JSX.Element;
     readonly res?: FormRes;
     protected formContext: FormContext;
     private content;
     readonly data: any;
+    readonly Container: (content: JSX.Element) => JSX.Element;
+    readonly FieldContainer: (label: any, content: JSX.Element) => JSX.Element;
+    readonly FieldClass: string;
+    readonly ButtonClass: string;
     constructor(props: FormProps);
+    private initData;
+    private initDataItem;
     componentDidMount(): void;
     render(): JSX.Element;
     protected DefaultContainer: (content: JSX.Element) => JSX.Element;
     protected DefaultFieldContainer: (label: string | JSX.Element, content: JSX.Element) => JSX.Element;
     protected DefaultFieldClass: string;
-    protected DefaultArrContainer: (label: any, content: JSX.Element) => JSX.Element;
-    protected DefaultRowContainer: (content: JSX.Element) => JSX.Element;
     protected DefaultButtonClass: string;
-    protected DefaultRowSeperator: JSX.Element;
     protected DefaultRes: FormRes;
+    ArrContainer: (label: any, content: JSX.Element) => JSX.Element;
+    RowContainer: (content: JSX.Element) => JSX.Element;
+    RowSeperator: JSX.Element;
 }

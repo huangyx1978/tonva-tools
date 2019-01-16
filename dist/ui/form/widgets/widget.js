@@ -12,10 +12,12 @@ export class Widget {
     constructor(context, itemSchema, fieldProps, children) {
         this.errors = [];
         this.contextErrors = [];
-        this.onChange = (evt) => {
+        this.onInputChange = (evt) => {
+            this.changeValue(evt.target.value, true);
+            /*
             let prev = this.value;
-            let onChanging;
-            let onChanged;
+            let onChanging: ChangingHandler;
+            let onChanged: ChangedHandler;
             if (this.ui !== undefined) {
                 onChanging = this.ui.onChanging;
                 onChanged = this.ui.onChanged;
@@ -34,6 +36,7 @@ export class Widget {
                     this.isChanging = false;
                 }
             }
+            */
         };
         this.context = context;
         let { name } = itemSchema;
@@ -120,13 +123,14 @@ export class Widget {
     setDataValue(value) {
         if (this.isChanging === true)
             return;
-        this.context.data[this.name] = this.value = this.parse(value);
+        this.context.initData[this.name] = this.value = this.parse(value);
     }
     setValue(value) {
         if (this.isChanging === true)
             return;
-        this.setDataValue(value);
-        this.setElementValue(value);
+        //this.setDataValue(value);
+        //this.setElementValue(value);
+        this.changeValue(value, false);
     }
     getValue() {
         return this.context.getValue(this.name);
@@ -137,6 +141,31 @@ export class Widget {
     setReadOnly(value) { this.readOnly = value; }
     setDisabled(value) { this.disabled = value; }
     setVisible(value) { this.visible = value; }
+    changeValue(newValue, fromElement) {
+        let prev = this.value;
+        let onChanging;
+        let onChanged;
+        if (this.ui !== undefined) {
+            onChanging = this.ui.onChanging;
+            onChanged = this.ui.onChanged;
+        }
+        let allowChange = true;
+        if (onChanging !== undefined) {
+            this.isChanging = true;
+            allowChange = onChanging(this.context, this.value, prev);
+            this.isChanging = false;
+        }
+        if (allowChange === true) {
+            this.setDataValue(newValue);
+            if (fromElement !== true)
+                this.setElementValue(newValue);
+            if (onChanged !== undefined) {
+                this.isChanging = true;
+                onChanged(this.context, this.value, prev);
+                this.isChanging = false;
+            }
+        }
+    }
     get className() {
         let fieldClass;
         if (this.context.inNode === false)
@@ -176,7 +205,7 @@ export class Widget {
             return undefined;
         let { Templet } = this.ui;
         if (typeof Templet === 'function')
-            return Templet(this.context, this.name, this.value);
+            return Templet(this.value);
         return Templet;
     }
     renderErrors() {

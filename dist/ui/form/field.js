@@ -1,5 +1,4 @@
 import * as React from 'react';
-//import { FormContext, ContextValue, Form } from './form';
 import { factory } from './widgets';
 import { ContextContainer } from './context';
 export class Field extends React.Component {

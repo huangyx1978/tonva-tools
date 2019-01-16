@@ -9,7 +9,7 @@ export class TextAreaWidget extends Widget {
     protected ui: UiTextAreaItem;
 
     protected setElementValue(value:any) {this.input.value = value}
-    protected onChange = (evt: React.ChangeEvent<HTMLTextAreaElement>) => {
+    protected onInputChange = (evt: React.ChangeEvent<HTMLTextAreaElement>) => {
         this.setValue(evt.currentTarget.value);
     }
 
@@ -20,6 +20,6 @@ export class TextAreaWidget extends Widget {
         return <textarea ref={(input) => this.input=input} 
             rows={this.ui && this.ui.rows}
             maxLength={this.itemSchema.maxLength}
-            defaultValue={this.defaultValue} onChange={this.onChange} />
+            defaultValue={this.defaultValue} onChange={this.onInputChange} />
     }
 }

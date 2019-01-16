@@ -29,8 +29,12 @@ export class CheckBoxWidget extends Widget {
     setReadOnly(value:boolean) {this.input.readOnly = this.readOnly = value}
     setDisabled(value:boolean) {this.input.disabled = this.disabled = value}
 
-    protected onChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
+    protected onInputChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
         this.setDataValue(evt.target.checked === true? this.trueValue : this.falseValue);
+    }
+
+    protected onClick = () => {
+        this.context.removeErrors();
     }
 
     render() {
@@ -40,7 +44,8 @@ export class CheckBoxWidget extends Widget {
             className={'align-self-center'}
             type="checkbox"
             defaultChecked={this.defaultValue} 
-            onChange={this.onChange} />;
+            onChange={this.onInputChange}
+            onClick={this.onClick} />;
         return this.context.inNode?
             <label className={cn}>
                 {input} {(this.ui&&this.ui.label) || this.name}

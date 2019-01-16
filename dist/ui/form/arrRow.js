@@ -1,13 +1,14 @@
 let keySeed = 1;
 export class ArrRow {
-    constructor(form, arrSchema, data) {
+    constructor(arrSchema, data) {
         this.key = keySeed++;
-        this.form = form;
+        //this.form = form;
         this.arrSchema = arrSchema;
-        let { uiSchema } = form;
-        if (uiSchema !== undefined) {
-            this.uiArr = uiSchema.items[arrSchema.name];
-        }
+        //let {uiSchema} = form;
+        //if (uiSchema !== undefined) {
+        //    this.uiArr = uiSchema.items[arrSchema.name] as UiArr;
+        //}
+        //this.uiArr = uiArr;
         this.data = data;
     }
 }

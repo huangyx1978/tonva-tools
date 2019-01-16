@@ -42,7 +42,7 @@ export class ButtonWidget extends Widget {
         let disabled = type==='submit' && hasError;
         let content:any;
         if (this.children !== undefined) content = this.children;
-        else if (typeof Templet === 'function') content = Templet(context, name);
+        else if (typeof Templet === 'function') content = Templet();
         else if (Templet !== undefined) content = Templet;
         else content = label; 
         let button = <button 

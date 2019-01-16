@@ -6,18 +6,19 @@ let keySeed:number = 1;
 
 export class ArrRow {
     readonly key: number;
-    readonly form: Form;
+    //readonly form: Form;
     readonly arrSchema: ArrSchema;
-    readonly uiArr: UiArr
+    //readonly uiArr: UiArr
     readonly data: any;
-    constructor(form:Form, arrSchema:ArrSchema, data:any) {
+    constructor(arrSchema:ArrSchema, data:any) {
         this.key = keySeed++;
-        this.form = form;
+        //this.form = form;
         this.arrSchema = arrSchema;
-        let {uiSchema} = form;
-        if (uiSchema !== undefined) {
-            this.uiArr = uiSchema.items[arrSchema.name] as UiArr;
-        }
+        //let {uiSchema} = form;
+        //if (uiSchema !== undefined) {
+        //    this.uiArr = uiSchema.items[arrSchema.name] as UiArr;
+        //}
+        //this.uiArr = uiArr;
         this.data = data;
     }
 }

@@ -1,8 +1,13 @@
 import { StatelessComponent } from 'react';
 import { Context } from './context';
 import { FieldRule, ContextRule } from './rules';
+import { ItemSchema } from './schema';
+import { FieldProps } from './field';
+import { Widget } from './widgets';
 
-export type UiType =  'form' | 'arr' | 'group' | 'button' | 'submit'
+export type TypeWidget = new (context:Context, itemSchema:ItemSchema, fieldProps:FieldProps, children: React.ReactNode) => Widget;
+
+export type UiType =  'form' | 'arr' | 'group' | 'button' | 'submit' | 'custom'
     | 'id'
     | 'text' | 'textarea' | 'password' 
     | 'date' | 'datetime' | 'select' | 'url' | 'email'
@@ -22,6 +27,11 @@ export interface UiItem {
     onChanged?: ChangedHandler;
     rules?: (ContextRule|FieldRule) | (ContextRule|FieldRule)[];
     Templet?: TempletType;
+}
+
+export interface UiCustom extends UiItem {
+    widget: 'custom';
+    WidgetClass: TypeWidget;
 }
 
 export interface UiIdItem extends UiItem {
@@ -82,7 +92,7 @@ export interface UiItemCollection {
     [field: string]: UiItem;
 }
 
-export type TempletType = ((context?:Context, name?:string, value?:number)=>JSX.Element) | JSX.Element;
+export type TempletType = ((item?:any)=>JSX.Element) | JSX.Element;
 export interface UiSchema {
     items?: UiItemCollection;
     Templet?: TempletType;
@@ -98,6 +108,9 @@ export interface UiSchema {
 export interface UiArr extends UiSchema, UiItem {
     widget: 'arr';
     rules?: ContextRule | ContextRule[];
+    ArrContainer?: (label:any, content:JSX.Element) => JSX.Element;
+    RowContainer?: (content:JSX.Element) => JSX.Element;
+    RowSeperator?: JSX.Element;
 }
 
 export interface UiGroup extends UiItem {

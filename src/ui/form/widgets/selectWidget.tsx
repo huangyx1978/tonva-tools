@@ -10,7 +10,7 @@ export class SelectWidget extends Widget {
     @observable protected readOnly: boolean;
 
     protected setElementValue(value:any) {this.select.value = value}
-    protected onChange = (evt:React.ChangeEvent<HTMLSelectElement>) => {
+    protected onInputChange = (evt:React.ChangeEvent<HTMLSelectElement>) => {
         this.setDataValue(evt.target.value);
     }
 
@@ -27,7 +27,7 @@ export class SelectWidget extends Widget {
             ref={(select)=>this.select = select}
             className={classNames(this.className, 'form-control')}
             defaultValue={this.defaultValue} 
-            onChange={this.onChange}>
+            onChange={this.onInputChange}>
             {this.ui.list.map((v,index) => {
                 let {title, value} = v;
                 let cn:string;

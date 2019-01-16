@@ -13,6 +13,9 @@ import { ContextContainer, FormContext } from './context';
 import { formRes } from './formRes';
 import { resLang } from '../res';
 export class Form extends React.Component {
+    //readonly ArrContainer: (label:any, content:JSX.Element) => JSX.Element;
+    //readonly RowContainer: (content:JSX.Element) => JSX.Element;
+    //readonly RowSeperator: JSX.Element;
     constructor(props) {
         super(props);
         this.DefaultContainer = (content) => {
@@ -43,75 +46,38 @@ export class Form extends React.Component {
                 content);
         };
         this.DefaultFieldClass = undefined;
-        this.DefaultArrContainer = (label, content) => {
+        this.DefaultButtonClass = 'text-center py-2';
+        this.DefaultRes = resLang(formRes);
+        this.ArrContainer = (label, content) => {
             return React.createElement("div", null,
                 React.createElement("div", { className: classNames('small text-muted text-center bg-light py-1 px-3 mt-4 mb-1') }, label),
                 content);
         };
-        this.DefaultRowContainer = (content) => {
+        this.RowContainer = (content) => {
             //return <div className="row">{content}</div>;
             let cn = classNames({
                 'py-3': true
             });
             return React.createElement("div", { className: cn }, content);
         };
-        this.DefaultButtonClass = 'text-center py-2';
-        this.DefaultRowSeperator = React.createElement("div", { className: "border border-gray border-top" });
-        this.DefaultRes = resLang(formRes);
-        let { schema, uiSchema, formData, Container, FieldContainer, FieldClass, ArrContainer, RowContainer, //ArrFieldContainer, 
-        ButtonClass, RowSeperator, res, } = props;
+        this.RowSeperator = React.createElement("div", { className: "border border-gray border-top" });
+        let { schema, uiSchema, formData, Container, FieldContainer, FieldClass, ButtonClass, res, } = props;
         this.Container = Container || this.DefaultContainer;
         this.FieldContainer = FieldContainer || this.DefaultFieldContainer;
         this.FieldClass = FieldClass !== undefined && FieldClass !== '' && FieldClass !== null ? FieldClass : this.DefaultFieldClass;
-        this.ArrContainer = ArrContainer || this.DefaultArrContainer;
-        this.RowContainer = RowContainer || this.DefaultRowContainer;
-        //this.ArrFieldContainer = ArrFieldContainer || this.DefaultArrFieldContainer;
         this.res = res || this.DefaultRes;
         this.ButtonClass = ButtonClass || this.DefaultButtonClass;
-        this.RowSeperator = RowSeperator || this.DefaultRowSeperator;
+        //this.ArrContainer = ArrContainer || this.DefaultArrContainer;
+        //this.RowContainer = RowContainer || this.DefaultRowContainer;
+        //this.RowSeperator = RowSeperator || this.DefaultRowSeperator;
         this.schema = schema;
         this.itemSchemas = {};
+        for (let itemSchema of this.schema) {
+            this.itemSchemas[itemSchema.name] = itemSchema;
+        }
         this.uiSchema = uiSchema;
         this.data = {};
-        if (formData === undefined)
-            formData = {};
-        for (let itemSchema of schema) {
-            let { name, type } = itemSchema;
-            this.itemSchemas[name] = itemSchema;
-            if (type === 'button') {
-            }
-            else if (type === 'arr') {
-                let arrItem = itemSchema;
-                let { arr: arrItems } = arrItem;
-                if (arrItems === undefined)
-                    continue;
-                let arrDict = arrItem.itemSchemas = {};
-                for (let item of arrItems) {
-                    arrDict[item.name] = item;
-                }
-                let val = formData[name];
-                if (val === undefined)
-                    val = [{}];
-                else if (Array.isArray(val) === false)
-                    val = [val];
-                let arr = [];
-                for (let row of val) {
-                    let r = {};
-                    for (let item of arrItems) {
-                        let { name: nm } = item;
-                        let v = row[nm];
-                        if (v === undefined)
-                            v = null;
-                        r[nm] = v;
-                    }
-                    arr.push(r);
-                }
-                this.data[name] = observable(arr);
-            }
-            else {
-                this.data[name] = formData[name];
-            }
-        }
+        this.initData(formData);
         let inNode = this.props.children !== undefined || this.uiSchema && this.uiSchema.Templet !== undefined;
         //this.formContext = new FormContext(this, inNode);
         let { children } = this.props;
@@ -129,7 +95,7 @@ export class Form extends React.Component {
             }
             if (Templet !== undefined) {
                 // inNode = true;
-                this.content = typeof (Templet) === 'function' ? Templet(this.context) : Templet;
+                this.content = typeof (Templet) === 'function' ? Templet(this.data) : Templet;
                 this.formContext = new FormContext(this, true);
             }
             else {
@@ -140,6 +106,50 @@ export class Form extends React.Component {
                 }));
             }
         }
+    }
+    initData(formData) {
+        if (formData === undefined)
+            formData = {};
+        for (let itemSchema of this.schema) {
+            this.initDataItem(itemSchema, this.data, formData);
+        }
+    }
+    initDataItem(itemSchema, data, formData) {
+        let { name, type } = itemSchema;
+        if (type === 'button')
+            return;
+        if (type === 'arr') {
+            let arrItem = itemSchema;
+            let { arr: arrItems } = arrItem;
+            if (arrItems === undefined)
+                return;
+            let arrDict = arrItem.itemSchemas = {};
+            for (let item of arrItems) {
+                arrDict[item.name] = item;
+            }
+            let val = formData[name];
+            if (val === undefined)
+                val = [];
+            else if (Array.isArray(val) === false)
+                val = [val];
+            let arr = [];
+            for (let row of val) {
+                let r = {};
+                for (let item of arrItems) {
+                    this.initDataItem(item, r, row);
+                    /*
+                    let {name:nm} = item;
+                    let v = row[nm];
+                    if (v === undefined) v = null;
+                    r[nm] = v;
+                    */
+                }
+                arr.push(r);
+            }
+            data[name] = observable(arr);
+            return;
+        }
+        data[name] = formData[name];
     }
     componentDidMount() {
         let { beforeShow } = this.props;

@@ -109,13 +109,14 @@ export abstract class Widget {
     protected setElementValue(value:any) {}
     protected setDataValue(value:any) {
         if (this.isChanging === true) return;
-        this.context.data[this.name] = this.value = this.parse(value);
+        this.context.initData[this.name] = this.value = this.parse(value);
     }
 
     setValue(value:any) {
         if (this.isChanging === true) return;
-        this.setDataValue(value);
-        this.setElementValue(value);
+        //this.setDataValue(value);
+        //this.setElementValue(value);
+        this.changeValue(value, false);
     }
 
     getValue() {
@@ -130,7 +131,9 @@ export abstract class Widget {
     setVisible(value:boolean) {this.visible = value}
 
     private isChanging: boolean;
-    protected onChange = (evt: React.ChangeEvent<any>) => {
+    protected onInputChange = (evt: React.ChangeEvent<any>) => {
+        this.changeValue(evt.target.value, true);
+        /*
         let prev = this.value;
         let onChanging: ChangingHandler;
         let onChanged: ChangedHandler;
@@ -146,6 +149,32 @@ export abstract class Widget {
         }
         if (allowChange === true) {
             this.setDataValue(evt.currentTarget.value);
+            if (onChanged !== undefined) {
+                this.isChanging = true;
+                onChanged(this.context, this.value, prev);
+                this.isChanging = false;
+            }
+        }
+        */
+    }
+
+    protected changeValue(newValue: any, fromElement: boolean) {
+        let prev = this.value;
+        let onChanging: ChangingHandler;
+        let onChanged: ChangedHandler;
+        if (this.ui !== undefined) {
+            onChanging = this.ui.onChanging;
+            onChanged = this.ui.onChanged;
+        }
+        let allowChange = true;
+        if (onChanging !== undefined) {
+            this.isChanging = true;
+            allowChange = onChanging(this.context, this.value, prev);
+            this.isChanging = false;
+        }
+        if (allowChange === true) {
+            this.setDataValue(newValue);
+            if (fromElement !== true) this.setElementValue(newValue);
             if (onChanged !== undefined) {
                 this.isChanging = true;
                 onChanged(this.context, this.value, prev);
@@ -187,7 +216,7 @@ export abstract class Widget {
         }
         if (this.ui === undefined) return undefined;
         let {Templet} = this.ui;
-        if (typeof Templet === 'function') return Templet(this.context, this.name, this.value);
+        if (typeof Templet === 'function') return Templet(this.value);
         return Templet;
     }
 

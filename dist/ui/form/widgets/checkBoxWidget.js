@@ -4,8 +4,11 @@ import { Widget } from './widget';
 export class CheckBoxWidget extends Widget {
     constructor() {
         super(...arguments);
-        this.onChange = (evt) => {
+        this.onInputChange = (evt) => {
             this.setDataValue(evt.target.checked === true ? this.trueValue : this.falseValue);
+        };
+        this.onClick = () => {
+            this.context.removeErrors();
         };
     }
     init() {
@@ -33,7 +36,7 @@ export class CheckBoxWidget extends Widget {
     setDisabled(value) { this.input.disabled = this.disabled = value; }
     render() {
         let cn = classNames(this.className, 'form-check-inline');
-        let input = React.createElement("input", { ref: (input) => this.input = input, className: 'align-self-center', type: "checkbox", defaultChecked: this.defaultValue, onChange: this.onChange });
+        let input = React.createElement("input", { ref: (input) => this.input = input, className: 'align-self-center', type: "checkbox", defaultChecked: this.defaultValue, onChange: this.onInputChange, onClick: this.onClick });
         return this.context.inNode ?
             React.createElement("label", { className: cn },
                 input,
