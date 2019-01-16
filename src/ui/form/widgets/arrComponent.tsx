@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {observer} from 'mobx-react';
 import classNames from 'classnames';
-import { ArrRow } from '../arrRow';
+//import { ArrRow } from '../arrRow';
 import { Context, RowContext, ContextContainer } from '../context';
 import { ArrSchema } from '../schema';
 import { UiArr, TempletType } from '../uiSchema';
@@ -31,9 +31,9 @@ export const ArrComponent = observer((
             selectable:arrSelectable, deletable:arrDeletable, restorable:arrRestorable,
             ArrContainer:ac, RowContainer:rc, RowSeperator:rs
         } = ui;
-        selectable = arrSelectable;
-        deletable = arrDeletable;
-        restorable = arrRestorable;
+        if (arrSelectable !== undefined) selectable = arrSelectable;
+        if (arrDeletable !== undefined) deletable = arrDeletable;
+        if (arrRestorable !== undefined) restorable = arrRestorable;
         if (ac !== undefined) ArrContainer = ac;
         if (rc !== undefined) RowContainer = rc;
         if (rs !== undefined) RowSeperator = rs;
@@ -44,11 +44,13 @@ export const ArrComponent = observer((
     let first = true;
     return ArrContainer(arrLabel, <>
         {data.map((row:any, index) => {
+            /*
             let arrRow = row.$row;
             if (arrRow === undefined) {
                 row.$row = arrRow = new ArrRow(arrSchema, row);
             }
             let rowKey = arrRow.key;
+            */
 
             let rowContext: RowContext;
             let rowContent: JSX.Element;
@@ -56,23 +58,23 @@ export const ArrComponent = observer((
             if (first === false) sep = RowSeperator;
             else first = false;
             if (children !== undefined) {
-                rowContext = new RowContext(parentContext, arrSchema, row, true, arrRow);
+                rowContext = new RowContext(parentContext, arrSchema, row, true);
                 rowContent = <>{children}</>;
             }
             else {
                 let typeofTemplet = typeof Templet;
                 if (typeofTemplet === 'function') {
-                    rowContext = new RowContext(parentContext, arrSchema, row, true, arrRow);
+                    rowContext = new RowContext(parentContext, arrSchema, row, true);
                     //row.$context = rowContext;
                     rowContent = React.createElement(observer(Templet as React.StatelessComponent), row);
                     //rowContent = React.createElement(Templet as React.StatelessComponent, row);
                 }
                 else if (typeofTemplet === 'object') {
-                    rowContext = new RowContext(parentContext, arrSchema, row, true, arrRow);
+                    rowContext = new RowContext(parentContext, arrSchema, row, true);
                     rowContent = Templet as JSX.Element;
                 }
                 else {
-                    rowContext = new RowContext(parentContext, arrSchema, row, false, arrRow);
+                    rowContext = new RowContext(parentContext, arrSchema, row, false);
                     rowContent = <>{
                         arr.map((v, index) => {
                             return <React.Fragment key={v.name}>
@@ -82,6 +84,7 @@ export const ArrComponent = observer((
                     </>;
                 }
             }
+            let {rowKey} = rowContext;
             arrRowContexts[rowKey] = rowContext;
 
             let selectCheck:JSX.Element, deleteIcon:JSX.Element;

@@ -3,7 +3,7 @@ import { Form } from './form';
 import { UiSchema, UiArr, UiItem } from './uiSchema';
 import { ArrSchema, ItemSchema } from './schema';
 import { Widget as Widget } from './widgets/widget';
-import { ArrRow } from './arrRow';
+//import { ArrRow } from './arrRow';
 import { observable, computed } from 'mobx';
 import { ContextRule } from './rules';
 import { observer } from 'mobx-react';
@@ -185,12 +185,15 @@ export abstract class Context {
     });
 }
 
+let rowKeySeed:number = 1;
 export class RowContext extends Context {
     readonly parentContext: Context;
     readonly arrSchema: ArrSchema;
     readonly uiSchema: UiArr;
-    readonly row: ArrRow;
-    constructor(parentContext:Context, arrSchema: ArrSchema, data: any, inNode: boolean, row:ArrRow) {
+    //readonly row: ArrRow;
+    readonly rowKey: number;
+    readonly data: any;
+    constructor(parentContext:Context, arrSchema: ArrSchema, data: any, inNode: boolean) {
         let uiArr:UiArr;
         let {uiSchema} = parentContext;
         if (uiSchema !== undefined) {
@@ -200,7 +203,9 @@ export class RowContext extends Context {
         super(parentContext.form, uiArr, data, inNode, true);
         this.parentContext = parentContext;
         this.arrSchema = arrSchema;
-        this.row = row;
+        this.rowKey = rowKeySeed++;
+        this.data = data;
+        //this.row = row;
     }
     getItemSchema(itemName:string):ItemSchema {return this.arrSchema.itemSchemas[itemName]}
     getUiItem(itemName:string):UiItem {
@@ -210,7 +215,7 @@ export class RowContext extends Context {
         return items[itemName]
     }
     get arrName():string {return this.arrSchema.name}
-    get data() {return this.row.data;}
+    //get data() {return this.row.data;}
     removeErrors() {
         super.removeErrors();
         this.parentContext.removeErrors();

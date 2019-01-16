@@ -31,7 +31,7 @@ export class RadioWidget extends Widget {
         let {isRow, inNode} = this.context;
         let rowKey:number;
         if (isRow === true) {
-            rowKey = (this.context as RowContext).row.key;
+            rowKey = (this.context as RowContext).rowKey;
         }
         let cn = classNames(this.className, 'form-radio-inline');
         return <span className={cn}>
