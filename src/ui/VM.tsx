@@ -1,9 +1,9 @@
 import * as React from 'react';
 import _ from 'lodash';
-import {isDevelopment} from '../local';
 import {User} from '../user';
 import {nav} from './nav';
 import {Page} from './page';
+import { isDevelopment } from '../net';
 
 export abstract class Controller {
     readonly res: any;

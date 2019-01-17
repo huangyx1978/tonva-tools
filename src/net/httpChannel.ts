@@ -2,7 +2,7 @@ import {bridgeCenterApi, isBridged} from './appBridge';
 import {FetchError} from '../fetchError';
 import {HttpChannelUI} from './httpChannelUI';
 import {nav} from '../ui/nav';
-import { isDevelopment } from '../local';
+import { isDevelopment } from './host';
 
 export async function httpGet(url:string, params?:any):Promise<any> {
     let channel = new HttpChannel(false, url, undefined, undefined);

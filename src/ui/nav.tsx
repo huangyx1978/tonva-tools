@@ -1,14 +1,13 @@
 import * as React from 'react';
 import {observable} from 'mobx';
-import {fetchLocalCheck} from '../net/fetchLocalCheck';
-import {User, decodeUserToken, Guest, UserInNav} from '../user';
+import {User, Guest, UserInNav} from '../user';
 import {Page} from './page';
 import {netToken} from '../net/netToken';
 import FetchErrorView from './fetchErrorView';
 import {FetchError} from '../fetchError';
-import {appUrl, setMeInFrame, isBridged, logoutUsqTokens} from '../net/appBridge';
-import {LocalData, isDevelopment} from '../local';
-import {guestApi, logoutApis, setCenterUrl, setCenterToken, WSChannel, getCenterUrl, centerDebugHost, CenterApi, meInFrame} from '../net';
+import {appUrl, setMeInFrame, logoutUsqTokens} from '../net/appBridge';
+import {LocalData} from '../local';
+import {guestApi, logoutApis, setCenterUrl, setCenterToken, WSChannel, meInFrame, isDevelopment, host} from '../net';
 import 'font-awesome/css/font-awesome.min.css';
 import '../css/va-form.css';
 import '../css/va.css';
@@ -336,45 +335,6 @@ export class NavView extends React.Component<Props, State> {
     }
 }
 
-interface UrlAndWs {
-    url: string;
-    ws: string;
-}
-
-function centerUrlAndWs(centerHost:string):UrlAndWs {
-    //let host = 'REACT_APP_CENTER_HOST';
-    //let centerHost = process.env[host];
-    if (centerHost === undefined) return {url:undefined, ws:undefined};
-    return {
-        url: 'http://' + centerHost + '/',
-        ws: 'ws://' + centerHost + '/tv/',
-    }
-}
-
-async function loadCenterUrl():Promise<{url:string, ws:string}> {
-    let urlAndWs:UrlAndWs = centerUrlAndWs(process.env['REACT_APP_CENTER_HOST']);
-    let debugUrlAndWs:UrlAndWs = centerUrlAndWs(process.env.REACT_APP_CENTER_DEBUG_HOST || centerDebugHost);
-    let hash = document.location.hash;
-    if (hash.includes('sheet_debug') === true) {
-        return debugUrlAndWs;
-    }
-    if (process.env.NODE_ENV==='development') {
-        if (debugUrlAndWs.url !== undefined) {
-            try {
-                console.log('try connect debug url');
-                //let ret = await fetch(debugUrlAndWs.url);
-                let ret = await fetchLocalCheck(debugUrlAndWs.url);
-                console.log('connected');
-                return debugUrlAndWs;
-            }
-            catch (err) {
-                //console.error(err);
-            }
-        }
-    }
-    return urlAndWs;
-}
-
 export class Nav {
     private nav:NavView;
     private ws: WsBase;
@@ -453,12 +413,14 @@ export class Nav {
     }
 
     private isInFrame:boolean;
+    private centerHost: string;
     async start() {
         nav.push(<Page header={false}><Loading /></Page>);
-
-        let {url, ws} = await loadCenterUrl();
-        setCenterUrl(url);
+        await host.start();
+        let {url, ws} = host;
+        this.centerHost = url;
         this.wsHost = ws;
+        setCenterUrl(url);
         
         let unit = await this.loadUnit();
         meInFrame.unit = unit;
@@ -604,8 +566,7 @@ export class Nav {
         return this.nav.confirmBox(message);
     }
     navToApp(url: string, unitId: number, apiId?:number, sheetType?:number, sheetId?:number) {
-        let centerUrl = getCenterUrl();
-        let sheet = centerUrl.includes('http://localhost:') === true? 'sheet_debug':'sheet'
+        let sheet = this.centerHost.includes('http://localhost:') === true? 'sheet_debug':'sheet'
         let uh = sheetId === undefined?
                 appUrl(url, unitId) :
                 appUrl(url, unitId, sheet, [apiId, sheetType, sheetId]);

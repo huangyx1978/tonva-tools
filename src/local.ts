@@ -1,7 +1,5 @@
 import {User, Guest, Unit} from './user';
 
-export const isDevelopment = process.env.NODE_ENV === 'development';
-
 export interface ClearableData {
     clear(): void;
 }

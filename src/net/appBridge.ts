@@ -2,8 +2,8 @@ import _ from 'lodash';
 import {nav} from '../ui';
 import {uid} from '../uid';
 import {usqTokenApi, callCenterapi, CenterAppApi, AppUsq, centerToken, App} from './usqApi';
-import {setSubAppWindow, wsBridge} from './wsChannel';
-import { getUrlOrDebug } from './apiBase';
+import {setSubAppWindow} from './wsChannel';
+import { host } from './host';
 
 export interface UsqToken {
     name: string;
@@ -131,7 +131,7 @@ async function onAppApiReturn(message:any) {
         throw 'error app api return';
         //return;
     }
-    let realUrl = await getUrlOrDebug(url, urlDebug);
+    let realUrl = host.getUrlOrDebug(url, urlDebug);
     console.log('onAppApiReturn(message:any): url=' + url + ', debug=' + urlDebug + ', real=' + realUrl);
     action.url = realUrl;
     action.token = token;
@@ -187,7 +187,7 @@ export async function appUsq(usq:string, usqOwner:string, usqName:string): Promi
         }
         if (usqToken.token === undefined) usqToken.token = centerToken;
         let {url, urlDebug} = usqToken;
-        let realUrl = await getUrlOrDebug(url, urlDebug);
+        let realUrl = host.getUrlOrDebug(url, urlDebug);
         console.log('realUrl: %s', realUrl);
         usqToken.url = realUrl;
         usqTokens[usq] = usqToken;

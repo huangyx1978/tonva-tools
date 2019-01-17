@@ -1,8 +1,9 @@
-import * as _ from 'lodash';
+import _ from 'lodash';
 import {HttpChannel} from './httpChannel';
 import {HttpChannelUI, HttpChannelNavUI} from './httpChannelUI';
 import {appUsq} from './appBridge';
-import {ApiBase, getUrlOrDebug} from './apiBase';
+import {ApiBase} from './apiBase';
+import { host } from './host';
 
 let channelUIs:{[name:string]: HttpChannel} = {};
 let channelNoUIs:{[name:string]: HttpChannel} = {};
@@ -227,7 +228,7 @@ export class UnitxApi extends UsqApi {
         let centerAppApi = new CenterAppApi('tv/', undefined);
         let ret = await centerAppApi.unitxUsq(this.unitId);
         let {token, url, urlDebug} = ret;
-        let realUrl = await getUrlOrDebug(url, urlDebug);
+        let realUrl = host.getUrlOrDebug(url, urlDebug);
         this.token = token;
         return new HttpChannel(false, realUrl, token, channelUI);
     }
@@ -241,10 +242,6 @@ export function setCenterUrl(url:string) {
     centerToken = undefined;
     centerChannel = undefined;
     centerChannelUI = undefined;
-}
-
-export function getCenterUrl():string {
-    return centerHost;
 }
 
 export let centerToken:string|undefined = undefined;
