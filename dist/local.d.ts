@@ -1,5 +1,4 @@
 import { User, Guest, Unit } from './user';
-export declare const isDevelopment: boolean;
 export interface ClearableData {
     clear(): void;
 }

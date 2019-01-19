@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { observer } from 'mobx-react';
 import classNames from 'classnames';
-import { ArrRow } from '../arrRow';
+//import { ArrRow } from '../arrRow';
 import { RowContext, ContextContainer } from '../context';
 import { Unknown } from './unknown';
 import { factory } from './factory';
@@ -26,9 +26,12 @@ export const ArrComponent = observer(({ parentContext, arrSchema, children }) =>
     }
     if (ui !== undefined) {
         let { widget: widgetType, label, selectable: arrSelectable, deletable: arrDeletable, restorable: arrRestorable, ArrContainer: ac, RowContainer: rc, RowSeperator: rs } = ui;
-        selectable = arrSelectable;
-        deletable = arrDeletable;
-        restorable = arrRestorable;
+        if (arrSelectable !== undefined)
+            selectable = arrSelectable;
+        if (arrDeletable !== undefined)
+            deletable = arrDeletable;
+        if (arrRestorable !== undefined)
+            restorable = arrRestorable;
         if (ac !== undefined)
             ArrContainer = ac;
         if (rc !== undefined)
@@ -42,11 +45,13 @@ export const ArrComponent = observer(({ parentContext, arrSchema, children }) =>
     }
     let first = true;
     return ArrContainer(arrLabel, React.createElement(React.Fragment, null, data.map((row, index) => {
+        /*
         let arrRow = row.$row;
         if (arrRow === undefined) {
             row.$row = arrRow = new ArrRow(arrSchema, row);
         }
         let rowKey = arrRow.key;
+        */
         let rowContext;
         let rowContent;
         let sep = undefined;
@@ -55,28 +60,29 @@ export const ArrComponent = observer(({ parentContext, arrSchema, children }) =>
         else
             first = false;
         if (children !== undefined) {
-            rowContext = new RowContext(parentContext, arrSchema, row, true, arrRow);
+            rowContext = new RowContext(parentContext, arrSchema, row, true);
             rowContent = React.createElement(React.Fragment, null, children);
         }
         else {
             let typeofTemplet = typeof Templet;
             if (typeofTemplet === 'function') {
-                rowContext = new RowContext(parentContext, arrSchema, row, true, arrRow);
+                rowContext = new RowContext(parentContext, arrSchema, row, true);
                 //row.$context = rowContext;
                 rowContent = React.createElement(observer(Templet), row);
                 //rowContent = React.createElement(Templet as React.StatelessComponent, row);
             }
             else if (typeofTemplet === 'object') {
-                rowContext = new RowContext(parentContext, arrSchema, row, true, arrRow);
+                rowContext = new RowContext(parentContext, arrSchema, row, true);
                 rowContent = Templet;
             }
             else {
-                rowContext = new RowContext(parentContext, arrSchema, row, false, arrRow);
+                rowContext = new RowContext(parentContext, arrSchema, row, false);
                 rowContent = React.createElement(React.Fragment, null, arr.map((v, index) => {
                     return React.createElement(React.Fragment, { key: v.name }, factory(rowContext, v, undefined));
                 }));
             }
         }
+        let { rowKey } = rowContext;
         arrRowContexts[rowKey] = rowContext;
         let selectCheck, deleteIcon;
         if (selectable === true) {

@@ -67,13 +67,13 @@ export abstract class Controller {
     private onMessageReceive = async (message:any):Promise<void> => {
         await this.onMessage(message);
     }
+
     protected async beforeStart():Promise<boolean> {
         /*
         console.log('this.receiveHandlerId = nav.registerReceiveHandler(this.onMessageReceive);');
         this.receiveHandlerId = nav.registerReceiveHandler(this.onMessageReceive);
         console.log('return true');
         */
-        this.registerReceiveHandler();
         return true;
     }
     protected registerReceiveHandler() {
@@ -83,6 +83,7 @@ export abstract class Controller {
     protected abstract internalStart(param?:any):Promise<void>;
     async start(param?:any):Promise<void> {
         this.disposer = this.dispose.bind(this);
+        this.registerReceiveHandler();
         let ret = await this.beforeStart();
         if (ret === false) return;
         await this.internalStart(param);

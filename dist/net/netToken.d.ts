@@ -1,4 +1,4 @@
 export declare const netToken: {
-    set(token: string): void;
+    set(userId: number, token: string): void;
     clear(): void;
 };

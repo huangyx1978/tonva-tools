@@ -14,14 +14,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import * as React from 'react';
 import { observable } from 'mobx';
-import { fetchLocalCheck } from '../net/fetchLocalCheck';
 import { UserInNav } from '../user';
 import { Page } from './page';
 import { netToken } from '../net/netToken';
 import FetchErrorView from './fetchErrorView';
 import { appUrl, setMeInFrame, logoutUsqTokens } from '../net/appBridge';
-import { LocalData, isDevelopment } from '../local';
-import { guestApi, logoutApis, setCenterUrl, setCenterToken, WSChannel, getCenterUrl, centerDebugHost, meInFrame } from '../net';
+import { LocalData } from '../local';
+import { guestApi, logoutApis, setCenterUrl, setCenterToken, WSChannel, meInFrame, isDevelopment, host } from '../net';
 import 'font-awesome/css/font-awesome.min.css';
 import '../css/va-form.css';
 import '../css/va.css';
@@ -311,41 +310,6 @@ export class NavView extends React.Component {
         // this.forceUpdate();
     }
 }
-function centerUrlAndWs(centerHost) {
-    //let host = 'REACT_APP_CENTER_HOST';
-    //let centerHost = process.env[host];
-    if (centerHost === undefined)
-        return { url: undefined, ws: undefined };
-    return {
-        url: 'http://' + centerHost + '/',
-        ws: 'ws://' + centerHost + '/tv/',
-    };
-}
-function loadCenterUrl() {
-    return __awaiter(this, void 0, void 0, function* () {
-        let urlAndWs = centerUrlAndWs(process.env['REACT_APP_CENTER_HOST']);
-        let debugUrlAndWs = centerUrlAndWs(process.env.REACT_APP_CENTER_DEBUG_HOST || centerDebugHost);
-        let hash = document.location.hash;
-        if (hash.includes('sheet_debug') === true) {
-            return debugUrlAndWs;
-        }
-        if (process.env.NODE_ENV === 'development') {
-            if (debugUrlAndWs.url !== undefined) {
-                try {
-                    console.log('try connect debug url');
-                    //let ret = await fetch(debugUrlAndWs.url);
-                    let ret = yield fetchLocalCheck(debugUrlAndWs.url);
-                    console.log('connected');
-                    return debugUrlAndWs;
-                }
-                catch (err) {
-                    //console.error(err);
-                }
-            }
-        }
-        return urlAndWs;
-    });
-}
 export class Nav {
     constructor() {
         this.local = new LocalData();
@@ -427,11 +391,14 @@ export class Nav {
     }
     start() {
         return __awaiter(this, void 0, void 0, function* () {
+            nav.clear();
             nav.push(React.createElement(Page, { header: false },
                 React.createElement(Loading, null)));
-            let { url, ws } = yield loadCenterUrl();
-            setCenterUrl(url);
+            yield host.start();
+            let { url, ws } = host;
+            this.centerHost = url;
             this.wsHost = ws;
+            setCenterUrl(url);
             let unit = yield this.loadUnit();
             meInFrame.unit = unit;
             let guest = this.local.guest.get();
@@ -457,9 +424,8 @@ export class Nav {
                     return;
                 }
             }
-            //let device: string = this.local.device.get();
             let user = this.local.user.get();
-            if (user === undefined /* || user.guest !== device*/) {
+            if (user === undefined) {
                 let { notLogined } = this.nav.props;
                 if (notLogined !== undefined) {
                     yield notLogined();
@@ -486,7 +452,7 @@ export class Nav {
     }
     setGuest(guest) {
         this.local.guest.set(guest);
-        netToken.set(guest.token);
+        netToken.set(0, guest.token);
     }
     logined(user) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -494,9 +460,8 @@ export class Nav {
             ws.connect();
             console.log("logined: %s", JSON.stringify(user));
             this.local.user.set(user);
-            netToken.set(user.token);
+            netToken.set(user.id, user.token);
             this.user = new UserInNav(user);
-            console.log('ws.connect() in app main frame');
             yield this.showAppView();
         });
     }
@@ -522,7 +487,7 @@ export class Nav {
             logoutApis();
             logoutUsqTokens();
             let guest = this.local.guest.get();
-            setCenterToken(guest && guest.token);
+            setCenterToken(0, guest && guest.token);
             this.ws = undefined;
             if (notShowLogin === true)
                 return;
@@ -580,8 +545,7 @@ export class Nav {
         return this.nav.confirmBox(message);
     }
     navToApp(url, unitId, apiId, sheetType, sheetId) {
-        let centerUrl = getCenterUrl();
-        let sheet = centerUrl.includes('http://localhost:') === true ? 'sheet_debug' : 'sheet';
+        let sheet = this.centerHost.includes('http://localhost:') === true ? 'sheet_debug' : 'sheet';
         let uh = sheetId === undefined ?
             appUrl(url, unitId) :
             appUrl(url, unitId, sheet, [apiId, sheetType, sheetId]);

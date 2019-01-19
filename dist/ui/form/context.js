@@ -5,6 +5,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import * as React from 'react';
+//import { ArrRow } from './arrRow';
 import { observable, computed } from 'mobx';
 import { observer } from 'mobx-react';
 export class Context {
@@ -193,8 +194,9 @@ __decorate([
 __decorate([
     computed
 ], Context.prototype, "hasError", null);
+let rowKeySeed = 1;
 export class RowContext extends Context {
-    constructor(parentContext, arrSchema, data, inNode, row) {
+    constructor(parentContext, arrSchema, data, inNode) {
         let uiArr;
         let { uiSchema } = parentContext;
         if (uiSchema !== undefined) {
@@ -205,7 +207,9 @@ export class RowContext extends Context {
         super(parentContext.form, uiArr, data, inNode, true);
         this.parentContext = parentContext;
         this.arrSchema = arrSchema;
-        this.row = row;
+        this.rowKey = rowKeySeed++;
+        this.data = data;
+        //this.row = row;
     }
     getItemSchema(itemName) { return this.arrSchema.itemSchemas[itemName]; }
     getUiItem(itemName) {
@@ -217,7 +221,7 @@ export class RowContext extends Context {
         return items[itemName];
     }
     get arrName() { return this.arrSchema.name; }
-    get data() { return this.row.data; }
+    //get data() {return this.row.data;}
     removeErrors() {
         super.removeErrors();
         this.parentContext.removeErrors();

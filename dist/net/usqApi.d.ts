@@ -9,8 +9,10 @@ export declare class UsqApi extends ApiBase {
     constructor(basePath: string, usqOwner: any, usqName: string, access: string[], showWaiting?: boolean);
     protected getHttpChannel(): Promise<HttpChannel>;
     update(): Promise<string>;
+    __loadAccess(): Promise<any>;
     loadAccess(): Promise<any>;
     loadEntities(): Promise<any>;
+    checkAccess(): Promise<boolean>;
     schema(name: string): Promise<any>;
     schemas(names: string[]): Promise<any[]>;
     tuidGet(name: string, id: number): Promise<any>;
@@ -43,14 +45,14 @@ export declare class UnitxApi extends UsqApi {
     private buildChannel;
 }
 export declare function setCenterUrl(url: string): void;
-export declare function getCenterUrl(): string;
 export declare let centerToken: string | undefined;
-export declare function setCenterToken(t?: string): void;
+export declare function setCenterToken(userId: number, t?: string): void;
 export declare abstract class CenterApi extends ApiBase {
     constructor(path: string, showWaiting?: boolean);
     protected getHttpChannel(): Promise<HttpChannel>;
 }
 export declare class UsqTokenApi extends CenterApi {
+    private local;
     usq(params: {
         unit: number;
         usqOwner: string;
@@ -78,6 +80,9 @@ export interface AppUsq {
     token: string;
 }
 export declare class CenterAppApi extends CenterApi {
+    private cachedUsqs;
     usqs(unit: number, appOwner: string, appName: string): Promise<App>;
+    private usqsPure;
+    checkUsqs(unit: number, appOwner: string, appName: string): Promise<boolean>;
     unitxUsq(unit: number): Promise<AppUsq>;
 }

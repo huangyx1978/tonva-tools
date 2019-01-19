@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { bridgeCenterApi, isBridged } from './appBridge';
 import { nav } from '../ui/nav';
-import { isDevelopment } from '../local';
+import { isDevelopment } from './host';
 export function httpGet(url, params) {
     return __awaiter(this, void 0, void 0, function* () {
         let channel = new HttpChannel(false, url, undefined, undefined);

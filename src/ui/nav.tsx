@@ -415,6 +415,7 @@ export class Nav {
     private isInFrame:boolean;
     private centerHost: string;
     async start() {
+        nav.clear();
         nav.push(<Page header={false}><Loading /></Page>);
         await host.start();
         let {url, ws} = host;
@@ -449,9 +450,9 @@ export class Nav {
                 return;
             }
         }
-        //let device: string = this.local.device.get();
+
         let user: User = this.local.user.get();
-        if (user === undefined/* || user.guest !== device*/) {
+        if (user === undefined) {
             let {notLogined} = this.nav.props;
             if (notLogined !== undefined) {
                 await notLogined();
@@ -478,7 +479,7 @@ export class Nav {
 
     setGuest(guest: Guest) {
         this.local.guest.set(guest);
-        netToken.set(guest.token);
+        netToken.set(0, guest.token);
     }
 
     async logined(user: User) {
@@ -487,9 +488,8 @@ export class Nav {
 
         console.log("logined: %s", JSON.stringify(user));
         this.local.user.set(user);
-        netToken.set(user.token);
+        netToken.set(user.id, user.token);
         this.user = new UserInNav(user);
-        console.log('ws.connect() in app main frame');
         await this.showAppView();
     }
 
@@ -513,7 +513,7 @@ export class Nav {
         logoutApis();
         logoutUsqTokens();
         let guest = this.local.guest.get();
-        setCenterToken(guest && guest.token);
+        setCenterToken(0, guest && guest.token);
         this.ws = undefined;
         if (notShowLogin === true) return;
         //await this.showLogin();

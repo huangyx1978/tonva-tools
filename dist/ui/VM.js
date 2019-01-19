@@ -7,9 +7,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import * as React from 'react';
-import { isDevelopment } from '../local';
 import { nav } from './nav';
 import { Page } from './page';
+import { isDevelopment } from '../net';
 export class Controller {
     constructor(res) {
         this.isDev = isDevelopment;
@@ -67,7 +67,6 @@ export class Controller {
             this.receiveHandlerId = nav.registerReceiveHandler(this.onMessageReceive);
             console.log('return true');
             */
-            this.registerReceiveHandler();
             return true;
         });
     }
@@ -77,6 +76,7 @@ export class Controller {
     start(param) {
         return __awaiter(this, void 0, void 0, function* () {
             this.disposer = this.dispose.bind(this);
+            this.registerReceiveHandler();
             let ret = yield this.beforeStart();
             if (ret === false)
                 return;

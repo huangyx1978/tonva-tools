@@ -28,7 +28,7 @@ export class RadioWidget extends Widget {
         let { isRow, inNode } = this.context;
         let rowKey;
         if (isRow === true) {
-            rowKey = this.context.row.key;
+            rowKey = this.context.rowKey;
         }
         let cn = classNames(this.className, 'form-radio-inline');
         return React.createElement("span", { className: cn }, list.map((v, index) => {

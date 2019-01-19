@@ -1,4 +1,3 @@
-export const isDevelopment = process.env.NODE_ENV === 'development';
 export class Data {
     constructor(name) { this.name = name; }
     get() {

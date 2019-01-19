@@ -173,7 +173,11 @@ export function appUrl(url: string, unitId: number, page?:string, param?:any[]):
 export async function loadAppUsqs(appOwner:string, appName): Promise<App> {
     let centerAppApi = new CenterAppApi('tv/', undefined);
     let unit = meInFrame.unit;
-    return await centerAppApi.usqs(unit, appOwner, appName);
+    let ret = await centerAppApi.usqs(unit, appOwner, appName);
+    centerAppApi.checkUsqs(unit, appOwner, appName).then(v => {
+        if (v === false) nav.start();
+    });
+    return ret;
 }
 
 export async function appUsq(usq:string, usqOwner:string, usqName:string): Promise<UsqToken> {

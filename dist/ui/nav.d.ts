@@ -72,6 +72,7 @@ export declare class Nav {
     private getUnitName;
     private loadUnit;
     private isInFrame;
+    private centerHost;
     start(): Promise<void>;
     showAppView(): Promise<void>;
     setGuest(guest: Guest): void;

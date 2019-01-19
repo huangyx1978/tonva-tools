@@ -11,7 +11,7 @@ import { nav } from '../ui';
 import { uid } from '../uid';
 import { usqTokenApi, callCenterapi, CenterAppApi, centerToken } from './usqApi';
 import { setSubAppWindow } from './wsChannel';
-import { getUrlOrDebug } from './apiBase';
+import { host } from './host';
 const usqTokens = {};
 export function logoutUsqTokens() {
     for (let i in usqTokens)
@@ -122,7 +122,7 @@ function onAppApiReturn(message) {
             throw 'error app api return';
             //return;
         }
-        let realUrl = yield getUrlOrDebug(url, urlDebug);
+        let realUrl = host.getUrlOrDebug(url, urlDebug);
         console.log('onAppApiReturn(message:any): url=' + url + ', debug=' + urlDebug + ', real=' + realUrl);
         action.url = realUrl;
         action.token = token;
@@ -166,7 +166,12 @@ export function loadAppUsqs(appOwner, appName) {
     return __awaiter(this, void 0, void 0, function* () {
         let centerAppApi = new CenterAppApi('tv/', undefined);
         let unit = meInFrame.unit;
-        return yield centerAppApi.usqs(unit, appOwner, appName);
+        let ret = yield centerAppApi.usqs(unit, appOwner, appName);
+        centerAppApi.checkUsqs(unit, appOwner, appName).then(v => {
+            if (v === false)
+                nav.start();
+        });
+        return ret;
     });
 }
 export function appUsq(usq, usqOwner, usqName) {
@@ -183,7 +188,7 @@ export function appUsq(usq, usqOwner, usqName) {
             if (usqToken.token === undefined)
                 usqToken.token = centerToken;
             let { url, urlDebug } = usqToken;
-            let realUrl = yield getUrlOrDebug(url, urlDebug);
+            let realUrl = host.getUrlOrDebug(url, urlDebug);
             console.log('realUrl: %s', realUrl);
             usqToken.url = realUrl;
             usqTokens[usq] = usqToken;

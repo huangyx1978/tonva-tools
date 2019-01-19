@@ -3,7 +3,6 @@ import { Form } from './form';
 import { UiSchema, UiArr, UiItem } from './uiSchema';
 import { ArrSchema, ItemSchema } from './schema';
 import { Widget as Widget } from './widgets/widget';
-import { ArrRow } from './arrRow';
 import { ContextRule } from './rules';
 export declare abstract class Context {
     private subContexts;
@@ -49,12 +48,12 @@ export declare class RowContext extends Context {
     readonly parentContext: Context;
     readonly arrSchema: ArrSchema;
     readonly uiSchema: UiArr;
-    readonly row: ArrRow;
-    constructor(parentContext: Context, arrSchema: ArrSchema, data: any, inNode: boolean, row: ArrRow);
+    readonly rowKey: number;
+    readonly data: any;
+    constructor(parentContext: Context, arrSchema: ArrSchema, data: any, inNode: boolean);
     getItemSchema(itemName: string): ItemSchema;
     getUiItem(itemName: string): UiItem;
     readonly arrName: string;
-    readonly data: any;
     removeErrors(): void;
 }
 export declare class FormContext extends Context {

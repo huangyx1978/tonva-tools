@@ -4,6 +4,7 @@ import {HttpChannelUI, HttpChannelNavUI} from './httpChannelUI';
 import {appUsq} from './appBridge';
 import {ApiBase} from './apiBase';
 import { host } from './host';
+import { deserializeJson, serializeJson } from './serializeJson';
 
 let channelUIs:{[name:string]: HttpChannel} = {};
 let channelNoUIs:{[name:string]: HttpChannel} = {};
@@ -14,6 +15,87 @@ export function logoutApis() {
     logoutUnitxApis();
 }
 
+interface UsqLocal {
+    value: any;
+    tick?: number;
+    isNet?: boolean;
+}
+interface UsqLocals {
+    user: number;
+    unit: number;
+    usqs: {[usq:string]: UsqLocal};
+}
+
+const usqLocalEntities = 'usqLocalEntities';
+class CacheUsqLocals {
+    private local:UsqLocals;
+
+    async loadAccess(usqApi: UsqApi):Promise<any> {
+        try {
+            let {usqOwner, usqName} = usqApi;
+            if (this.local === undefined) {
+                let ls = localStorage.getItem(usqLocalEntities);
+                if (ls !== null) {
+                    this.local = JSON.parse(ls);
+                }
+            }
+            if (this.local !== undefined) {
+                let {user, usqs} = this.local;
+                if (user !== loginedUserId || usqs === undefined) {
+                    this.local = undefined;
+                }
+                else {
+                    for (let i in usqs) {
+                        let ul = usqs[i];
+                        ul.isNet = undefined;
+                    }
+                }
+            }
+            if (this.local === undefined) {
+                this.local = {
+                    user: loginedUserId,
+                    unit: undefined,
+                    usqs: {}
+                };
+            }
+
+            let ret: any;
+            let un = usqOwner+'/'+usqName;
+            let usq = this.local.usqs[un];
+            if (usq !== undefined) {
+                let {value} = usq;
+                ret = value;
+            }
+            if (ret === undefined) {
+                ret = await usqApi.__loadAccess();
+                this.local.usqs[un] = {
+                    value: ret,
+                    isNet: true,
+                }
+                let str = JSON.stringify(this.local);
+                localStorage.setItem(usqLocalEntities, str);
+            }
+            return _.cloneDeep(ret);
+        }
+        catch (err) {
+            this.local = undefined;
+            localStorage.removeItem(usqLocalEntities);
+            throw err;
+        }
+    }
+
+    async checkAccess(usqApi: UsqApi):Promise<boolean> {
+        let {usqOwner, usqName} = usqApi;
+        let un = usqOwner+'/'+usqName;
+        let usq = this.local.usqs[un];
+        let {isNet, value} = usq;
+        if (isNet === true) return true;
+        let ret = await usqApi.__loadAccess();
+        return _.isMatch(value, ret);
+    }
+}
+
+const localUsqs = new CacheUsqLocals;
 export class UsqApi extends ApiBase {
     private access:string[];
     usqOwner: string;
@@ -54,15 +136,30 @@ export class UsqApi extends ApiBase {
         return await this.get('update');
     }
 
+    async __loadAccess():Promise<any> {
+        let acc = this.access === undefined?
+            '' :
+            this.access.join('|');
+        let ret = await this.get('access', {acc:acc});
+        return ret;
+    }
+
     async loadAccess():Promise<any> {
+        return await localUsqs.loadAccess(this);
+        /*
         let acc = this.access === undefined?
             '' :
             this.access.join('|');
         return await this.get('access', {acc:acc});
+        */
     }
 
     async loadEntities():Promise<any> {
         return await this.get('entities');
+    }
+
+    async checkAccess():Promise<boolean> {
+        return await localUsqs.checkAccess(this);
     }
 
     async schema(name:string):Promise<any> {
@@ -246,7 +343,8 @@ export function setCenterUrl(url:string) {
 
 export let centerToken:string|undefined = undefined;
 
-export function setCenterToken(t?:string) {
+let loginedUserId:number = 0;
+export function setCenterToken(userId:number, t?:string) {
     centerToken = t;
     console.log('setCenterToken %s', t);
     centerChannel = undefined;
@@ -276,9 +374,52 @@ export abstract class CenterApi extends ApiBase {
     }
 }
 
+const usqTokens = 'usqTokens';
 export class UsqTokenApi extends CenterApi {
+    private local: UsqLocals;
     async usq(params: {unit:number, usqOwner:string, usqName:string}):Promise<any> {
-        return await this.get('app-usq', params);
+        try {
+            let {unit:unitParam, usqOwner, usqName} = params;
+            if (this.local === undefined) {
+                let ls = localStorage.getItem(usqTokens);
+                if (ls !== null) {
+                    this.local = JSON.parse(ls);
+                }
+            }
+            if (this.local !== undefined) {
+                let {unit, user} = this.local;
+                if (unit !== unitParam || user !== loginedUserId) this.local = undefined;
+            }
+            if (this.local === undefined) {
+                this.local = {
+                    user: loginedUserId,
+                    unit: params.unit,
+                    usqs: {}
+                };
+            }
+
+            let un = usqOwner+'/'+usqName;
+            let nowTick = new Date().getTime();
+            let usq = this.local.usqs[un];
+            if (usq !== undefined) {
+                let {tick, value} = usq;
+                if ((nowTick - tick) < 24*3600*1000) {
+                    return value;
+                }
+            }
+            let ret = await this.get('app-usq', params);
+            this.local.usqs[un] = {
+                tick: nowTick,
+                value: ret,
+            }
+            localStorage.setItem(usqTokens, JSON.stringify(this.local));
+            return ret;
+        }
+        catch (err) {
+            this.local = undefined;
+            localStorage.removeItem(usqTokens);
+            throw err;
+        }
     }
 }
 
@@ -307,11 +448,35 @@ export interface AppUsq {
     access: string;
     token: string;
 }
-console.log('CenterApi');
-console.log(CenterApi);
+
 export class CenterAppApi extends CenterApi {
+    private cachedUsqs: any;
     async usqs(unit:number, appOwner:string, appName:string):Promise<App> {
+        let ret:any;
+        let ls = localStorage.getItem('appUsqs');
+        if (ls !== null) {
+            let rLs = JSON.parse(ls);
+            let {unit:rUnit, appOwner:rAppOwner, appName:rAppName, value} = rLs;
+            if (unit === rUnit && appOwner === rAppOwner && appName === rAppName) ret = value;
+        }
+        if (ret === undefined) {
+            ret = await this.usqsPure(unit, appOwner, appName);
+            let obj = {
+                unit:unit, 
+                appOwner:appOwner, 
+                appName:appName, 
+                value: ret,
+            }
+            localStorage.setItem('appUsqs', JSON.stringify(obj));
+        }
+        return this.cachedUsqs = _.cloneDeep(ret);
+    }
+    private async usqsPure(unit:number, appOwner:string, appName:string):Promise<App> {
         return await this.get('tie/app-usqs', {unit:unit, appOwner:appOwner, appName:appName});
+    }
+    async checkUsqs(unit:number, appOwner:string, appName:string):Promise<boolean> {
+        let ret = await this.usqsPure(unit, appOwner, appName);
+        return _.isMatch(this.cachedUsqs, ret);
     }
     async unitxUsq(unit:number):Promise<AppUsq> {
         return await this.get('tie/unitx-usq', {unit:unit});
