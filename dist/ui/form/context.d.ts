@@ -21,6 +21,7 @@ export declare abstract class Context {
     getArrRowContexts(arrName: string): {
         [rowKey: string]: Context;
     };
+    abstract readonly data: any;
     abstract getItemSchema(itemName: string): ItemSchema;
     abstract getUiItem(itemName: string): UiItem;
     readonly arrName: string;
@@ -55,9 +56,11 @@ export declare class RowContext extends Context {
     getUiItem(itemName: string): UiItem;
     readonly arrName: string;
     removeErrors(): void;
+    readonly parentData: any;
 }
 export declare class FormContext extends Context {
     constructor(form: Form, inNode: boolean);
+    readonly data: any;
     getItemSchema(itemName: string): ItemSchema;
     getUiItem(itemName: string): UiItem;
 }

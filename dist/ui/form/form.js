@@ -5,7 +5,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import * as React from 'react';
-import { observable } from 'mobx';
+import { observable, autorun } from 'mobx';
 import classNames from 'classnames';
 import { factory } from './widgets';
 import 'font-awesome/css/font-awesome.min.css';
@@ -18,6 +18,13 @@ export class Form extends React.Component {
     //readonly RowSeperator: JSX.Element;
     constructor(props) {
         super(props);
+        this.calcSelectOrDelete = () => {
+            if (this.formData === undefined)
+                return;
+            for (let itemSchema of this.schema) {
+                this.arrItemOperated(itemSchema);
+            }
+        };
         this.DefaultContainer = (content) => {
             return React.createElement("form", { className: classNames(this.props.className) }, content);
         };
@@ -76,6 +83,8 @@ export class Form extends React.Component {
             this.itemSchemas[itemSchema.name] = itemSchema;
         }
         this.uiSchema = uiSchema;
+        this.formData = formData;
+        this.disposer = autorun(this.calcSelectOrDelete);
         this.data = {};
         this.initData(formData);
         let inNode = this.props.children !== undefined || this.uiSchema && this.uiSchema.Templet !== undefined;
@@ -134,7 +143,12 @@ export class Form extends React.Component {
                 val = [val];
             let arr = [];
             for (let row of val) {
-                let r = {};
+                let { $isSelected, $isDeleted } = row;
+                let r = {
+                    $source: row,
+                    $isSelected: $isSelected,
+                    $isDeleted: $isDeleted,
+                };
                 for (let item of arrItems) {
                     this.initDataItem(item, r, row);
                     /*
@@ -151,10 +165,34 @@ export class Form extends React.Component {
         }
         data[name] = formData[name];
     }
+    arrItemOperated(itemSchema) {
+        let { name, type } = itemSchema;
+        if (type !== 'arr')
+            return;
+        //let arrVal = this.formData[name];
+        //if (arrVal === undefined) return;
+        let formArrVal = this.data[name];
+        let { arr: arrItems } = itemSchema;
+        for (let row of formArrVal) {
+            let { $source } = row;
+            if ($source === undefined)
+                continue;
+            let { $isSelected, $isDeleted } = $source;
+            row.$isSelected = $isSelected;
+            row.$isDeleted = $isDeleted;
+            //console.log($isSelected, $isDeleted);
+            for (let item of arrItems) {
+                this.arrItemOperated(item);
+            }
+        }
+    }
     componentDidMount() {
         let { beforeShow } = this.props;
         if (beforeShow !== undefined)
             beforeShow(this.formContext);
+    }
+    componentWillUnmount() {
+        this.disposer();
     }
     render() {
         return React.createElement(ContextContainer.Provider, { value: this.formContext },

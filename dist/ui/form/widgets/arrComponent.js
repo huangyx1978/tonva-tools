@@ -45,13 +45,6 @@ export const ArrComponent = observer(({ parentContext, arrSchema, children }) =>
     }
     let first = true;
     return ArrContainer(arrLabel, React.createElement(React.Fragment, null, data.map((row, index) => {
-        /*
-        let arrRow = row.$row;
-        if (arrRow === undefined) {
-            row.$row = arrRow = new ArrRow(arrSchema, row);
-        }
-        let rowKey = arrRow.key;
-        */
         let rowContext;
         let rowContent;
         let sep = undefined;
@@ -67,9 +60,7 @@ export const ArrComponent = observer(({ parentContext, arrSchema, children }) =>
             let typeofTemplet = typeof Templet;
             if (typeofTemplet === 'function') {
                 rowContext = new RowContext(parentContext, arrSchema, row, true);
-                //row.$context = rowContext;
                 rowContent = React.createElement(observer(Templet), row);
-                //rowContent = React.createElement(Templet as React.StatelessComponent, row);
             }
             else if (typeofTemplet === 'object') {
                 rowContext = new RowContext(parentContext, arrSchema, row, true);
@@ -87,11 +78,15 @@ export const ArrComponent = observer(({ parentContext, arrSchema, children }) =>
         let selectCheck, deleteIcon;
         if (selectable === true) {
             let onClick = (evt) => {
-                row.$isSelected = evt.target.checked;
+                let { checked } = evt.target;
+                row.$isSelected = checked;
+                let { $source } = row;
+                if ($source !== undefined)
+                    $source.$isSelected = checked;
                 rowContext.removeErrors();
             };
             selectCheck = React.createElement("div", { className: "form-row-checkbox" },
-                React.createElement("input", { type: "checkbox", onClick: onClick }));
+                React.createElement("input", { type: "checkbox", onClick: onClick, defaultChecked: row.$isSelected }));
         }
         let isDeleted = !(row.$isDeleted === undefined || row.$isDeleted === false);
         if (deletable === true) {
@@ -99,6 +94,9 @@ export const ArrComponent = observer(({ parentContext, arrSchema, children }) =>
             let onDelClick = () => {
                 if (restorable === true) {
                     row.$isDeleted = !isDeleted;
+                    let { $source } = row;
+                    if ($source !== undefined)
+                        $source.$isDeleted = !isDeleted;
                 }
                 else {
                     let p = data.indexOf(row);
@@ -107,7 +105,7 @@ export const ArrComponent = observer(({ parentContext, arrSchema, children }) =>
                 }
                 rowContext.removeErrors();
             };
-            deleteIcon = React.createElement("div", { className: "form-row-edit align-self-start text-info cursor-pointer", onClick: onDelClick },
+            deleteIcon = React.createElement("div", { className: "form-row-edit text-info", onClick: onDelClick },
                 React.createElement("i", { className: classNames('fa', icon, 'fa-fw') }));
         }
         let editContainer = selectable === true || deletable === true ?

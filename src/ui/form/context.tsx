@@ -45,6 +45,7 @@ export abstract class Context {
         return arrRowContexts;
     }
 
+    abstract get data():any;
     abstract getItemSchema(itemName:string):ItemSchema;
     abstract getUiItem(itemName:string):UiItem;
     get arrName():string {return undefined}
@@ -205,7 +206,6 @@ export class RowContext extends Context {
         this.arrSchema = arrSchema;
         this.rowKey = rowKeySeed++;
         this.data = data;
-        //this.row = row;
     }
     getItemSchema(itemName:string):ItemSchema {return this.arrSchema.itemSchemas[itemName]}
     getUiItem(itemName:string):UiItem {
@@ -220,12 +220,15 @@ export class RowContext extends Context {
         super.removeErrors();
         this.parentContext.removeErrors();
     }
+
+    get parentData():any {return this.parentContext.data;}
 }
 
 export class FormContext extends Context {
     constructor(form:Form, inNode:boolean) {
         super(form, form.uiSchema, form.data, inNode, false);
     }
+    get data():any {return this.form.data}
     getItemSchema(itemName:string):ItemSchema {return this.form.itemSchemas[itemName]}
     getUiItem(itemName:string):UiItem {
         let {uiSchema} = this.form;

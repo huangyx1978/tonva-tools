@@ -209,7 +209,6 @@ export class RowContext extends Context {
         this.arrSchema = arrSchema;
         this.rowKey = rowKeySeed++;
         this.data = data;
-        //this.row = row;
     }
     getItemSchema(itemName) { return this.arrSchema.itemSchemas[itemName]; }
     getUiItem(itemName) {
@@ -226,11 +225,13 @@ export class RowContext extends Context {
         super.removeErrors();
         this.parentContext.removeErrors();
     }
+    get parentData() { return this.parentContext.data; }
 }
 export class FormContext extends Context {
     constructor(form, inNode) {
         super(form, form.uiSchema, form.data, inNode, false);
     }
+    get data() { return this.form.data; }
     getItemSchema(itemName) { return this.form.itemSchemas[itemName]; }
     getUiItem(itemName) {
         let { uiSchema } = this.form;

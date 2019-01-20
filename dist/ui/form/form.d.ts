@@ -29,6 +29,8 @@ export declare class Form extends React.Component<FormProps> {
     readonly res?: FormRes;
     protected formContext: FormContext;
     private content;
+    private formData;
+    private disposer;
     readonly data: any;
     readonly Container: (content: JSX.Element) => JSX.Element;
     readonly FieldContainer: (label: any, content: JSX.Element) => JSX.Element;
@@ -37,7 +39,10 @@ export declare class Form extends React.Component<FormProps> {
     constructor(props: FormProps);
     private initData;
     private initDataItem;
+    private calcSelectOrDelete;
+    private arrItemOperated;
     componentDidMount(): void;
+    componentWillUnmount(): void;
     render(): JSX.Element;
     protected DefaultContainer: (content: JSX.Element) => JSX.Element;
     protected DefaultFieldContainer: (label: string | JSX.Element, content: JSX.Element) => JSX.Element;

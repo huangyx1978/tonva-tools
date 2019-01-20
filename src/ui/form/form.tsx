@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {observable} from 'mobx';
+import {observable, IReactionDisposer, autorun} from 'mobx';
 import classNames from 'classnames';
 import { Schema, ItemSchema, ArrSchema } from './schema';
 import { UiSchema, TempletType } from './uiSchema';
@@ -40,6 +40,8 @@ export class Form extends React.Component<FormProps> {
     readonly res?: FormRes;
     protected formContext: FormContext;
     private content: any;
+    private formData: any;
+    private disposer: IReactionDisposer;
     @observable readonly data:any;
 
     readonly Container: (content:JSX.Element) => JSX.Element;
@@ -74,6 +76,8 @@ export class Form extends React.Component<FormProps> {
             this.itemSchemas[itemSchema.name] = itemSchema;
         }
         this.uiSchema = uiSchema;
+        this.formData = formData;
+        this.disposer = autorun(this.calcSelectOrDelete);
         this.data = {};
         this.initData(formData);
         let inNode:boolean = this.props.children !== undefined || this.uiSchema && this.uiSchema.Templet !== undefined;
@@ -129,7 +133,12 @@ export class Form extends React.Component<FormProps> {
             else if (Array.isArray(val) === false) val = [val];
             let arr:any[] = [];
             for (let row of val) {
-                let r = {};
+                let {$isSelected, $isDeleted} = row;
+                let r = {
+                    $source: row,
+                    $isSelected: $isSelected,
+                    $isDeleted: $isDeleted,
+                };
                 for (let item of arrItems) {
                     this.initDataItem(item, r, row);
                     /*
@@ -147,9 +156,40 @@ export class Form extends React.Component<FormProps> {
         data[name] = formData[name];
     }
 
+    private calcSelectOrDelete = () => {
+        if (this.formData === undefined) return;
+        for (let itemSchema of this.schema) {
+            this.arrItemOperated(itemSchema);
+        }
+    }
+
+    private arrItemOperated(itemSchema: ItemSchema) {
+        let {name, type} = itemSchema;
+        if (type !== 'arr') return;
+        //let arrVal = this.formData[name];
+        //if (arrVal === undefined) return;
+        let formArrVal = this.data[name];
+        let {arr: arrItems} = itemSchema as ArrSchema;
+        for (let row of formArrVal) {
+            let {$source} = row;
+            if ($source === undefined) continue;
+            let {$isSelected, $isDeleted} = $source;
+            row.$isSelected = $isSelected;
+            row.$isDeleted = $isDeleted;
+            //console.log($isSelected, $isDeleted);
+            for (let item of arrItems) {
+                this.arrItemOperated(item);
+            }
+        }
+    }
+
     componentDidMount() {
         let {beforeShow} = this.props;
         if (beforeShow !== undefined) beforeShow(this.formContext);
+    }
+
+    componentWillUnmount() {
+        this.disposer();
     }
 
     render() {
