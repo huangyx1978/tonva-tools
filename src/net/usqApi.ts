@@ -68,12 +68,15 @@ class CacheUsqLocals {
             }
             if (ret === undefined) {
                 ret = await usqApi.__loadAccess();
+                this.saveLocal(un, ret);
+                /*
                 this.local.usqs[un] = {
                     value: ret,
                     isNet: true,
                 }
                 let str = JSON.stringify(this.local);
                 localStorage.setItem(usqLocalEntities, str);
+                */
             }
             return _.cloneDeep(ret);
         }
@@ -84,6 +87,15 @@ class CacheUsqLocals {
         }
     }
 
+    private saveLocal(usqName:string, accessValue: any) {
+        this.local.usqs[usqName] = {
+            value: accessValue,
+            isNet: true,
+        }
+        let str = JSON.stringify(this.local);
+        localStorage.setItem(usqLocalEntities, str);
+    }
+
     async checkAccess(usqApi: UsqApi):Promise<boolean> {
         let {usqOwner, usqName} = usqApi;
         let un = usqOwner+'/'+usqName;
@@ -91,7 +103,12 @@ class CacheUsqLocals {
         let {isNet, value} = usq;
         if (isNet === true) return true;
         let ret = await usqApi.__loadAccess();
-        return _.isMatch(value, ret);
+        let isMatch = _.isMatch(value, ret);
+        if (isMatch === false) {
+            this.saveLocal(un, ret);
+        }
+        return isMatch;
+
     }
 }
 

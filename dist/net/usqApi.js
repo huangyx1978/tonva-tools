@@ -59,12 +59,15 @@ class CacheUsqLocals {
                 }
                 if (ret === undefined) {
                     ret = yield usqApi.__loadAccess();
+                    this.saveLocal(un, ret);
+                    /*
                     this.local.usqs[un] = {
                         value: ret,
                         isNet: true,
-                    };
+                    }
                     let str = JSON.stringify(this.local);
                     localStorage.setItem(usqLocalEntities, str);
+                    */
                 }
                 return _.cloneDeep(ret);
             }
@@ -75,6 +78,14 @@ class CacheUsqLocals {
             }
         });
     }
+    saveLocal(usqName, accessValue) {
+        this.local.usqs[usqName] = {
+            value: accessValue,
+            isNet: true,
+        };
+        let str = JSON.stringify(this.local);
+        localStorage.setItem(usqLocalEntities, str);
+    }
     checkAccess(usqApi) {
         return __awaiter(this, void 0, void 0, function* () {
             let { usqOwner, usqName } = usqApi;
@@ -84,7 +95,11 @@ class CacheUsqLocals {
             if (isNet === true)
                 return true;
             let ret = yield usqApi.__loadAccess();
-            return _.isMatch(value, ret);
+            let isMatch = _.isMatch(value, ret);
+            if (isMatch === false) {
+                this.saveLocal(un, ret);
+            }
+            return isMatch;
         });
     }
 }
