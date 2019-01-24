@@ -29,6 +29,8 @@ class CacheUsqLocals {
                     let ls = localStorage.getItem(usqLocalEntities);
                     if (ls !== null) {
                         this.local = JSON.parse(ls);
+                        if (this.local.usqs === undefined)
+                            this.local.usqs = {};
                     }
                 }
                 if (this.local !== undefined) {
@@ -60,19 +62,10 @@ class CacheUsqLocals {
                 if (ret === undefined) {
                     ret = yield usqApi.__loadAccess();
                     this.saveLocal(un, ret);
-                    /*
-                    this.local.usqs[un] = {
-                        value: ret,
-                        isNet: true,
-                    }
-                    let str = JSON.stringify(this.local);
-                    localStorage.setItem(usqLocalEntities, str);
-                    */
                 }
                 return _.cloneDeep(ret);
             }
             catch (err) {
-                this.local = undefined;
                 localStorage.removeItem(usqLocalEntities);
                 throw err;
             }
@@ -91,6 +84,8 @@ class CacheUsqLocals {
             let { usqOwner, usqName } = usqApi;
             let un = usqOwner + '/' + usqName;
             let usq = this.local.usqs[un];
+            if (usq === undefined)
+                return true;
             let { isNet, value } = usq;
             if (isNet === true)
                 return true;
@@ -152,12 +147,6 @@ export class UsqApi extends ApiBase {
     loadAccess() {
         return __awaiter(this, void 0, void 0, function* () {
             return yield localUsqs.loadAccess(this);
-            /*
-            let acc = this.access === undefined?
-                '' :
-                this.access.join('|');
-            return await this.get('access', {acc:acc});
-            */
         });
     }
     loadEntities() {

@@ -1,11 +1,5 @@
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
 import * as React from 'react';
-import { observable, autorun } from 'mobx';
+import { observable, isObservable } from 'mobx';
 import classNames from 'classnames';
 import { factory } from './widgets';
 import 'font-awesome/css/font-awesome.min.css';
@@ -13,27 +7,12 @@ import { ContextContainer, FormContext } from './context';
 import { formRes } from './formRes';
 import { resLang } from '../res';
 export class Form extends React.Component {
-    //readonly ArrContainer: (label:any, content:JSX.Element) => JSX.Element;
-    //readonly RowContainer: (content:JSX.Element) => JSX.Element;
-    //readonly RowSeperator: JSX.Element;
     constructor(props) {
         super(props);
-        this.calcSelectOrDelete = () => {
-            if (this.formData === undefined)
-                return;
-            for (let itemSchema of this.schema) {
-                this.arrItemOperated(itemSchema);
-            }
-        };
         this.DefaultContainer = (content) => {
             return React.createElement("form", { className: classNames(this.props.className) }, content);
         };
-        /*
-        protected DefaultArrFieldContainer = (itemName:string, content:JSX.Element, context:RowContext): JSX.Element => {
-            return this.InnerFieldContainer(itemName, content, context);
-        }*/
         this.DefaultFieldContainer = (label, content) => {
-            //return this.InnerFieldContainer(itemName, content, context);
             let { fieldLabelSize } = this.props;
             if (fieldLabelSize > 0) {
                 let labelView;
@@ -61,7 +40,6 @@ export class Form extends React.Component {
                 content);
         };
         this.RowContainer = (content) => {
-            //return <div className="row">{content}</div>;
             let cn = classNames({
                 'py-3': true
             });
@@ -74,26 +52,24 @@ export class Form extends React.Component {
         this.FieldClass = FieldClass !== undefined && FieldClass !== '' && FieldClass !== null ? FieldClass : this.DefaultFieldClass;
         this.res = res || this.DefaultRes;
         this.ButtonClass = ButtonClass || this.DefaultButtonClass;
-        //this.ArrContainer = ArrContainer || this.DefaultArrContainer;
-        //this.RowContainer = RowContainer || this.DefaultRowContainer;
-        //this.RowSeperator = RowSeperator || this.DefaultRowSeperator;
         this.schema = schema;
         this.itemSchemas = {};
         for (let itemSchema of this.schema) {
             this.itemSchemas[itemSchema.name] = itemSchema;
         }
         this.uiSchema = uiSchema;
-        this.formData = formData;
-        this.disposer = autorun(this.calcSelectOrDelete);
-        this.data = {};
+        //this.inData = formData;
+        if (formData === undefined) {
+            formData = {};
+        }
+        else if (isObservable(formData) === true) {
+            this.data = formData;
+        }
+        if (this.data === undefined)
+            this.data = observable({});
         this.initData(formData);
-        let inNode = this.props.children !== undefined || this.uiSchema && this.uiSchema.Templet !== undefined;
-        //this.formContext = new FormContext(this, inNode);
         let { children } = this.props;
-        //let content:JSX.Element; //, inNode:boolean;
-        //let formContext: FormContext;
         if (children !== undefined) {
-            //inNode = true;
             this.content = React.createElement(React.Fragment, null, children);
             this.formContext = new FormContext(this, true);
         }
@@ -103,22 +79,19 @@ export class Form extends React.Component {
                 Templet = this.uiSchema.Templet;
             }
             if (Templet !== undefined) {
-                // inNode = true;
                 this.content = typeof (Templet) === 'function' ? Templet(this.data) : Templet;
                 this.formContext = new FormContext(this, true);
             }
             else {
-                // inNode = false;
                 this.formContext = new FormContext(this, false);
                 this.content = React.createElement(React.Fragment, null, this.schema.map((v, index) => {
                     return React.createElement(React.Fragment, { key: index }, factory(this.formContext, v, children));
                 }));
             }
         }
+        //this.disposer = autorun(this.onItemValueChanged);
     }
     initData(formData) {
-        if (formData === undefined)
-            formData = {};
         for (let itemSchema of this.schema) {
             this.initDataItem(itemSchema, this.data, formData);
         }
@@ -141,37 +114,58 @@ export class Form extends React.Component {
                 val = [];
             else if (Array.isArray(val) === false)
                 val = [val];
-            let arr = [];
-            for (let row of val) {
-                let { $isSelected, $isDeleted } = row;
-                let r = {
-                    $source: row,
-                    $isSelected: $isSelected,
-                    $isDeleted: $isDeleted,
-                };
-                for (let item of arrItems) {
-                    this.initDataItem(item, r, row);
+            let arr = data[name];
+            if (arr === undefined) {
+                data[name] = [];
+                arr = data[name];
+                for (let row of val) {
                     /*
-                    let {name:nm} = item;
-                    let v = row[nm];
-                    if (v === undefined) v = null;
-                    r[nm] = v;
+                    let {$isSelected, $isDeleted} = row;
+                    let r = {
+                        $source: row,
+                        $isSelected: $isSelected,
+                        $isDeleted: $isDeleted,
+                    };
                     */
+                    let r = {};
+                    for (let item of arrItems) {
+                        this.initDataItem(item, r, row);
+                    }
+                    arr.push(r);
                 }
-                arr.push(r);
             }
-            data[name] = observable(arr);
+            else {
+                for (let row of val) {
+                    for (let item of arrItems) {
+                        this.initDataItem(item, row, row);
+                    }
+                }
+            }
+            //data[name] = arr;
             return;
         }
-        data[name] = formData[name];
+        if (data[name] === undefined)
+            data[name] = formData[name];
     }
-    arrItemOperated(itemSchema) {
-        let { name, type } = itemSchema;
-        if (type !== 'arr')
+    /*
+    private onItemValueChanged = () => {
+        for (let itemSchema of this.schema) {
+            this.itemChanged(itemSchema, this.data, this.inData);
+        }
+    }*/
+    itemChanged(itemSchema, data, inData) {
+        if (data === undefined || inData === undefined)
             return;
+        let { name, type } = itemSchema;
+        if (type !== 'arr') {
+            data[name] = inData[name];
+            return;
+        }
         //let arrVal = this.formData[name];
         //if (arrVal === undefined) return;
-        let formArrVal = this.data[name];
+        let formArrVal = data[name];
+        if (formArrVal === undefined)
+            return;
         let { arr: arrItems } = itemSchema;
         for (let row of formArrVal) {
             let { $source } = row;
@@ -182,7 +176,7 @@ export class Form extends React.Component {
             row.$isDeleted = $isDeleted;
             //console.log($isSelected, $isDeleted);
             for (let item of arrItems) {
-                this.arrItemOperated(item);
+                this.itemChanged(item, row, $source);
             }
         }
     }
@@ -192,7 +186,7 @@ export class Form extends React.Component {
             beforeShow(this.formContext);
     }
     componentWillUnmount() {
-        this.disposer();
+        //this.disposer();
     }
     render() {
         return React.createElement(ContextContainer.Provider, { value: this.formContext },
@@ -200,7 +194,4 @@ export class Form extends React.Component {
             this.Container(this.content));
     }
 }
-__decorate([
-    observable
-], Form.prototype, "data", void 0);
 //# sourceMappingURL=form.js.map

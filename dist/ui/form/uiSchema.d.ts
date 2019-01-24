@@ -3,11 +3,12 @@ import { Context } from './context';
 import { FieldRule, ContextRule } from './rules';
 import { ItemSchema } from './schema';
 import { FieldProps } from './field';
-import { Widget } from './widgets';
+import { Widget, RowContext } from './widgets';
 export declare type TypeWidget = new (context: Context, itemSchema: ItemSchema, fieldProps: FieldProps, children: React.ReactNode) => Widget;
 export declare type UiType = 'form' | 'arr' | 'group' | 'button' | 'submit' | 'custom' | 'id' | 'text' | 'textarea' | 'password' | 'date' | 'datetime' | 'select' | 'url' | 'email' | 'updown' | 'color' | 'checkbox' | 'checkboxes' | 'radio' | 'range';
 export declare type ChangingHandler = (context: Context, value: any, prev: any) => boolean;
 export declare type ChangedHandler = (context: Context, value: any, prev: any) => void;
+export declare type RowStateChangedHandler = (context: RowContext, selected: boolean, deleted: boolean) => void;
 export interface UiItem {
     widget?: UiType;
     readOnly?: boolean;
@@ -89,6 +90,7 @@ export interface UiArr extends UiSchema, UiItem {
     ArrContainer?: (label: any, content: JSX.Element) => JSX.Element;
     RowContainer?: (content: JSX.Element) => JSX.Element;
     RowSeperator?: JSX.Element;
+    onStateChanged?: RowStateChangedHandler;
 }
 export interface UiGroup extends UiItem {
     widget: 'group';

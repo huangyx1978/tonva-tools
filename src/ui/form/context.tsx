@@ -1,10 +1,9 @@
 import * as React from 'react';
+import { observable, computed } from 'mobx';
 import { Form } from './form';
 import { UiSchema, UiArr, UiItem } from './uiSchema';
 import { ArrSchema, ItemSchema } from './schema';
 import { Widget as Widget } from './widgets/widget';
-//import { ArrRow } from './arrRow';
-import { observable, computed } from 'mobx';
 import { ContextRule } from './rules';
 import { observer } from 'mobx-react';
 
