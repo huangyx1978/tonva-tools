@@ -1,11 +1,11 @@
 import * as React from 'react';
-import {observable, IReactionDisposer, autorun, isObservable} from 'mobx';
+import {observable, isObservable} from 'mobx';
 import classNames from 'classnames';
 import { Schema, ItemSchema, ArrSchema } from './schema';
 import { UiSchema, TempletType } from './uiSchema';
 import { factory } from './widgets';
 import 'font-awesome/css/font-awesome.min.css';
-import { ContextContainer, FormContext, Context, RowContext } from './context';
+import { ContextContainer, FormContext, Context } from './context';
 import { FormRes, formRes } from './formRes';
 import { resLang } from '../res';
 
@@ -35,8 +35,6 @@ export class Form extends React.Component<FormProps> {
     readonly res?: FormRes;
     protected formContext: FormContext;
     private content: any;
-    //private inData: any;
-    //private disposer: IReactionDisposer;
     readonly data:any;
 
     readonly Container: (content:JSX.Element) => JSX.Element;
@@ -63,7 +61,6 @@ export class Form extends React.Component<FormProps> {
             this.itemSchemas[itemSchema.name] = itemSchema;
         }
         this.uiSchema = uiSchema;
-        //this.inData = formData;
         if (formData === undefined) {
             formData = {};
         }
@@ -94,8 +91,6 @@ export class Form extends React.Component<FormProps> {
                 })}</>;
             }
         }
-
-        //this.disposer = autorun(this.onItemValueChanged);
     }
 
     private initData(formData: any) {
@@ -123,14 +118,6 @@ export class Form extends React.Component<FormProps> {
                 data[name] = [];
                 arr = data[name];
                 for (let row of val) {
-                    /*
-                    let {$isSelected, $isDeleted} = row;
-                    let r = {
-                        $source: row,
-                        $isSelected: $isSelected,
-                        $isDeleted: $isDeleted,
-                    };
-                    */
                    let r = {};
                     for (let item of arrItems) {
                         this.initDataItem(item, r, row);
@@ -145,51 +132,14 @@ export class Form extends React.Component<FormProps> {
                     }
                 }
             }
-            //data[name] = arr;
             return;
         }
         if (data[name] === undefined) data[name] = formData[name];
     }
 
-    /*
-    private onItemValueChanged = () => {
-        for (let itemSchema of this.schema) {
-            this.itemChanged(itemSchema, this.data, this.inData);
-        }
-    }*/
-
-    private itemChanged(itemSchema: ItemSchema, data:any, inData:any) {
-        if (data === undefined || inData === undefined) return;
-        let {name, type} = itemSchema;
-        if (type !== 'arr') {
-            data[name] = inData[name];
-            return;
-        }
-        //let arrVal = this.formData[name];
-        //if (arrVal === undefined) return;
-        let formArrVal = data[name];
-        if (formArrVal === undefined) return;
-        let {arr: arrItems} = itemSchema as ArrSchema;
-        for (let row of formArrVal) {
-            let {$source} = row;
-            if ($source === undefined) continue;
-            let {$isSelected, $isDeleted} = $source;
-            row.$isSelected = $isSelected;
-            row.$isDeleted = $isDeleted;
-            //console.log($isSelected, $isDeleted);
-            for (let item of arrItems) {
-                this.itemChanged(item, row, $source);
-            }
-        }
-    }
-
     componentDidMount() {
         let {beforeShow} = this.props;
         if (beforeShow !== undefined) beforeShow(this.formContext);
-    }
-
-    componentWillUnmount() {
-        //this.disposer();
     }
 
     render() {
