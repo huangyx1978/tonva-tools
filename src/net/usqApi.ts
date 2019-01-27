@@ -4,6 +4,7 @@ import {HttpChannelUI, HttpChannelNavUI} from './httpChannelUI';
 import {appUsq} from './appBridge';
 import {ApiBase} from './apiBase';
 import { host } from './host';
+import { deserializeJson, serializeJson } from './serializeJson';
 
 let channelUIs:{[name:string]: HttpChannel} = {};
 let channelNoUIs:{[name:string]: HttpChannel} = {};
@@ -36,7 +37,6 @@ class CacheUsqLocals {
                 let ls = localStorage.getItem(usqLocalEntities);
                 if (ls !== null) {
                     this.local = JSON.parse(ls);
-                    if (this.local.usqs === undefined) this.local.usqs = {};
                 }
             }
             if (this.local !== undefined) {
@@ -51,7 +51,7 @@ class CacheUsqLocals {
                     }
                 }
             }
-            if (this.local === undefined) {                
+            if (this.local === undefined) {
                 this.local = {
                     user: loginedUserId,
                     unit: undefined,
@@ -69,10 +69,19 @@ class CacheUsqLocals {
             if (ret === undefined) {
                 ret = await usqApi.__loadAccess();
                 this.saveLocal(un, ret);
+                /*
+                this.local.usqs[un] = {
+                    value: ret,
+                    isNet: true,
+                }
+                let str = JSON.stringify(this.local);
+                localStorage.setItem(usqLocalEntities, str);
+                */
             }
             return _.cloneDeep(ret);
         }
         catch (err) {
+            this.local = undefined;
             localStorage.removeItem(usqLocalEntities);
             throw err;
         }
@@ -91,7 +100,6 @@ class CacheUsqLocals {
         let {usqOwner, usqName} = usqApi;
         let un = usqOwner+'/'+usqName;
         let usq = this.local.usqs[un];
-        if (usq === undefined) return true;
         let {isNet, value} = usq;
         if (isNet === true) return true;
         let ret = await usqApi.__loadAccess();

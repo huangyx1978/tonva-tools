@@ -1,11 +1,11 @@
 import * as React from 'react';
-import {observable, isObservable} from 'mobx';
+import {observable, IReactionDisposer, autorun} from 'mobx';
 import classNames from 'classnames';
 import { Schema, ItemSchema, ArrSchema } from './schema';
 import { UiSchema, TempletType } from './uiSchema';
 import { factory } from './widgets';
 import 'font-awesome/css/font-awesome.min.css';
-import { ContextContainer, FormContext, Context } from './context';
+import { ContextContainer, FormContext, Context, RowContext } from './context';
 import { FormRes, formRes } from './formRes';
 import { resLang } from '../res';
 
@@ -26,6 +26,11 @@ export interface FormProps {
     FieldContainer?: (label:string|JSX.Element, content:JSX.Element) => JSX.Element;
     FieldClass?: string;
     ButtonClass?: string;
+/*    
+    ArrContainer?: (label:any, content:JSX.Element) => JSX.Element;
+    RowContainer?: (content:JSX.Element) => JSX.Element;
+    RowSeperator?: JSX.Element;
+*/
 }
 
 export class Form extends React.Component<FormProps> {
@@ -35,25 +40,35 @@ export class Form extends React.Component<FormProps> {
     readonly res?: FormRes;
     protected formContext: FormContext;
     private content: any;
-    readonly data:any;
+    private formData: any;
+    private disposer: IReactionDisposer;
+    @observable readonly data:any;
 
     readonly Container: (content:JSX.Element) => JSX.Element;
     readonly FieldContainer: (label:any, content:JSX.Element) => JSX.Element;
     readonly FieldClass: string;
     readonly ButtonClass: string;
+    //readonly ArrContainer: (label:any, content:JSX.Element) => JSX.Element;
+    //readonly RowContainer: (content:JSX.Element) => JSX.Element;
+    //readonly RowSeperator: JSX.Element;
 
     constructor(props:FormProps) {
         super(props);
-        let {schema, uiSchema, formData,
+        let {schema, uiSchema, formData, 
             Container, FieldContainer, FieldClass, 
             ButtonClass, 
             res,
+            //ArrContainer, RowContainer, //ArrFieldContainer, 
+            //RowSeperator,
         } = props;
         this.Container = Container || this.DefaultContainer;
         this.FieldContainer = FieldContainer || this.DefaultFieldContainer;
         this.FieldClass = FieldClass!==undefined && FieldClass!==''&&FieldClass!==null? FieldClass : this.DefaultFieldClass;
         this.res = res || this.DefaultRes;
         this.ButtonClass = ButtonClass || this.DefaultButtonClass;
+        //this.ArrContainer = ArrContainer || this.DefaultArrContainer;
+        //this.RowContainer = RowContainer || this.DefaultRowContainer;
+        //this.RowSeperator = RowSeperator || this.DefaultRowSeperator;
 
         this.schema = schema;
         this.itemSchemas = {};
@@ -61,17 +76,17 @@ export class Form extends React.Component<FormProps> {
             this.itemSchemas[itemSchema.name] = itemSchema;
         }
         this.uiSchema = uiSchema;
-        if (formData === undefined) {
-            formData = {};
-        }
-        else if (isObservable(formData) === true) {
-            this.data = formData;
-        }
-        if (this.data === undefined) this.data = observable({});
+        this.formData = formData;
+        this.disposer = autorun(this.calcSelectOrDelete);
+        this.data = {};
         this.initData(formData);
-
+        let inNode:boolean = this.props.children !== undefined || this.uiSchema && this.uiSchema.Templet !== undefined;
+        //this.formContext = new FormContext(this, inNode);
         let {children} = this.props;
+        //let content:JSX.Element; //, inNode:boolean;
+        //let formContext: FormContext;
         if (children !== undefined) {
+            //inNode = true;
             this.content = <>{children}</>;
             this.formContext = new FormContext(this, true);
         }
@@ -81,10 +96,12 @@ export class Form extends React.Component<FormProps> {
                 Templet = this.uiSchema.Templet;
             }
             if (Templet !== undefined) {
+                // inNode = true;
                 this.content = typeof(Templet) === 'function'? Templet(this.data) : Templet;
                 this.formContext = new FormContext(this, true);
             }
             else {
+                // inNode = false;
                 this.formContext = new FormContext(this, false);
                 this.content = <>{this.schema.map((v, index) => {
                     return <React.Fragment key={index}>{factory(this.formContext, v, children)}</React.Fragment>
@@ -94,6 +111,7 @@ export class Form extends React.Component<FormProps> {
     }
 
     private initData(formData: any) {
+        if (formData === undefined) formData = {};
         for (let itemSchema of this.schema) {
             this.initDataItem(itemSchema, this.data, formData);
         }
@@ -113,33 +131,65 @@ export class Form extends React.Component<FormProps> {
             let val:any[] = formData[name];
             if (val === undefined) val = [];
             else if (Array.isArray(val) === false) val = [val];
-            let arr:any[] = data[name];
-            if (arr === undefined) {
-                data[name] = [];
-                arr = data[name];
-                for (let row of val) {
-                   let r = {};
-                    for (let item of arrItems) {
-                        this.initDataItem(item, r, row);
-                    }
-                    arr.push(r);
+            let arr:any[] = [];
+            for (let row of val) {
+                let {$isSelected, $isDeleted} = row;
+                let r = {
+                    $source: row,
+                    $isSelected: $isSelected,
+                    $isDeleted: $isDeleted,
+                };
+                for (let item of arrItems) {
+                    this.initDataItem(item, r, row);
+                    /*
+                    let {name:nm} = item;
+                    let v = row[nm];
+                    if (v === undefined) v = null;
+                    r[nm] = v;
+                    */
                 }
+                arr.push(r);
             }
-            else {
-                for (let row of val) {
-                    for (let item of arrItems) {
-                        this.initDataItem(item, row, row);
-                    }
-                }
-            }
+            data[name] = observable(arr);
             return;
         }
-        if (data[name] === undefined) data[name] = formData[name];
+        data[name] = formData[name];
+    }
+
+    private calcSelectOrDelete = () => {
+        if (this.formData === undefined) return;
+        for (let itemSchema of this.schema) {
+            this.arrItemOperated(itemSchema);
+        }
+    }
+
+    private arrItemOperated(itemSchema: ItemSchema) {
+        let {name, type} = itemSchema;
+        if (type !== 'arr') return;
+        //let arrVal = this.formData[name];
+        //if (arrVal === undefined) return;
+        let formArrVal = this.data[name];
+        let {arr: arrItems} = itemSchema as ArrSchema;
+        for (let row of formArrVal) {
+            let {$source} = row;
+            if ($source === undefined) continue;
+            let {$isSelected, $isDeleted} = $source;
+            row.$isSelected = $isSelected;
+            row.$isDeleted = $isDeleted;
+            //console.log($isSelected, $isDeleted);
+            for (let item of arrItems) {
+                this.arrItemOperated(item);
+            }
+        }
     }
 
     componentDidMount() {
         let {beforeShow} = this.props;
         if (beforeShow !== undefined) beforeShow(this.formContext);
+    }
+
+    componentWillUnmount() {
+        this.disposer();
     }
 
     render() {
@@ -154,8 +204,12 @@ export class Form extends React.Component<FormProps> {
             {content}
         </form>;
     }
-
+    /*
+    protected DefaultArrFieldContainer = (itemName:string, content:JSX.Element, context:RowContext): JSX.Element => {
+        return this.InnerFieldContainer(itemName, content, context);
+    }*/
     protected DefaultFieldContainer = (label:string|JSX.Element, content:JSX.Element): JSX.Element => {
+        //return this.InnerFieldContainer(itemName, content, context);
         let {fieldLabelSize} = this.props;
 
         if (fieldLabelSize > 0) {
@@ -188,6 +242,7 @@ export class Form extends React.Component<FormProps> {
         </div>;
     }
     RowContainer = (content:JSX.Element): JSX.Element => {
+        //return <div className="row">{content}</div>;
         let cn = classNames({
             'py-3': true
         });
