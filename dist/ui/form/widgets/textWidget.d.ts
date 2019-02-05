@@ -8,8 +8,9 @@ export declare class TextWidget extends Widget {
     protected setElementValue(value: any): void;
     protected readonly placeholder: string;
     protected onKeyDown: (evt: React.KeyboardEvent<HTMLInputElement>) => void;
-    protected onBlur(): void;
-    protected onFocus(): void;
+    protected onBlur(evt: React.FocusEvent<any>): void;
+    protected onFocus(evt: React.FocusEvent<any>): void;
+    protected onChange(evt: React.ChangeEvent<any>): void;
     setReadOnly(value: boolean): void;
     setDisabled(value: boolean): void;
     render(): JSX.Element;

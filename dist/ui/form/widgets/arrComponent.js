@@ -14,7 +14,6 @@ export const ArrComponent = observer(({ parentContext, arrSchema, children }) =>
     let arrLabel = name;
     let Templet;
     let selectable, deletable, restorable;
-    let onStateChanged;
     let { ArrContainer, RowContainer, RowSeperator, uiSchema } = form;
     if (uiSchema !== undefined) {
         let { selectable: formSelectable, deletable: formDeletable, restorable: formRestorable } = uiSchema;
@@ -26,8 +25,7 @@ export const ArrComponent = observer(({ parentContext, arrSchema, children }) =>
             restorable = formRestorable;
     }
     if (ui !== undefined) {
-        let { widget: widgetType, label, selectable: arrSelectable, deletable: arrDeletable, restorable: arrRestorable, ArrContainer: ac, RowContainer: rc, RowSeperator: rs, onStateChanged: osc } = ui;
-        onStateChanged = osc;
+        let { widget: widgetType, label, selectable: arrSelectable, deletable: arrDeletable, restorable: arrRestorable, ArrContainer: ac, RowContainer: rc, RowSeperator: rs } = ui;
         if (arrSelectable !== undefined)
             selectable = arrSelectable;
         if (arrDeletable !== undefined)
@@ -77,64 +75,52 @@ export const ArrComponent = observer(({ parentContext, arrSchema, children }) =>
         }
         let { rowKey } = rowContext;
         arrRowContexts[rowKey] = rowContext;
-        let editContainer;
-        if (selectable === true || deletable === true) {
-            let Content = observer(() => {
-                let selectCheck, deleteIcon;
-                if (selectable === true) {
-                    let onClick = (evt) => {
-                        let { checked } = evt.target;
-                        row.$isSelected = checked;
-                        let { $source } = row;
-                        if ($source !== undefined)
-                            $source.$isSelected = checked;
-                        if (onStateChanged !== undefined)
-                            onStateChanged(rowContext, checked, undefined);
-                        rowContext.removeErrors();
-                    };
-                    selectCheck = React.createElement("div", { className: "form-row-checkbox" },
-                        React.createElement("input", { type: "checkbox", onClick: onClick, defaultChecked: row.$isSelected }));
-                }
-                let isDeleted = !(row.$isDeleted === undefined || row.$isDeleted === false);
-                if (deletable === true) {
-                    let icon = isDeleted ? 'fa-undo' : 'fa-trash';
-                    let onDelClick = () => {
-                        if (onStateChanged !== undefined)
-                            onStateChanged(rowContext, undefined, !isDeleted);
-                        if (restorable === true) {
-                            row.$isDeleted = !isDeleted;
-                            let { $source } = row;
-                            if ($source !== undefined)
-                                $source.$isDeleted = !isDeleted;
-                        }
-                        else {
-                            let p = data.indexOf(row);
-                            if (p >= 0)
-                                data.splice(p, 1);
-                        }
-                        rowContext.removeErrors();
-                    };
-                    deleteIcon = React.createElement("div", { className: "form-row-edit text-info", onClick: onDelClick },
-                        React.createElement("i", { className: classNames('fa', icon, 'fa-fw') }));
-                }
-                return React.createElement("fieldset", { disabled: isDeleted },
-                    React.createElement("div", { className: classNames('d-flex', { 'deleted': isDeleted, 'row-selected': row.$isSelected }) },
-                        selectCheck,
-                        React.createElement("div", { className: "flex-grow-1" },
-                            React.createElement(rowContext.renderErrors, null),
-                            rowContent),
-                        deleteIcon));
-            });
-            editContainer = React.createElement(Content, null);
+        let selectCheck, deleteIcon;
+        if (selectable === true) {
+            let onClick = (evt) => {
+                let { checked } = evt.target;
+                row.$isSelected = checked;
+                let { $source } = row;
+                if ($source !== undefined)
+                    $source.$isSelected = checked;
+                rowContext.removeErrors();
+            };
+            selectCheck = React.createElement("div", { className: "form-row-checkbox" },
+                React.createElement("input", { type: "checkbox", onClick: onClick, defaultChecked: row.$isSelected }));
         }
-        else {
-            editContainer = React.createElement(React.Fragment, null,
-                React.createElement(rowContext.renderErrors, null),
-                rowContent);
+        let isDeleted = !(row.$isDeleted === undefined || row.$isDeleted === false);
+        if (deletable === true) {
+            let icon = isDeleted ? 'fa-undo' : 'fa-trash';
+            let onDelClick = () => {
+                if (restorable === true) {
+                    row.$isDeleted = !isDeleted;
+                    let { $source } = row;
+                    if ($source !== undefined)
+                        $source.$isDeleted = !isDeleted;
+                }
+                else {
+                    let p = data.indexOf(row);
+                    if (p >= 0)
+                        data.splice(p, 1);
+                }
+                rowContext.removeErrors();
+            };
+            deleteIcon = React.createElement("div", { className: "form-row-edit text-info", onClick: onDelClick },
+                React.createElement("i", { className: classNames('fa', icon, 'fa-fw') }));
         }
+        let editContainer = selectable === true || deletable === true ?
+            (content) => React.createElement("fieldset", { disabled: isDeleted },
+                React.createElement("div", { className: classNames('d-flex', { 'deleted': isDeleted, 'row-selected': row.$isSelected }) },
+                    selectCheck,
+                    React.createElement("div", { className: "flex-grow-1" }, content),
+                    deleteIcon))
+            :
+                (content) => content;
         return React.createElement(ContextContainer.Provider, { key: rowKey, value: rowContext },
             sep,
-            RowContainer(editContainer));
+            RowContainer(editContainer(React.createElement(React.Fragment, null,
+                React.createElement(rowContext.renderErrors, null),
+                rowContent))));
     })));
 });
 //# sourceMappingURL=arrComponent.js.map

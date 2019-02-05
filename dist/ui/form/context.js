@@ -5,6 +5,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import * as React from 'react';
+//import { ArrRow } from './arrRow';
 import { observable, computed } from 'mobx';
 import { observer } from 'mobx-react';
 export class Context {

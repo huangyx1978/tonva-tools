@@ -1,35 +1,28 @@
 export const isDevelopment = process.env.NODE_ENV === 'development';
 
+const centerHost = process.env['REACT_APP_CENTER_HOST'];
 const centerDebugHost = 'localhost:3000'; //'192.168.86.64';
-const centerEnvHost = 'REACT_APP_CENTER_DEBUG_HOST';
-const usqDebugHost = 'localhost:3015'; //'192.168.86.63';
-const usqEnvHost = 'REACT_APP_USQ_DEBUG_HOST';
-const debugUsqlServer = 'localhost:3009';
-const envUsqlServer = 'REACT_APP_DEBUG_USQL_SERVER';
+const uqDebugHost = 'localhost:3015'; //'192.168.86.63';
+const uqDebugBuilderHost = 'localhost:3009';
 interface HostValue {
     value: string;
-    env: string;
     local: boolean;
 }
 const hosts:{[name:string]:HostValue} = {
     centerhost: {
-        value: centerDebugHost, 
-        env: centerEnvHost,
+        value: process.env['REACT_APP_CENTER_DEBUG_HOST'] || centerDebugHost, 
         local: false
     },
-    usqhost: {
-        value: usqDebugHost, 
-        env: usqEnvHost,
+    uqhost: {
+        value: process.env['REACT_APP_UQ_DEBUG_HOST'] || uqDebugHost, 
         local: false
     },
     unitxhost: {
-        value: usqDebugHost, 
-        env: usqEnvHost,
+        value: process.env['REACT_APP_UQ_DEBUG_HOST'] || uqDebugHost, 
         local: false
     },
-    "usql-server": {
-        value: debugUsqlServer, 
-        env: envUsqlServer,
+    "uq-build": {
+        value: process.env['REACT_APP_UQ_DEBUG_BUILDER_HOST'] || uqDebugBuilderHost, 
         local: false
     }
 }
@@ -55,9 +48,9 @@ class Host {
         let promises:PromiseLike<any>[] = [];
         for (let i in hosts) {
             let hostValue = hosts[i];
-            let {value, env} = hostValue;
-            let host = process.env[env] || value;
-            let fetchUrl = this.debugHostUrl(host);
+            let {value} = hostValue;
+            //let host = process.env[env] || value;
+            let fetchUrl = this.debugHostUrl(value);
             let fetchOptions = {
                 method: "GET",
                 mode: "no-cors", // no-cors, cors, *same-origin
@@ -77,14 +70,15 @@ class Host {
     }
 
     private getCenterHost():string {
-        let host = process.env['REACT_APP_CENTER_HOST'];
-        let debugHost = process.env.REACT_APP_CENTER_DEBUG_HOST || centerDebugHost;
+        //let host = process.env['REACT_APP_CENTER_HOST'];
+        let {value, local} = hosts.centerhost; // process.env.REACT_APP_CENTER_DEBUG_HOST || centerDebugHost;
         let hash = document.location.hash;
         if (hash.includes('sheet_debug') === true) {
-            return debugHost;
+            return value;
         }
-        if (process.env.NODE_ENV==='development') {
-            if (hosts.centerhost.local === true) return debugHost;
+        //if (process.env.NODE_ENV==='development') {
+        if (isDevelopment === true) {
+            if (local === true) return value;
             /*
             if (debugHost !== undefined) {
                 try {
@@ -97,7 +91,7 @@ class Host {
                 }
             }*/
         }
-        return host;
+        return centerHost;
     }
 
     getUrlOrDebug(url:string, urlDebug:string):string {
@@ -105,12 +99,12 @@ class Host {
         if (!urlDebug) return url;
         for (let i in hosts) {
             let host = hosts[i];
-            let {env, value, local} = host;
+            let {value, local} = host;
             let hostString = `://${i}/`;
             let pos = urlDebug.indexOf(hostString);
             if (pos > 0) {
                 if (local === false) break;
-                urlDebug = urlDebug.replace(hostString, `://${process.env[env] || value}/`);
+                urlDebug = urlDebug.replace(hostString, `://${value}/`);
                 return urlDebug;
             }
         }
