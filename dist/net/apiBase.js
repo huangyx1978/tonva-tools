@@ -6,8 +6,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-//import {centerDebugHost, usqDebugHost, debugUsqlServer} from './host';
-//import {fetchLocalCheck} from './fetchLocalCheck';
 export function refetchApi(channel, url, options, resolve, reject) {
     return __awaiter(this, void 0, void 0, function* () {
         yield channel.fetch(url, options, resolve, reject);

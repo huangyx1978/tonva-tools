@@ -9,13 +9,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import _ from 'lodash';
 import { nav } from '../ui';
 import { uid } from '../uid';
-import { usqTokenApi, callCenterapi, CenterAppApi, centerToken } from './usqApi';
+import { uqTokenApi as uqTokenApi, callCenterapi, CenterAppApi, centerToken } from './uqApi';
 import { setSubAppWindow } from './wsChannel';
 import { host } from './host';
-const usqTokens = {};
-export function logoutUsqTokens() {
-    for (let i in usqTokens)
-        usqTokens[i] = undefined;
+const uqTokens = {};
+export function logoutUqTokens() {
+    for (let i in uqTokens)
+        uqTokens[i] = undefined;
 }
 const appsInFrame = {};
 class AppInFrameClass {
@@ -106,7 +106,7 @@ function onReceiveAppApiMessage(hash, apiName) {
             return { name: apiName, url: undefined, urlDebug: undefined, token: undefined };
         let { unit } = appInFrame;
         let parts = apiName.split('/');
-        let ret = yield usqTokenApi.usq({ unit: unit, usqOwner: parts[0], usqName: parts[1] });
+        let ret = yield uqTokenApi.uq({ unit: unit, uqOwner: parts[0], uqName: parts[1] });
         if (ret === undefined) {
             console.log('apiTokenApi.api return undefined. api=%s, unit=%s', apiName, unit);
             throw 'api not found';
@@ -117,7 +117,7 @@ function onReceiveAppApiMessage(hash, apiName) {
 function onAppApiReturn(message) {
     return __awaiter(this, void 0, void 0, function* () {
         let { apiName, url, urlDebug, token } = message;
-        let action = usqTokens[apiName];
+        let action = uqTokens[apiName];
         if (action === undefined) {
             throw 'error app api return';
             //return;
@@ -162,61 +162,61 @@ export function appUrl(url, unitId, page, param) {
     }
     return { url: url, hash: u };
 }
-export function loadAppUsqs(appOwner, appName) {
+export function loadAppUqs(appOwner, appName) {
     return __awaiter(this, void 0, void 0, function* () {
         let centerAppApi = new CenterAppApi('tv/', undefined);
         let unit = meInFrame.unit;
-        let ret = yield centerAppApi.usqs(unit, appOwner, appName);
-        centerAppApi.checkUsqs(unit, appOwner, appName).then(v => {
+        let ret = yield centerAppApi.uqs(unit, appOwner, appName);
+        centerAppApi.checkUqs(unit, appOwner, appName).then(v => {
             if (v === false)
                 nav.start();
         });
         return ret;
     });
 }
-export function appUsq(usq, usqOwner, usqName) {
+export function appUq(uq, uqOwner, uqName) {
     return __awaiter(this, void 0, void 0, function* () {
-        let usqToken = usqTokens[usq];
-        if (usqToken !== undefined)
-            return usqToken;
+        let uqToken = uqTokens[uq];
+        if (uqToken !== undefined)
+            return uqToken;
         if (!isBridged()) {
-            usqToken = yield usqTokenApi.usq({ unit: meInFrame.unit, usqOwner: usqOwner, usqName: usqName });
-            if (usqToken === undefined) {
-                let err = 'unauthorized call: usqTokenApi center return undefined!';
+            uqToken = yield uqTokenApi.uq({ unit: meInFrame.unit, uqOwner: uqOwner, uqName: uqName });
+            if (uqToken === undefined) {
+                let err = 'unauthorized call: uqTokenApi center return undefined!';
                 throw err;
             }
-            if (usqToken.token === undefined)
-                usqToken.token = centerToken;
-            let { url, urlDebug } = usqToken;
+            if (uqToken.token === undefined)
+                uqToken.token = centerToken;
+            let { url, urlDebug } = uqToken;
             let realUrl = host.getUrlOrDebug(url, urlDebug);
             console.log('realUrl: %s', realUrl);
-            usqToken.url = realUrl;
-            usqTokens[usq] = usqToken;
-            return usqToken;
+            uqToken.url = realUrl;
+            uqTokens[uq] = uqToken;
+            return uqToken;
         }
         console.log("appApi parent send: %s", meInFrame.hash);
-        usqToken = {
-            name: usq,
+        uqToken = {
+            name: uq,
             url: undefined,
             urlDebug: undefined,
             token: undefined,
             resolve: undefined,
             reject: undefined,
         };
-        usqTokens[usq] = usqToken;
+        uqTokens[uq] = uqToken;
         return new Promise((resolve, reject) => {
-            usqToken.resolve = (at) => __awaiter(this, void 0, void 0, function* () {
+            uqToken.resolve = (at) => __awaiter(this, void 0, void 0, function* () {
                 let a = yield at;
                 console.log('return from parent window: %s', JSON.stringify(a));
-                usqToken.url = a.url;
-                usqToken.urlDebug = a.urlDebug;
-                usqToken.token = a.token;
-                resolve(usqToken);
+                uqToken.url = a.url;
+                uqToken.urlDebug = a.urlDebug;
+                uqToken.token = a.token;
+                resolve(uqToken);
             });
-            usqToken.reject = reject;
+            uqToken.reject = reject;
             (window.opener || window.parent).postMessage({
                 type: 'app-api',
-                apiName: usq,
+                apiName: uq,
                 hash: meInFrame.hash,
             }, "*");
         });

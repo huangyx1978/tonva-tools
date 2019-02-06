@@ -5,7 +5,7 @@ import {Page} from './page';
 import {netToken} from '../net/netToken';
 import FetchErrorView from './fetchErrorView';
 import {FetchError} from '../fetchError';
-import {appUrl, setMeInFrame, logoutUsqTokens} from '../net/appBridge';
+import {appUrl, setMeInFrame, logoutUqTokens} from '../net/appBridge';
 import {LocalData} from '../local';
 import {guestApi, logoutApis, setCenterUrl, setCenterToken, WSChannel, meInFrame, isDevelopment, host} from '../net';
 import 'font-awesome/css/font-awesome.min.css';
@@ -511,7 +511,7 @@ export class Nav {
         this.local.logoutClear();
         this.user = undefined; //{} as User;
         logoutApis();
-        logoutUsqTokens();
+        logoutUqTokens();
         let guest = this.local.guest.get();
         setCenterToken(0, guest && guest.token);
         this.ws = undefined;

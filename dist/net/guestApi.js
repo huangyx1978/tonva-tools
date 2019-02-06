@@ -7,7 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { decodeGuestToken } from '../user';
-import { CenterApi } from './usqApi';
+import { CenterApi } from './uqApi';
 export class GuestApi extends CenterApi {
     guest() {
         return __awaiter(this, void 0, void 0, function* () {

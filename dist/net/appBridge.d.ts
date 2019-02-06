@@ -1,11 +1,11 @@
-import { App } from './usqApi';
-export interface UsqToken {
+import { App } from './uqApi';
+export interface UqToken {
     name: string;
     url: string;
     urlDebug: string;
     token: string;
 }
-export declare function logoutUsqTokens(): void;
+export declare function logoutUqTokens(): void;
 export interface AppInFrame {
     hash: string;
     unit: number;
@@ -19,6 +19,6 @@ export declare function appUrl(url: string, unitId: number, page?: string, param
     url: string;
     hash: string;
 };
-export declare function loadAppUsqs(appOwner: string, appName: any): Promise<App>;
-export declare function appUsq(usq: string, usqOwner: string, usqName: string): Promise<UsqToken>;
+export declare function loadAppUqs(appOwner: string, appName: any): Promise<App>;
+export declare function appUq(uq: string, uqOwner: string, uqName: string): Promise<UqToken>;
 export declare function bridgeCenterApi(url: string, method: string, body: any): Promise<any>;

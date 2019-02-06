@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import _ from 'lodash';
 import { HttpChannel } from './httpChannel';
 import { HttpChannelNavUI } from './httpChannelUI';
-import { appUsq } from './appBridge';
+import { appUq } from './appBridge';
 import { ApiBase } from './apiBase';
 import { host } from './host';
 let channelUIs = {};
@@ -19,26 +19,26 @@ export function logoutApis() {
     channelNoUIs = {};
     logoutUnitxApis();
 }
-const usqLocalEntities = 'usqLocalEntities';
-class CacheUsqLocals {
-    loadAccess(usqApi) {
+const uqLocalEntities = 'uqLocalEntities';
+class CacheUqLocals {
+    loadAccess(uqApi) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                let { usqOwner, usqName } = usqApi;
+                let { uqOwner, uqName } = uqApi;
                 if (this.local === undefined) {
-                    let ls = localStorage.getItem(usqLocalEntities);
+                    let ls = localStorage.getItem(uqLocalEntities);
                     if (ls !== null) {
                         this.local = JSON.parse(ls);
                     }
                 }
                 if (this.local !== undefined) {
-                    let { user, usqs } = this.local;
-                    if (user !== loginedUserId || usqs === undefined) {
+                    let { user, uqs } = this.local;
+                    if (user !== loginedUserId || uqs === undefined) {
                         this.local = undefined;
                     }
                     else {
-                        for (let i in usqs) {
-                            let ul = usqs[i];
+                        for (let i in uqs) {
+                            let ul = uqs[i];
                             ul.isNet = undefined;
                         }
                     }
@@ -47,54 +47,46 @@ class CacheUsqLocals {
                     this.local = {
                         user: loginedUserId,
                         unit: undefined,
-                        usqs: {}
+                        uqs: {}
                     };
                 }
                 let ret;
-                let un = usqOwner + '/' + usqName;
-                let usq = this.local.usqs[un];
-                if (usq !== undefined) {
-                    let { value } = usq;
+                let un = uqOwner + '/' + uqName;
+                let uq = this.local.uqs[un];
+                if (uq !== undefined) {
+                    let { value } = uq;
                     ret = value;
                 }
                 if (ret === undefined) {
-                    ret = yield usqApi.__loadAccess();
+                    ret = yield uqApi.__loadAccess();
                     this.saveLocal(un, ret);
-                    /*
-                    this.local.usqs[un] = {
-                        value: ret,
-                        isNet: true,
-                    }
-                    let str = JSON.stringify(this.local);
-                    localStorage.setItem(usqLocalEntities, str);
-                    */
                 }
                 return _.cloneDeep(ret);
             }
             catch (err) {
                 this.local = undefined;
-                localStorage.removeItem(usqLocalEntities);
+                localStorage.removeItem(uqLocalEntities);
                 throw err;
             }
         });
     }
-    saveLocal(usqName, accessValue) {
-        this.local.usqs[usqName] = {
+    saveLocal(uqName, accessValue) {
+        this.local.uqs[uqName] = {
             value: accessValue,
             isNet: true,
         };
         let str = JSON.stringify(this.local);
-        localStorage.setItem(usqLocalEntities, str);
+        localStorage.setItem(uqLocalEntities, str);
     }
-    checkAccess(usqApi) {
+    checkAccess(uqApi) {
         return __awaiter(this, void 0, void 0, function* () {
-            let { usqOwner, usqName } = usqApi;
-            let un = usqOwner + '/' + usqName;
-            let usq = this.local.usqs[un];
-            let { isNet, value } = usq;
+            let { uqOwner, uqName } = uqApi;
+            let un = uqOwner + '/' + uqName;
+            let uq = this.local.uqs[un];
+            let { isNet, value } = uq;
             if (isNet === true)
                 return true;
-            let ret = yield usqApi.__loadAccess();
+            let ret = yield uqApi.__loadAccess();
             let isMatch = _.isMatch(value, ret);
             if (isMatch === false) {
                 this.saveLocal(un, ret);
@@ -103,14 +95,14 @@ class CacheUsqLocals {
         });
     }
 }
-const localUsqs = new CacheUsqLocals;
-export class UsqApi extends ApiBase {
-    constructor(basePath, usqOwner, usqName, access, showWaiting) {
+const localUqs = new CacheUqLocals;
+export class UqApi extends ApiBase {
+    constructor(basePath, uqOwner, uqName, access, showWaiting) {
         super(basePath, showWaiting);
-        if (usqName) {
-            this.usqOwner = usqOwner;
-            this.usqName = usqName;
-            this.usq = usqOwner + '/' + usqName;
+        if (uqName) {
+            this.uqOwner = uqOwner;
+            this.uqName = uqName;
+            this.uq = uqOwner + '/' + uqName;
         }
         this.access = access;
         this.showWaiting = showWaiting;
@@ -126,13 +118,13 @@ export class UsqApi extends ApiBase {
             else {
                 channels = channelNoUIs;
             }
-            let channel = channels[this.usq];
+            let channel = channels[this.uq];
             if (channel !== undefined)
                 return channel;
-            let usqToken = yield appUsq(this.usq, this.usqOwner, this.usqName);
-            this.token = usqToken.token;
-            channel = new HttpChannel(false, usqToken.url, usqToken.token, channelUI);
-            return channels[this.usq] = channel;
+            let uqToken = yield appUq(this.uq, this.uqOwner, this.uqName);
+            this.token = uqToken.token;
+            channel = new HttpChannel(false, uqToken.url, uqToken.token, channelUI);
+            return channels[this.uq] = channel;
         });
     }
     update() {
@@ -151,7 +143,7 @@ export class UsqApi extends ApiBase {
     }
     loadAccess() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield localUsqs.loadAccess(this);
+            return yield localUqs.loadAccess(this);
         });
     }
     loadEntities() {
@@ -161,7 +153,7 @@ export class UsqApi extends ApiBase {
     }
     checkAccess() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield localUsqs.checkAccess(this);
+            return yield localUqs.checkAccess(this);
         });
     }
     schema(name) {
@@ -341,7 +333,7 @@ let channels = {};
 export function logoutUnitxApis() {
     channels = {};
 }
-export class UnitxApi extends UsqApi {
+export class UnitxApi extends UqApi {
     constructor(unitId) {
         super('tv/', undefined, undefined, undefined, true);
         this.unitId = unitId;
@@ -358,7 +350,7 @@ export class UnitxApi extends UsqApi {
         return __awaiter(this, void 0, void 0, function* () {
             let channelUI = new HttpChannelNavUI();
             let centerAppApi = new CenterAppApi('tv/', undefined);
-            let ret = yield centerAppApi.unitxUsq(this.unitId);
+            let ret = yield centerAppApi.unitxUq(this.unitId);
             let { token, url, urlDebug } = ret;
             let realUrl = host.getUrlOrDebug(url, urlDebug);
             this.token = token;
@@ -406,14 +398,14 @@ export class CenterApi extends ApiBase {
         });
     }
 }
-const usqTokens = 'usqTokens';
-export class UsqTokenApi extends CenterApi {
-    usq(params) {
+const uqTokens = 'uqTokens';
+export class UqTokenApi extends CenterApi {
+    uq(params) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                let { unit: unitParam, usqOwner, usqName } = params;
+                let { unit: unitParam, uqOwner, uqName } = params;
                 if (this.local === undefined) {
-                    let ls = localStorage.getItem(usqTokens);
+                    let ls = localStorage.getItem(uqTokens);
                     if (ls !== null) {
                         this.local = JSON.parse(ls);
                     }
@@ -427,35 +419,35 @@ export class UsqTokenApi extends CenterApi {
                     this.local = {
                         user: loginedUserId,
                         unit: params.unit,
-                        usqs: {}
+                        uqs: {}
                     };
                 }
-                let un = usqOwner + '/' + usqName;
+                let un = uqOwner + '/' + uqName;
                 let nowTick = new Date().getTime();
-                let usq = this.local.usqs[un];
-                if (usq !== undefined) {
-                    let { tick, value } = usq;
+                let uq = this.local.uqs[un];
+                if (uq !== undefined) {
+                    let { tick, value } = uq;
                     if ((nowTick - tick) < 24 * 3600 * 1000) {
                         return value;
                     }
                 }
-                let ret = yield this.get('app-usq', params);
-                this.local.usqs[un] = {
+                let ret = yield this.get('app-uq', params);
+                this.local.uqs[un] = {
                     tick: nowTick,
                     value: ret,
                 };
-                localStorage.setItem(usqTokens, JSON.stringify(this.local));
+                localStorage.setItem(uqTokens, JSON.stringify(this.local));
                 return ret;
             }
             catch (err) {
                 this.local = undefined;
-                localStorage.removeItem(usqTokens);
+                localStorage.removeItem(uqTokens);
                 throw err;
             }
         });
     }
 }
-export const usqTokenApi = new UsqTokenApi('tv/tie/', undefined);
+export const uqTokenApi = new UqTokenApi('tv/tie/', undefined);
 export class CallCenterApi extends CenterApi {
     directCall(url, method, body) {
         return this.call(url, method, body);
@@ -463,10 +455,10 @@ export class CallCenterApi extends CenterApi {
 }
 export const callCenterapi = new CallCenterApi('', undefined);
 export class CenterAppApi extends CenterApi {
-    usqs(unit, appOwner, appName) {
+    uqs(unit, appOwner, appName) {
         return __awaiter(this, void 0, void 0, function* () {
             let ret;
-            let ls = localStorage.getItem('appUsqs');
+            let ls = localStorage.getItem('appUqs');
             if (ls !== null) {
                 let rLs = JSON.parse(ls);
                 let { unit: rUnit, appOwner: rAppOwner, appName: rAppName, value } = rLs;
@@ -474,33 +466,33 @@ export class CenterAppApi extends CenterApi {
                     ret = value;
             }
             if (ret === undefined) {
-                ret = yield this.usqsPure(unit, appOwner, appName);
+                ret = yield this.uqsPure(unit, appOwner, appName);
                 let obj = {
                     unit: unit,
                     appOwner: appOwner,
                     appName: appName,
                     value: ret,
                 };
-                localStorage.setItem('appUsqs', JSON.stringify(obj));
+                localStorage.setItem('appUqs', JSON.stringify(obj));
             }
-            return this.cachedUsqs = _.cloneDeep(ret);
+            return this.cachedUqs = _.cloneDeep(ret);
         });
     }
-    usqsPure(unit, appOwner, appName) {
+    uqsPure(unit, appOwner, appName) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.get('tie/app-usqs', { unit: unit, appOwner: appOwner, appName: appName });
+            return yield this.get('tie/app-uqs', { unit: unit, appOwner: appOwner, appName: appName });
         });
     }
-    checkUsqs(unit, appOwner, appName) {
+    checkUqs(unit, appOwner, appName) {
         return __awaiter(this, void 0, void 0, function* () {
-            let ret = yield this.usqsPure(unit, appOwner, appName);
-            return _.isMatch(this.cachedUsqs, ret);
+            let ret = yield this.uqsPure(unit, appOwner, appName);
+            return _.isMatch(this.cachedUqs, ret);
         });
     }
-    unitxUsq(unit) {
+    unitxUq(unit) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.get('tie/unitx-usq', { unit: unit });
+            return yield this.get('tie/unitx-uq', { unit: unit });
         });
     }
 }
-//# sourceMappingURL=usqApi.js.map
+//# sourceMappingURL=uqApi.js.map

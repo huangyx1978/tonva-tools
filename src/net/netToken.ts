@@ -1,5 +1,5 @@
 
-import {setCenterToken} from './usqApi';
+import {setCenterToken} from './uqApi';
 import {WSChannel} from './wsChannel';
 
 export const netToken = {

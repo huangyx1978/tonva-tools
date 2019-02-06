@@ -30,15 +30,3 @@
         "dist"
     ]
 }
-
-//    "include": [
-//        "src/**/*"
-//    ],
-/*
-,
-  "references": [
-    { "path": "./tonva-tools" },
-    { "path": "./tonva-react-form" },
-    { "path": "./tonva-react-usql" }
-  ]
-*/

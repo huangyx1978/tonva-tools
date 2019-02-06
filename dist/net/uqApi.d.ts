@@ -1,12 +1,12 @@
 import { HttpChannel } from './httpChannel';
 import { ApiBase } from './apiBase';
 export declare function logoutApis(): void;
-export declare class UsqApi extends ApiBase {
+export declare class UqApi extends ApiBase {
     private access;
-    usqOwner: string;
-    usqName: string;
-    usq: string;
-    constructor(basePath: string, usqOwner: any, usqName: string, access: string[], showWaiting?: boolean);
+    uqOwner: string;
+    uqName: string;
+    uq: string;
+    constructor(basePath: string, uqOwner: string, uqName: string, access: string[], showWaiting?: boolean);
     protected getHttpChannel(): Promise<HttpChannel>;
     update(): Promise<string>;
     __loadAccess(): Promise<any>;
@@ -38,7 +38,7 @@ export declare class UsqApi extends ApiBase {
     user(): Promise<any>;
 }
 export declare function logoutUnitxApis(): void;
-export declare class UnitxApi extends UsqApi {
+export declare class UnitxApi extends UqApi {
     private unitId;
     constructor(unitId: number);
     protected getHttpChannel(): Promise<HttpChannel>;
@@ -51,27 +51,27 @@ export declare abstract class CenterApi extends ApiBase {
     constructor(path: string, showWaiting?: boolean);
     protected getHttpChannel(): Promise<HttpChannel>;
 }
-export declare class UsqTokenApi extends CenterApi {
+export declare class UqTokenApi extends CenterApi {
     private local;
-    usq(params: {
+    uq(params: {
         unit: number;
-        usqOwner: string;
-        usqName: string;
+        uqOwner: string;
+        uqName: string;
     }): Promise<any>;
 }
-export declare const usqTokenApi: UsqTokenApi;
+export declare const uqTokenApi: UqTokenApi;
 export declare class CallCenterApi extends CenterApi {
     directCall(url: string, method: string, body: any): Promise<any>;
 }
 export declare const callCenterapi: CallCenterApi;
 export interface App {
     id: number;
-    usqs: AppUsq[];
+    uqs: AppUq[];
 }
-export interface AppUsq {
+export interface AppUq {
     id: number;
-    usqOwner: string;
-    usqName: string;
+    uqOwner: string;
+    uqName: string;
     url: string;
     urlDebug: string;
     ws: string;
@@ -80,9 +80,9 @@ export interface AppUsq {
     token: string;
 }
 export declare class CenterAppApi extends CenterApi {
-    private cachedUsqs;
-    usqs(unit: number, appOwner: string, appName: string): Promise<App>;
-    private usqsPure;
-    checkUsqs(unit: number, appOwner: string, appName: string): Promise<boolean>;
-    unitxUsq(unit: number): Promise<AppUsq>;
+    private cachedUqs;
+    uqs(unit: number, appOwner: string, appName: string): Promise<App>;
+    private uqsPure;
+    checkUqs(unit: number, appOwner: string, appName: string): Promise<boolean>;
+    unitxUq(unit: number): Promise<AppUq>;
 }

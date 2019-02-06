@@ -1,7 +1,5 @@
 //import {isDevelopment} from '../local';
 import {HttpChannel} from './httpChannel';
-//import {centerDebugHost, usqDebugHost, debugUsqlServer} from './host';
-//import {fetchLocalCheck} from './fetchLocalCheck';
 
 export async function refetchApi(channel:HttpChannel, url, options, resolve, reject) {
     await channel.fetch(url, options, resolve, reject);

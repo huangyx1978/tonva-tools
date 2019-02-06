@@ -1,5 +1,5 @@
 import { decodeGuestToken } from '../user';
-import { CenterApi } from './usqApi';
+import { CenterApi } from './uqApi';
 
 export class GuestApi extends CenterApi {
     async guest(): Promise<any> {
