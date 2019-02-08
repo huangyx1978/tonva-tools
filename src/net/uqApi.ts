@@ -4,7 +4,6 @@ import {HttpChannelUI, HttpChannelNavUI} from './httpChannelUI';
 import {appUq} from './appBridge';
 import {ApiBase} from './apiBase';
 import { host } from './host';
-import { deserializeJson, serializeJson } from './serializeJson';
 
 let channelUIs:{[name:string]: HttpChannel} = {};
 let channelNoUIs:{[name:string]: HttpChannel} = {};
@@ -92,6 +91,7 @@ class CacheUqLocals {
         let {uqOwner, uqName} = uqApi;
         let un = uqOwner+'/'+uqName;
         let uq = this.local.uqs[un];
+        if (uq === undefined) return false;
         let {isNet, value} = uq;
         if (isNet === true) return true;
         let ret = await uqApi.__loadAccess();
