@@ -83,6 +83,8 @@ class CacheUqLocals {
             let { uqOwner, uqName } = uqApi;
             let un = uqOwner + '/' + uqName;
             let uq = this.local.uqs[un];
+            if (uq === undefined)
+                return false;
             let { isNet, value } = uq;
             if (isNet === true)
                 return true;

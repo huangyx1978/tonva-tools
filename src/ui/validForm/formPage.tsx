@@ -1,3 +1,4 @@
+/*
 import * as React from 'react';
 import {ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem,
     Row, Col, Button} from 'reactstrap';
@@ -55,3 +56,4 @@ export class FormPage1 extends React.Component<FormPageProps, FormPageState> {
         </Page>;
     }
 }
+*/

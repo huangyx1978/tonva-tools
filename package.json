@@ -20,9 +20,6 @@
     "mobx-react": "^5.3.6",
     "react": "^16.6.1",
     "react-dom": "^16.6.1",
-    "react-popper": "^0.7.4",
-    "react-transition-group": "^2.2.1",
-    "reactstrap": "^5.0.0",
     "typescript": "^3.0.3"
   },
   "peerDependencies": {

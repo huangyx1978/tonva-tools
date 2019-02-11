@@ -1,8 +1,29 @@
+/*
 import * as React from 'react';
-import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
-import { Page } from '../page';
-import { ValidForm1 } from './validForm';
-export class FormPage1 extends React.Component {
+import {ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem,
+    Row, Col, Button} from 'reactstrap';
+import {Page} from '../page';
+import {ValidForm1} from './validForm';
+import {FormSchema} from './formSchema';
+
+export interface MenuItem {
+    caption: string;
+    action: () => void;
+}
+
+export interface FormPageProps {
+    back?: 'back' | 'close' | 'none';
+    header?: boolean | string | JSX.Element;
+    rightMenu?: MenuItem[];
+    footer?: JSX.Element;
+    formSchema: FormSchema;
+}
+
+export interface FormPageState {
+    dropdownOpen: boolean;
+}
+
+export class FormPage1 extends React.Component<FormPageProps, FormPageState> {
     constructor(props) {
         super(props);
         this.toggle = this.toggle.bind(this);
@@ -10,24 +31,30 @@ export class FormPage1 extends React.Component {
             dropdownOpen: false
         };
     }
+
     toggle() {
         this.setState({
             dropdownOpen: !this.state.dropdownOpen
         });
     }
-    renderMenu(menuItems) {
-        if (menuItems === undefined)
-            return null;
-        return React.createElement(ButtonDropdown, { isOpen: this.state.dropdownOpen, toggle: this.toggle },
-            React.createElement(DropdownToggle, { caret: true, size: 'sm' }, "+"),
-            React.createElement(DropdownMenu, { right: true }, menuItems.map((v, index) => {
-                return React.createElement(DropdownItem, { key: index, onClick: v.action }, v.caption);
-            })));
+    
+    renderMenu(menuItems: MenuItem[]) {
+        if (menuItems === undefined) return null;
+        return <ButtonDropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
+            <DropdownToggle caret={true} size='sm'>+</DropdownToggle>
+            <DropdownMenu right={true}>
+                {menuItems.map((v,index) => {
+                    return <DropdownItem key={index} onClick={v.action}>{v.caption}</DropdownItem>
+                })}
+            </DropdownMenu>
+        </ButtonDropdown>
     }
     render() {
-        let { back, header, rightMenu, footer, formSchema, children } = this.props;
-        return React.createElement(Page, { header: header, back: back, right: this.renderMenu(rightMenu), footer: footer },
-            React.createElement(ValidForm1, { formSchema: formSchema, children: children }));
+        let {back, header, rightMenu, footer, formSchema, children} = this.props;
+        return <Page header={header} back={back} right={this.renderMenu(rightMenu)} footer={footer}>
+            <ValidForm1 formSchema={formSchema} children={children} />
+        </Page>;
     }
 }
+*/ 
 //# sourceMappingURL=formPage.js.map
