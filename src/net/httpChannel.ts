@@ -1,3 +1,4 @@
+import * as jwt_decode from 'jwt-decode';
 import {bridgeCenterApi, isBridged} from './appBridge';
 import {FetchError} from '../fetchError';
 import {HttpChannelUI} from './httpChannelUI';
@@ -174,7 +175,7 @@ export class HttpChannel {
         let lang = language;
         if (culture) lang += '-' + culture;
         headers.append('Accept-Language', lang);
-        if (this.apiToken) { 
+        if (this.apiToken) {
             headers.append('Authorization', this.apiToken); 
         }
         let options = {
