@@ -111,7 +111,7 @@ class Host {
                 return urlDebug;
             }
         }
-        return url;
+        return urlDebug;
     }
 }
 export const host = new Host();

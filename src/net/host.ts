@@ -108,7 +108,7 @@ class Host {
                 return urlDebug;
             }
         }
-        return url;
+        return urlDebug;
     }
 }
 
