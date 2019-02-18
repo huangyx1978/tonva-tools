@@ -103,12 +103,12 @@ class Host {
             let hostString = `://${i}/`;
             let pos = urlDebug.indexOf(hostString);
             if (pos > 0) {
-                if (local === false) break;
+                if (local === false) return url;
                 urlDebug = urlDebug.replace(hostString, `://${value}/`);
                 return urlDebug;
             }
         }
-        return urlDebug;
+        return url;
     }
 }
 

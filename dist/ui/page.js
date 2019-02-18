@@ -166,13 +166,15 @@ let Page = class Page extends React.Component {
         }
         return React.createElement("article", { className: 'page-container' },
             titleBar,
-            React.createElement("section", null, this.state.tabs.map((tab, index) => {
-                let { isSelected, isMounted, content } = tab;
-                if (isSelected === true || isMounted === true) {
-                    tab.isMounted = true;
-                    return React.createElement(ScrollView, { key: index, className: classNames({ invisible: isSelected === false }), onScroll: tab.onScroll, onScrollTop: tab.onScrollTop, onScrollBottom: tab.onScrollBottom }, (typeof content) === 'function' ? content() : content);
-                }
-            })),
+            React.createElement("section", { className: "position-relative" },
+                this.props.sideBar,
+                this.state.tabs.map((tab, index) => {
+                    let { isSelected, isMounted, content } = tab;
+                    if (isSelected === true || isMounted === true) {
+                        tab.isMounted = true;
+                        return React.createElement(ScrollView, { key: index, className: classNames({ invisible: isSelected === false }), onScroll: tab.onScroll, onScrollTop: tab.onScrollTop, onScrollBottom: tab.onScrollBottom }, (typeof content) === 'function' ? content() : content);
+                    }
+                })),
             tabs,
             footer);
     }
@@ -183,7 +185,8 @@ let Page = class Page extends React.Component {
             titleBar = React.createElement(TitleBar, { back: back, center: header, right: right, logout: this.props.logout });
         return (React.createElement("article", { className: 'page-container', onTouchStart: this.onTouchStart },
             titleBar,
-            React.createElement("section", null,
+            React.createElement("section", { className: "position-relative" },
+                this.props.sideBar,
                 React.createElement(ScrollView, { onScroll: onScroll, onScrollTop: onScrollTop, onScrollBottom: onScrollBottom }, children)),
             footer));
     }

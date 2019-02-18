@@ -545,15 +545,21 @@ export class Nav {
         return this.nav.confirmBox(message);
     }
     navToApp(url, unitId, apiId, sheetType, sheetId) {
-        let sheet = this.centerHost.includes('http://localhost:') === true ? 'sheet_debug' : 'sheet';
-        let uh = sheetId === undefined ?
-            appUrl(url, unitId) :
-            appUrl(url, unitId, sheet, [apiId, sheetType, sheetId]);
-        console.log('navToApp: %s', JSON.stringify(uh));
-        nav.push(React.createElement("article", { className: 'app-container' },
-            React.createElement("span", { id: uh.hash, onClick: () => this.back(), style: mobileHeaderStyle },
-                React.createElement("i", { className: "fa fa-arrow-left" })),
-            React.createElement("iframe", { src: uh.url })));
+        return __awaiter(this, void 0, void 0, function* () {
+            return new Promise((resolve, reject) => {
+                let sheet = this.centerHost.includes('http://localhost:') === true ? 'sheet_debug' : 'sheet';
+                let uh = sheetId === undefined ?
+                    appUrl(url, unitId) :
+                    appUrl(url, unitId, sheet, [apiId, sheetType, sheetId]);
+                console.log('navToApp: %s', JSON.stringify(uh));
+                nav.push(React.createElement("article", { className: 'app-container' },
+                    React.createElement("span", { id: uh.hash, onClick: () => this.back(), style: mobileHeaderStyle },
+                        React.createElement("i", { className: "fa fa-arrow-left" })),
+                    React.createElement("iframe", { src: uh.url })), () => {
+                    resolve();
+                });
+            });
+        });
     }
     navToSite(url) {
         // show in new window

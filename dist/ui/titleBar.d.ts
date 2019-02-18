@@ -17,5 +17,6 @@ export declare class TitleBar extends React.Component<TitleBarProps, TitleBarSta
     back(): Promise<void>;
     openWindow(): void;
     private logoutClick;
+    private logout;
     render(): JSX.Element;
 }

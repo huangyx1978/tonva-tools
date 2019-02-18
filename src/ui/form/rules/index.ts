@@ -20,7 +20,7 @@ export class RuleCustom extends Rule {
         if (ret === undefined) return;
         switch (typeof ret) {
             case 'undefined': return;
-            case 'string': defy.push(ret); return;
+            case 'string': defy.push(ret as string); return;
             default: defy.push(...ret); return;
         }        
     }

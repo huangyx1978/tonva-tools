@@ -22,6 +22,7 @@ export interface PageProps extends ScrollProps {
     header?: boolean | string | JSX.Element;
     keepHeader?: boolean;
     right?: JSX.Element;
+    sideBar?: JSX.Element;
     footer?: JSX.Element;
     tabs?: Tab[];
     logout?: boolean | (() => void);

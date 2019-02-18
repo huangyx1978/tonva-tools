@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import _ from 'lodash';
 import { nav } from '../ui';
 import { uid } from '../uid';
-import { uqTokenApi as uqTokenApi, callCenterapi, CenterAppApi, centerToken, setCenterToken } from './uqApi';
+import { uqTokenApi as uqTokenApi, callCenterapi, CenterAppApi, centerToken } from './uqApi';
 import { setSubAppWindow } from './wsChannel';
 import { host } from './host';
 const uqTokens = {};
@@ -95,9 +95,7 @@ function hideFrameBack(hash) {
 function initSubWin(message) {
     return __awaiter(this, void 0, void 0, function* () {
         console.log('initSubWin: set nav.user', message);
-        let { id, token } = message;
-        setCenterToken(id, token);
-        nav.user = message;
+        nav.user = message; // message.user;
         yield nav.showAppView();
     });
 }

@@ -106,12 +106,12 @@ class Host {
             let pos = urlDebug.indexOf(hostString);
             if (pos > 0) {
                 if (local === false)
-                    break;
+                    return url;
                 urlDebug = urlDebug.replace(hostString, `://${value}/`);
                 return urlDebug;
             }
         }
-        return urlDebug;
+        return url;
     }
 }
 export const host = new Host();

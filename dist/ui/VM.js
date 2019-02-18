@@ -33,9 +33,9 @@ export class Controller {
     }
     onDispose() {
     }
-    showVPage(vp, param) {
+    openVPage(vp, param) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield (new vp(this)).showEntry(param);
+            yield (new vp(this)).open(param);
         });
     }
     renderView(view, param) {
@@ -100,7 +100,7 @@ export class Controller {
                 this._resolve_$ = [];
             return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
                 this._resolve_$.push(resolve);
-                yield (new vp(this)).showEntry(param);
+                yield (new vp(this)).open(param);
             }));
         });
     }
@@ -148,9 +148,9 @@ export class View {
     renderVm(vm, param) {
         return (new vm(this.controller)).render(param);
     }
-    showVPage(vp, param) {
+    openVPage(vp, param) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield (new vp(this.controller)).showEntry(param);
+            yield (new vp(this.controller)).open(param);
         });
     }
     event(type, value) {

@@ -13,7 +13,7 @@ export declare abstract class Controller {
     private disposer;
     private dispose;
     protected onDispose(): void;
-    protected showVPage(vp: new (coordinator: Controller) => VPage<Controller>, param?: any): Promise<void>;
+    protected openVPage(vp: new (coordinator: Controller) => VPage<Controller>, param?: any): Promise<void>;
     protected renderView(view: new (coordinator: Controller) => View<Controller>, param?: any): JSX.Element;
     event(type: string, value: any): Promise<void>;
     protected onEvent(type: string, value: any): Promise<void>;
@@ -46,7 +46,7 @@ export declare abstract class View<C extends Controller> {
     protected readonly isDev: boolean;
     abstract render(param?: any): JSX.Element;
     protected renderVm(vm: new (coordinator: Controller) => View<C>, param?: any): JSX.Element;
-    protected showVPage(vp: new (coordinator: Controller) => VPage<Controller>, param?: any): Promise<void>;
+    protected openVPage(vp: new (coordinator: Controller) => VPage<Controller>, param?: any): Promise<void>;
     protected event(type: string, value?: any): Promise<void>;
     protected returnCall(value: any): void;
     protected openPage(view: React.StatelessComponent<any>, param?: any): void;
@@ -61,7 +61,7 @@ export declare abstract class View<C extends Controller> {
 }
 export declare abstract class VPage<C extends Controller> extends View<C> {
     constructor(coordinator: C);
-    abstract showEntry(param?: any): Promise<void>;
+    abstract open(param?: any): Promise<void>;
     render(param?: any): JSX.Element;
 }
 export declare type TypeVPage<C extends Controller> = new (coordinator: C) => VPage<C>;

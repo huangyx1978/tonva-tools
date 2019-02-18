@@ -73,10 +73,13 @@ export default class Login extends React.Component {
         let footer = React.createElement("div", { className: 'text-center' },
             React.createElement("button", { className: "btn btn-link", color: "link", style: { margin: '0px auto' }, onClick: () => nav.push(React.createElement(RegisterView, null)) }, "\u5982\u679C\u6CA1\u6709\u8D26\u53F7\uFF0C\u8BF7\u6CE8\u518C"));
         let header = false;
-        let top = '同花';
+        let top = React.createElement(React.Fragment, null,
+            React.createElement("span", { className: "text-primary" }, "\u540C"),
+            "\u00A0",
+            React.createElement("span", { className: "text-danger" }, "\u82B1"));
         if (this.props.withBack === true) {
             header = '登录';
-            top = '登录用户';
+            top = React.createElement(React.Fragment, null, "\u767B\u5F55\u7528\u6237");
         }
         return React.createElement(Page, { header: header, footer: footer },
             React.createElement("div", { style: {
