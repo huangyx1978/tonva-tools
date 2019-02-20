@@ -1,5 +1,5 @@
 /// <reference types="react" />
-import { UiRange } from '../uiSchema';
+import { UiRange } from '../../schema';
 import { Widget } from './widget';
 export declare class RangeWidget extends Widget {
     protected inputType: string;

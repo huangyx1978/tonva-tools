@@ -13,15 +13,5 @@ export interface User extends Guest {
     nick?: string;
     icon?: string;
 }
-export declare class UserInNav {
-    private user;
-    constructor(user: User);
-    readonly id: number;
-    readonly name: string;
-    readonly nick: string;
-    readonly icon: string;
-    readonly guest: number;
-    readonly token: string;
-}
 export declare function decodeUserToken(token: string): User;
 export declare function decodeGuestToken(token: string): Guest;

@@ -155,11 +155,105 @@
 .w-max-8c {
   max-width: 8rem !important;
 }
+.w-20c {
+  width: 20rem !important;
+}
 .w-max-20c {
   max-width: 20rem !important;
 }
+.w-min-20c {
+  min-width: 20rem !important;
+}
+.w-30c {
+  width: 20rem !important;
+}
 .w-max-30c {
   max-width: 30rem !important;
+}
+.w-min-30c {
+  min-width: 30rem !important;
+}
+
+.h-1c {
+  height: 1rem !important;
+}
+.h-min-1c {
+  min-height: 1rem !important;
+}
+.h-max-1c {
+  max-height: 1rem !important;
+}
+.h-1-2c {
+  height: 1.2rem !important;
+}
+.h-min-1-2c {
+  min-height: 1.2rem !important;
+}
+.h-max-1-2c {
+  max-height: 1.2rem !important;
+}
+.h-1-5c {
+  height: 1.5rem !important;
+}
+.h-min-1-5c {
+  min-height: 1.5rem !important;
+}
+.h-max-1-5c {
+  max-height: 1.5rem !important;
+}
+.h-2c {
+  height: 2rem !important;
+}
+.h-min-2c {
+  min-height: 2rem !important;
+}
+.h-max-2c {
+  max-height: 2rem !important;
+}
+.h-4c {
+  height: 4rem !important;
+}
+.h-min-4c {
+  min-height: 4rem !important;
+}
+.h-max-4c {
+  max-height: 4rem !important;
+}
+.h-6c {
+  height: 6rem !important;
+}
+.h-min-6c {
+  min-height: 6rem !important;
+}
+.h-max-6c {
+  max-height: 6rem !important;
+}
+.h-8c {
+  height: 8rem !important;
+}
+.h-min-8c {
+  min-height: 8rem !important;
+}
+.h-max-8c {
+  max-height: 8rem !important;
+}
+.h-20c {
+  height: 20rem !important;
+}
+.h-max-20c {
+  max-height: 20rem !important;
+}
+.h-min-20c {
+  min-height: 20rem !important;
+}
+.h-30c {
+  height: 30rem !important;
+}
+.h-max-30c {
+  max-height: 30rem !important;
+}
+.h-min-30c {
+  min-height: 30rem !important;
 }
 
 .form-inline label.form-check-inline {

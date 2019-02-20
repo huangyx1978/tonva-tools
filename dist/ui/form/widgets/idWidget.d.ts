@@ -1,6 +1,6 @@
 /// <reference types="react" />
 import { Widget } from './widget';
-import { UiIdItem } from '../uiSchema';
+import { UiIdItem } from '../../schema';
 export declare class IdWidget extends Widget {
     protected ui: UiIdItem;
     protected value: number;

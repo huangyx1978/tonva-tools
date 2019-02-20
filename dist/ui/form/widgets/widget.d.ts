@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { UiItem } from '../uiSchema';
+import { UiItem } from '../../schema';
 import { FieldProps } from '../field';
 import { Context } from '../context';
-import { ItemSchema } from '../schema';
+import { ItemSchema } from '../../schema';
 import { Rule } from '../rules';
 export declare abstract class Widget {
     protected name: string;

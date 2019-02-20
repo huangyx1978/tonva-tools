@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Widget } from './widget';
-import { UiCheckItem } from '../uiSchema';
+import { UiCheckItem } from '../../schema';
 export declare class CheckBoxWidget extends Widget {
     protected input: HTMLInputElement;
     protected ui: UiCheckItem;

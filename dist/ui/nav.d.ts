@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { User, Guest, UserInNav } from '../user';
+import { User, Guest } from '../user';
 import { FetchError } from '../fetchError';
 import 'font-awesome/css/font-awesome.min.css';
 import '../css/va-form.css';
@@ -60,9 +60,10 @@ export declare class Nav {
     private ws;
     private wsHost;
     private local;
-    user: UserInNav;
+    user: User;
     language: string;
     culture: string;
+    resUrl: string;
     constructor();
     readonly guest: number;
     set(nav: NavView): void;
@@ -76,6 +77,7 @@ export declare class Nav {
     start(): Promise<void>;
     showAppView(): Promise<void>;
     setGuest(guest: Guest): void;
+    saveLocalUser(): void;
     logined(user: User): Promise<void>;
     showLogin(withBack?: boolean): Promise<void>;
     logout(notShowLogin?: boolean): Promise<void>;

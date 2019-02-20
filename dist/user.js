@@ -1,15 +1,18 @@
 import jwtDecode from 'jwt-decode';
+/*
 export class UserInNav {
-    constructor(user) {
+    private user: User;
+    constructor(user: User) {
         this.user = user;
     }
-    get id() { return this.user.id; }
-    get name() { return this.user.name; }
-    get nick() { return this.user.nick; }
-    get icon() { return this.user.icon || ('http://' + process.env['REACT_APP_CENTER_HOST'] + '/imgs/Bear-icon.png'); }
-    get guest() { return this.user.guest; }
-    get token() { return this.user.token; }
+    get id():number {return this.user.id}
+    get name(): string {return this.user.name}
+    get nick(): string {return this.user.nick}
+    get icon(): string {return this.user.icon || ('http://' + process.env['REACT_APP_CENTER_HOST'] + '/imgs/Bear-icon.png');}
+    get guest(): number {return this.user.guest}
+    get token(): string {return this.user.token}
 }
+*/
 export function decodeUserToken(token) {
     let ret = jwtDecode(token);
     let user = {

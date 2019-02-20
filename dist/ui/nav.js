@@ -14,7 +14,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import * as React from 'react';
 import { observable } from 'mobx';
-import { UserInNav } from '../user';
 import { Page } from './page';
 import { netToken } from '../net/netToken';
 import FetchErrorView from './fetchErrorView';
@@ -395,8 +394,9 @@ export class Nav {
             nav.push(React.createElement(Page, { header: false },
                 React.createElement(Loading, null)));
             yield host.start();
-            let { url, ws } = host;
+            let { url, ws, resHost } = host;
             this.centerHost = url;
+            this.resUrl = 'http://' + resHost + '/res/';
             this.wsHost = ws;
             setCenterUrl(url);
             let unit = yield this.loadUnit();
@@ -454,14 +454,18 @@ export class Nav {
         this.local.guest.set(guest);
         netToken.set(0, guest.token);
     }
+    saveLocalUser() {
+        this.local.user.set(this.user);
+    }
     logined(user) {
         return __awaiter(this, void 0, void 0, function* () {
             let ws = this.ws = new WSChannel(this.wsHost, user.token);
             ws.connect();
             console.log("logined: %s", JSON.stringify(user));
-            this.local.user.set(user);
+            this.user = user;
+            this.saveLocalUser();
             netToken.set(user.id, user.token);
-            this.user = new UserInNav(user);
+            //this.user = new UserInNav(user);
             yield this.showAppView();
         });
     }

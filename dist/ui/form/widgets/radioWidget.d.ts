@@ -1,6 +1,6 @@
 /// <reference types="react" />
 import { Widget } from './widget';
-import { UiRadio } from '../uiSchema';
+import { UiRadio } from '../../schema';
 export declare class RadioWidget extends Widget {
     protected inputs: {
         [index: number]: HTMLInputElement;

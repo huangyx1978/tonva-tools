@@ -1,5 +1,5 @@
 /// <reference types="react" />
-import { UiButton } from '../uiSchema';
+import { UiButton } from '../../schema';
 import { Widget } from './widget';
 export declare class ButtonWidget extends Widget {
     protected ui: UiButton;
