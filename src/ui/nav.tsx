@@ -8,13 +8,14 @@ import {FetchError} from '../fetchError';
 import {appUrl, setMeInFrame, logoutUqTokens} from '../net/appBridge';
 import {LocalData} from '../local';
 import {guestApi, logoutApis, setCenterUrl, setCenterToken, WSChannel, meInFrame, isDevelopment, host} from '../net';
+import { WsBase, wsBridge } from '../net/wsChannel';
+import { resOptions } from './res';
+import { Loading } from './loading';
+
 import 'font-awesome/css/font-awesome.min.css';
 import '../css/va-form.css';
 import '../css/va.css';
 import '../css/animation.css';
-import { WsBase, wsBridge } from '../net/wsChannel';
-import { resOptions } from './res';
-import { Loading } from './loading';
 
 const regEx = new RegExp('Android|webOS|iPhone|iPad|' +
     'BlackBerry|Windows Phone|'  +
@@ -126,7 +127,7 @@ export class NavView extends React.Component<Props, State> {
     {
         let err = fetchError.error;
         if (err !== undefined && err.unauthorized === true) {
-            await nav.showLogin();
+            await nav.showLogin(undefined);
             return;
         }
         this.setState({
@@ -209,7 +210,20 @@ export class NavView extends React.Component<Props, State> {
     }
 
     popTo(key: number) {
-        throw new Error('to be designed');
+        if (key === undefined) return;
+        if (this.stack.find(v => v.key === key) === undefined) return;
+        while (this.stack.length >0) {
+            let len = this.stack.length;
+            let top = this.stack[len-1];
+            if (top.key === key) break;
+            this.pop();
+        }
+    }
+
+    topKey():number {
+        let len = this.stack.length;
+        if (len === 0) return undefined;
+        return this.stack[len-1].key;
     }
 
     removeCeased() {
@@ -460,7 +474,7 @@ export class Nav {
                 await notLogined();
             }
             else {
-                await nav.showLogin();
+                await nav.showLogin(undefined);
             }
             return;
         }
@@ -488,7 +502,7 @@ export class Nav {
         this.local.user.set(this.user);
     }
 
-    async logined(user: User) {
+    async logined(user: User, callback?: (user:User)=>Promise<void>) {
         let ws:WSChannel = this.ws = new WSChannel(this.wsHost, user.token);
         ws.connect();
 
@@ -496,25 +510,36 @@ export class Nav {
         this.user = user;
         this.saveLocalUser();
         netToken.set(user.id, user.token);
-        //this.user = new UserInNav(user);
-        await this.showAppView();
+        if (callback !== undefined) //this.loginCallbacks.has)
+            callback(user);
+            //this.loginCallbacks.call(user);
+        else {
+            await this.showAppView();
+        }
     }
 
-    async showLogin(withBack?:boolean) {
-        //if (this.loginView === undefined) {
+    async showLogin(callback?: (user:User)=>Promise<void>, top?:any, withBack?:boolean) {
         let lv = await import('../entry/login');
-        //this.loginView = <lv.default logo={logo} />;
-        let loginView = <lv.default withBack={withBack} />;
-        //}
+         let loginView = <lv.default withBack={withBack} callback={callback} top={top} />;
         if (withBack !== true) {
             this.nav.clear();
             this.pop();
         }
-        //this.nav.show(loginView);
         this.nav.push(loginView);
     }
 
-    async logout(notShowLogin?:boolean) {
+    async showLogout(callback?: ()=>Promise<void>) {
+        nav.push(<Page header="安全退出" back="close">
+            <div className="m-5 border border-info bg-white rounded p-3 text-center">
+                <div>退出当前账号不会删除任何历史数据，下次登录依然可以使用本账号</div>
+                <div className="mt-3">
+                    <button className="btn btn-danger" onClick={()=>this.logout(callback)}>退出</button>
+                </div>
+            </div>
+        </Page>);
+    }
+
+    async logout(callback?:()=>Promise<void>) { //notShowLogin?:boolean) {
         this.local.logoutClear();
         this.user = undefined; //{} as User;
         logoutApis();
@@ -522,9 +547,23 @@ export class Nav {
         let guest = this.local.guest.get();
         setCenterToken(0, guest && guest.token);
         this.ws = undefined;
-        if (notShowLogin === true) return;
-        //await this.showLogin();
+        /*
+        if (this.loginCallbacks.has)
+            this.logoutCallbacks.call();
+        else {
+            if (notShowLogin === true) return;
+        }
         await nav.start();
+        */
+        if (callback === undefined)
+            await nav.start();
+        else
+            await callback();
+    }
+
+    async changePassword() {
+        let cp = await import('../entry/changePassword');
+        nav.push(<cp.ChangePasswordPage />);
     }
 
     get level(): number {
@@ -550,6 +589,12 @@ export class Nav {
     }
     pop(level:number = 1) {
         this.nav.pop(level);
+    }
+    topKey():number {
+        return this.nav.topKey();
+    }
+    popTo(key:number) {
+        this.nav.popTo(key);
     }
     clear() {
         this.nav.clear();

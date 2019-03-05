@@ -35,7 +35,15 @@ const hosts:{[name:string]:HostValue} = {
 
 function centerUrlFromHost(host:string) {return `http://${host}/`}
 function centerWsFromHost(host:string) {return `ws://${host}/tv/`}
-    
+
+const fetchOptions = {
+    method: "GET",
+    mode: "no-cors", // no-cors, cors, *same-origin
+    headers: {
+        "Content-Type": "text/plain"
+    },
+};
+
 class Host {
     url: string;
     ws: string;
@@ -54,27 +62,37 @@ class Host {
     private debugHostUrl(host:string) {return `http://${host}/hello`}
     private async tryLocal() {
         let promises:PromiseLike<any>[] = [];
+        let hostArr:string[] = [];
         for (let i in hosts) {
             let hostValue = hosts[i];
             let {value} = hostValue;
-            //let host = process.env[env] || value;
-            let fetchUrl = this.debugHostUrl(value);
-            let fetchOptions = {
-                method: "GET",
-                mode: "no-cors", // no-cors, cors, *same-origin
-                headers: {
-                    "Content-Type": "text/plain"
-                },
-            };
-            promises.push(localCheck(fetchUrl, fetchOptions));
+            if (hostArr.findIndex(v => v === value) < 0) hostArr.push(value);
+        }
+
+        for (let host of hostArr) {
+            let fetchUrl = this.debugHostUrl(host);
+            promises.push(localCheck(fetchUrl));
         }
         let results = await Promise.all(promises);
+        let len = hostArr.length;
+        for (let i=0; i<len; i++) {
+            let local = results[i];
+            let host = hostArr[i];
+            for (let j in hosts) {
+                let hostValue = hosts[j];
+                if (hostValue.value === host) {
+                    hostValue.local = local;
+                }
+            }
+        }
+        /*
         let p = 0;
         for (let i in hosts) {
             let hostValue = hosts[i];
             hostValue.local = results[p];
             ++p;
         }
+        */
     }
 
     private getCenterHost():string {
@@ -84,8 +102,7 @@ class Host {
             return value;
         }
         if (isDevelopment === true) {
-            //if (local === true) 
-            return value;
+            if (local === true) return value;
         }
         return centerHost;
     }
@@ -97,8 +114,7 @@ class Host {
             return value;
         }
         if (isDevelopment === true) {
-            //if (local === true) 
-            return value;
+            if (local === true) return value;
         }
         return resHost;
     }
@@ -119,6 +135,10 @@ class Host {
         }
         return url;
     }
+
+    async localCheck(urlDebug: string):Promise<boolean> {
+        return await localCheck(urlDebug);
+    }
 }
 
 export const host:Host = new Host();
@@ -129,11 +149,11 @@ export const host:Host = new Host();
 
 // 实际上，一秒钟不够。web服务器会自动停。重启的时候，可能会比较长时间。也许两秒甚至更多。
 //const timeout = 2000;
-const timeout = 100;
+const timeout = 200;
 
-function fetchLocalCheck(url:string, options?:any):Promise<any> {
+function fetchLocalCheck(url:string):Promise<any> {
     return new Promise((resolve, reject) => {
-      fetch(url, options)
+      fetch(url, fetchOptions as any)
       .then(v => {
           v.text().then(resolve).catch(reject);
       })
@@ -143,12 +163,12 @@ function fetchLocalCheck(url:string, options?:any):Promise<any> {
     });
 }
 
-async function localCheck(url:string, options?:any):Promise<boolean> {
+async function localCheck(url:string):Promise<boolean> {
     try {
-        await fetchLocalCheck(url, options);
+        await fetchLocalCheck(url);
         return true;
     }
-    catch {
+    catch (err) {
         return false;
     }
 }

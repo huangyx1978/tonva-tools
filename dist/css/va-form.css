@@ -31,9 +31,9 @@
 }
 .tab>div>div>div>u {
   position: absolute;
-  right: -1.2rem;
+  right: -0.8rem;
   top: 0rem;
-  font-size: 0.7em;
+  font-size: 0.7rem;
   background-color: red;
   display: flex;
   align-items: center;
@@ -128,6 +128,15 @@
 .w-max-2c {
   max-width: 2rem !important;
 }
+.w-3c {
+  width: 3rem !important;
+}
+.w-min-3c {
+  min-width: 3rem !important;
+}
+.w-max-3c {
+  max-width: 3rem !important;
+}
 .w-4c {
   width: 4rem !important;
 }
@@ -154,6 +163,15 @@
 }
 .w-max-8c {
   max-width: 8rem !important;
+}
+.w-12c {
+  width: 12rem !important;
+}
+.w-min-12c {
+  min-width: 12rem !important;
+}
+.w-max-12c {
+  max-width: 12rem !important;
 }
 .w-20c {
   width: 20rem !important;
@@ -210,6 +228,15 @@
 .h-max-2c {
   max-height: 2rem !important;
 }
+.h-3c {
+  height: 3rem !important;
+}
+.h-min-3c {
+  min-height: 3rem !important;
+}
+.h-max-3c {
+  max-height: 3rem !important;
+}
 .h-4c {
   height: 4rem !important;
 }
@@ -236,6 +263,15 @@
 }
 .h-max-8c {
   max-height: 8rem !important;
+}
+.h-12c {
+  height: 12rem !important;
+}
+.h-min-12c {
+  min-height: 12rem !important;
+}
+.h-max-12c {
+  max-height: 12rem !important;
 }
 .h-20c {
   height: 20rem !important;
@@ -294,4 +330,17 @@ fieldset.edit-container {
   padding-inline-end: 0;
   padding-block-end: 0;
   min-inline-size: min-content;
+}
+.edit-sep-light-gray {
+  border-color: #f8f8f8;
+}
+.image-none {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #f0f0f0;
+  border-radius: 0.2rem;
+  background-color: #f8f8f8;
+  color: #e0e0e0;
 }

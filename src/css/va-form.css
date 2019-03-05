@@ -31,9 +31,9 @@
 }
 .tab>div>div>div>u {
   position: absolute;
-  right: -1.2rem;
+  right: -0.8rem;
   top: 0rem;
-  font-size: 0.7em;
+  font-size: 0.7rem;
   background-color: red;
   display: flex;
   align-items: center;
@@ -333,4 +333,14 @@ fieldset.edit-container {
 }
 .edit-sep-light-gray {
   border-color: #f8f8f8;
+}
+.image-none {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #e0e0e0;
+  border-radius: 0.3rem;
+  background-color: #f0f0f0;
+  color: #d0d0d0;
 }

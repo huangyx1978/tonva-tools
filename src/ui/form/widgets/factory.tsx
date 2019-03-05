@@ -17,6 +17,7 @@ import { RangeWidget } from './rangeWidget';
 import { IdWidget } from './idWidget';
 import { ButtonWidget } from './buttonWidget';
 import { ArrComponent } from './arrComponent';
+import { ImageWidget } from './imageWidget';
 
 const widgetsFactory: {[type: string]: {widget?: TypeWidget, dataTypes?: DataType[]}} = {
     id: {
@@ -77,6 +78,10 @@ const widgetsFactory: {[type: string]: {widget?: TypeWidget, dataTypes?: DataTyp
     checkbox: {
         dataTypes: ['boolean', 'integer', 'number'],
         widget: CheckBoxWidget
+    },
+    image: {
+        dataTypes: ['string'],
+        widget: ImageWidget,
     },
     checkboxes: {
 
@@ -151,13 +156,16 @@ export function factory(context: Context, itemSchema: ItemSchema, children:React
     let widget = new typeWidget(context, itemSchema, fieldProps, children);
     widgets[name] = widget;
 
+    return <widget.container />;
+    /*
     if (isRow === false) {
-        let WidgetElement = observer(() => widget.renderContainer());
+        let WidgetElement = observer(() => widget.container());
         return <WidgetElement />;
     }
     else {
-        let widgetElement = widget.renderContainer();
+        let widgetElement = widget.container();
         return widgetElement;
     }
+    */
 }
 

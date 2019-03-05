@@ -1,4 +1,5 @@
 import * as React from 'react';
+import classNames from 'classnames';
 import { nav } from './nav';
 
 export interface ImageProps {
@@ -7,14 +8,14 @@ export interface ImageProps {
     style?: React.CSSProperties;
 }
 
-const defaultImage = 'http://101.200.46.56/imgs/Bear-icon.png';
-
 export function Image(props: ImageProps) {
     let {className, style, src} = props;
     if (!src) {
-        src = defaultImage;
+        return <div className={classNames(className, 'image-none')} style={style}>
+            <i className="fa fa-camera" />
+        </div>;
     }
-    else if (src.startsWith(':') === true) {
+    if (src.startsWith(':') === true) {
         src = nav.resUrl + src.substr(1);
     }
     return <img src={src} className={className} style={style} />;
