@@ -13,8 +13,8 @@ export declare abstract class Controller {
     private disposer;
     private dispose;
     protected onDispose(): void;
-    protected openVPage(vp: new (coordinator: Controller) => VPage<Controller>, param?: any): Promise<void>;
-    protected renderView(view: new (coordinator: Controller) => View<Controller>, param?: any): JSX.Element;
+    protected openVPage<C extends Controller>(vp: new (controller: C) => VPage<C>, param?: any): Promise<void>;
+    protected renderView<C extends Controller>(view: new (controller: C) => View<C>, param?: any): JSX.Element;
     event(type: string, value: any): Promise<void>;
     protected onEvent(type: string, value: any): Promise<void>;
     protected msg(text: string): void;
@@ -28,7 +28,7 @@ export declare abstract class Controller {
     readonly isCalling: boolean;
     private _resolve_$;
     call(param?: any): Promise<any>;
-    vCall(vp: new (coordinator: Controller) => VPage<Controller>, param?: any): Promise<any>;
+    vCall<C extends Controller>(vp: new (controller: C) => VPage<C>, param?: any): Promise<any>;
     returnCall(value: any): void;
     openPage(page: JSX.Element): void;
     replacePage(page: JSX.Element): void;
@@ -45,8 +45,8 @@ export declare abstract class View<C extends Controller> {
     constructor(controller: C);
     protected readonly isDev: boolean;
     abstract render(param?: any): JSX.Element;
-    protected renderVm(vm: new (coordinator: Controller) => View<C>, param?: any): JSX.Element;
-    protected openVPage(vp: new (coordinator: Controller) => VPage<Controller>, param?: any): Promise<void>;
+    protected renderVm(vm: new (controller: C) => View<C>, param?: any): JSX.Element;
+    protected openVPage(vp: new (controller: C) => VPage<C>, param?: any): Promise<void>;
     protected event(type: string, value?: any): Promise<void>;
     protected returnCall(value: any): void;
     protected openPage(view: React.StatelessComponent<any>, param?: any): void;
@@ -60,8 +60,7 @@ export declare abstract class View<C extends Controller> {
     protected regConfirmClose(confirmClose: () => Promise<boolean>): void;
 }
 export declare abstract class VPage<C extends Controller> extends View<C> {
-    constructor(coordinator: C);
     abstract open(param?: any): Promise<void>;
     render(param?: any): JSX.Element;
 }
-export declare type TypeVPage<C extends Controller> = new (coordinator: C) => VPage<C>;
+export declare type TypeVPage<C extends Controller> = new (controller: C) => VPage<C>;

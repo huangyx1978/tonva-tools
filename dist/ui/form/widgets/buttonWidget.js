@@ -35,14 +35,14 @@ export class ButtonWidget extends Widget {
         });
         this.observerRender = observer(() => {
             let { name, type } = this.itemSchema;
-            let Templet, cn, label;
+            let Templet, cn, caption;
             if (this.ui !== undefined) {
                 let { widget: widgetType } = this.ui;
                 if (widgetType !== 'button')
                     return Unknown(type, widgetType, ['button']);
                 Templet = this.ui.Templet;
                 cn = this.ui.className;
-                label = this.ui.label;
+                caption = this.ui.label;
             }
             let { form, hasError } = this.context;
             let context = this.context;
@@ -55,7 +55,7 @@ export class ButtonWidget extends Widget {
             else if (Templet !== undefined)
                 content = Templet;
             else
-                content = label;
+                content = caption;
             let button = React.createElement("button", { className: cn, type: "button", disabled: disabled, onClick: this.onClick }, content || name);
             if (context.inNode === true)
                 return React.createElement(React.Fragment, null,
@@ -66,16 +66,9 @@ export class ButtonWidget extends Widget {
                 button);
         });
     }
+    get label() { return null; }
     render() {
         return React.createElement(this.observerRender, null);
-    }
-    renderContainer() {
-        if (this.visible === false)
-            return null;
-        let { form, inNode } = this.context;
-        if (inNode === true)
-            return this.render();
-        return form.FieldContainer(null, this.render());
     }
 }
 //# sourceMappingURL=buttonWidget.js.map

@@ -8,36 +8,30 @@ import * as React from 'react';
 import classNames from 'classnames';
 import { RuleRequired, RuleCustom } from '../rules';
 import { computed, observable } from 'mobx';
+import { observer } from 'mobx-react';
 export class Widget {
     constructor(context, itemSchema, fieldProps, children) {
         this.errors = [];
         this.contextErrors = [];
         this.onInputChange = (evt) => {
             this.changeValue(evt.target.value, true);
-            /*
-            let prev = this.value;
-            let onChanging: ChangingHandler;
-            let onChanged: ChangedHandler;
-            if (this.ui !== undefined) {
-                onChanging = this.ui.onChanging;
-                onChanged = this.ui.onChanged;
-            }
-            let allowChange = true;
-            if (onChanging !== undefined) {
-                this.isChanging = true;
-                allowChange = onChanging(this.context, this.value, prev);
-                this.isChanging = false;
-            }
-            if (allowChange === true) {
-                this.setDataValue(evt.currentTarget.value);
-                if (onChanged !== undefined) {
-                    this.isChanging = true;
-                    onChanged(this.context, this.value, prev);
-                    this.isChanging = false;
-                }
-            }
-            */
         };
+        this.container = observer(() => {
+            if (this.visible === false)
+                return null;
+            let { form, inNode } = this.context;
+            if (inNode === true)
+                return this.render();
+            let label = this.label;
+            if (this.itemSchema.required === true && form.props.requiredFlag !== false) {
+                if (label !== null)
+                    label = React.createElement(React.Fragment, null,
+                        label,
+                        "\u00A0",
+                        React.createElement("span", { className: "text-danger" }, "*"));
+            }
+            return form.FieldContainer(label, this.render());
+        });
         this.context = context;
         let { name } = itemSchema;
         this.name = name;
@@ -172,12 +166,7 @@ export class Widget {
             fieldClass = 'form-control';
         return classNames(fieldClass, this.context.form.FieldClass, this.ui && this.ui.className);
     }
-    renderContainer() {
-        if (this.visible === false)
-            return null;
-        let { form, inNode } = this.context;
-        if (inNode === true)
-            return this.render();
+    get label() {
         let label;
         if (this.ui === undefined) {
             label = this.name;
@@ -186,16 +175,10 @@ export class Widget {
             let uiLabel = this.ui.label;
             if (uiLabel === null)
                 label = null;
-            label = uiLabel || this.name;
+            else
+                label = uiLabel || this.name;
         }
-        if (this.itemSchema.required === true && form.props.requiredFlag !== false) {
-            if (label !== null)
-                label = React.createElement(React.Fragment, null,
-                    label,
-                    "\u00A0",
-                    React.createElement("span", { className: "text-danger" }, "*"));
-        }
-        return form.FieldContainer(label, this.render());
+        return label;
     }
     renderTemplet() {
         if (this.children !== undefined) {

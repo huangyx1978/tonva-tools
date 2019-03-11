@@ -10,6 +10,7 @@ import { FormRes, formRes } from './formRes';
 import { resLang } from '../res';
 
 export type FormButtonClick = (name:string, context: Context) => Promise<any>;
+export type InputEnter = (name:string, context: Context) => Promise<any>;
 
 export interface FormProps {
     className?: string;
@@ -17,6 +18,7 @@ export interface FormProps {
     uiSchema?: UiSchema;
     formData?: any;
     onButtonClick?: FormButtonClick;
+    onEnter?: InputEnter;
     fieldLabelSize?: number;            // col-sm-2 for label
     requiredFlag?: boolean;             // default=true
     beforeShow?: (formContext:FormContext) => void;
@@ -71,7 +73,6 @@ export class Form extends React.Component<FormProps> {
         this.disposer = autorun(this.watch);
         this.data = {};
         // this.initRender();
-        //this.initData(this.props.formData);
     }
 
     private renderContent():any {

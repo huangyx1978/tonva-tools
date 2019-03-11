@@ -109,7 +109,7 @@ export class Controller {
             return;
         let resolve = this._resolve_$.pop();
         if (resolve === undefined) {
-            alert('the Coordinator call already returned, or not called');
+            alert('the Controller call already returned, or not called');
             return;
         }
         resolve(value);
@@ -195,9 +195,6 @@ export class View {
     }
 }
 export class VPage extends View {
-    constructor(coordinator) {
-        super(coordinator);
-    }
     render(param) { return null; }
 }
 //# sourceMappingURL=VM.js.map

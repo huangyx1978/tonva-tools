@@ -65,6 +65,15 @@ let Tabs = class Tabs extends React.Component {
             this.selectedTab = this.tabs[0];
         this.selectedTab.selected = true;
     }
+    showTab(tabName) {
+        let tab = this.tabs.find(v => v.name === tabName);
+        if (tab === undefined)
+            return;
+        if (this.selectedTab !== undefined)
+            this.selectedTab.selected = false;
+        tab.selected = true;
+        this.selectedTab = tab;
+    }
     render() {
         return React.createElement("div", { className: "tab" },
             React.createElement("div", { className: this.contentBack, style: { height: 'calc(100% - ' + this.size + ')' } }, this.tabs.map((v, index) => {

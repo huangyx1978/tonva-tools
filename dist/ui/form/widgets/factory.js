@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { observer } from 'mobx-react';
 import { TextWidget } from './textWidget';
 import { TextAreaWidget } from './textareaWidget';
 import { PasswordWidget, UrlWidget, EmailWidget } from './passwordWidget';
@@ -13,6 +12,7 @@ import { RangeWidget } from './rangeWidget';
 import { IdWidget } from './idWidget';
 import { ButtonWidget } from './buttonWidget';
 import { ArrComponent } from './arrComponent';
+import { ImageWidget } from './imageWidget';
 const widgetsFactory = {
     id: {
         dataTypes: ['id'],
@@ -70,6 +70,10 @@ const widgetsFactory = {
     checkbox: {
         dataTypes: ['boolean', 'integer', 'number'],
         widget: CheckBoxWidget
+    },
+    image: {
+        dataTypes: ['string'],
+        widget: ImageWidget,
     },
     checkboxes: {},
     radio: {
@@ -140,13 +144,16 @@ export function factory(context, itemSchema, children, fieldProps) {
     let { isRow, widgets } = context;
     let widget = new typeWidget(context, itemSchema, fieldProps, children);
     widgets[name] = widget;
+    return React.createElement(widget.container, null);
+    /*
     if (isRow === false) {
-        let WidgetElement = observer(() => widget.renderContainer());
-        return React.createElement(WidgetElement, null);
+        let WidgetElement = observer(() => widget.container());
+        return <WidgetElement />;
     }
     else {
-        let widgetElement = widget.renderContainer();
+        let widgetElement = widget.container();
         return widgetElement;
     }
+    */
 }
 //# sourceMappingURL=factory.js.map

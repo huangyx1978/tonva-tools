@@ -9,6 +9,7 @@ declare class Host {
     private getCenterHost;
     private getResHost;
     getUrlOrDebug(url: string, urlDebug: string): string;
+    localCheck(urlDebug: string): Promise<boolean>;
 }
 export declare const host: Host;
 export {};

@@ -35,15 +35,18 @@ export class CheckBoxWidget extends Widget {
     setReadOnly(value) { this.input.readOnly = this.readOnly = value; }
     setDisabled(value) { this.input.disabled = this.disabled = value; }
     render() {
-        let cn = classNames(this.className, 'form-check-inline');
+        let cn = classNames(this.className, 'form-check-inline p-0');
         let input = React.createElement("input", { ref: (input) => this.input = input, className: 'align-self-center', type: "checkbox", defaultChecked: this.defaultValue, onChange: this.onInputChange, onClick: this.onClick });
-        return this.context.inNode ?
-            React.createElement("label", { className: cn },
+        if (this.context.inNode === true) {
+            return React.createElement("label", { className: cn },
                 input,
                 " ",
-                (this.ui && this.ui.label) || this.name)
-            :
-                React.createElement("div", { className: cn }, input);
+                (this.ui && this.ui.label) || this.name);
+        }
+        else {
+            return React.createElement("div", { className: cn },
+                React.createElement("label", { className: "w-100 h-100 mb-0 d-flex justify-content-center" }, input));
+        }
     }
 }
 //# sourceMappingURL=checkBoxWidget.js.map

@@ -1,11 +1,13 @@
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
 };
 import * as React from 'react';
-import { observable, autorun } from 'mobx';
+import { autorun } from 'mobx';
 import classNames from 'classnames';
 import { factory } from './widgets';
 import 'font-awesome/css/font-awesome.min.css';
@@ -18,22 +20,17 @@ export class Form extends React.Component {
     //readonly RowSeperator: JSX.Element;
     constructor(props) {
         super(props);
-        this.calcSelectOrDelete = () => {
-            if (this.formData === undefined)
+        this.watch = () => {
+            let { formData } = this.props;
+            if (formData === undefined)
                 return;
-            for (let itemSchema of this.schema) {
-                this.arrItemOperated(itemSchema);
-            }
+            //this.initData(formData);
+            this.calcSelectOrDelete();
         };
         this.DefaultContainer = (content) => {
             return React.createElement("form", { className: classNames(this.props.className) }, content);
         };
-        /*
-        protected DefaultArrFieldContainer = (itemName:string, content:JSX.Element, context:RowContext): JSX.Element => {
-            return this.InnerFieldContainer(itemName, content, context);
-        }*/
         this.DefaultFieldContainer = (label, content) => {
-            //return this.InnerFieldContainer(itemName, content, context);
             let { fieldLabelSize } = this.props;
             if (fieldLabelSize > 0) {
                 let labelView;
@@ -74,47 +71,36 @@ export class Form extends React.Component {
         this.FieldClass = FieldClass !== undefined && FieldClass !== '' && FieldClass !== null ? FieldClass : this.DefaultFieldClass;
         this.res = res || this.DefaultRes;
         this.ButtonClass = ButtonClass || this.DefaultButtonClass;
-        //this.ArrContainer = ArrContainer || this.DefaultArrContainer;
-        //this.RowContainer = RowContainer || this.DefaultRowContainer;
-        //this.RowSeperator = RowSeperator || this.DefaultRowSeperator;
         this.schema = schema;
         this.itemSchemas = {};
         for (let itemSchema of this.schema) {
             this.itemSchemas[itemSchema.name] = itemSchema;
         }
         this.uiSchema = uiSchema;
-        this.formData = formData;
-        this.disposer = autorun(this.calcSelectOrDelete);
+        //this.formData = formData;
+        this.disposer = autorun(this.watch);
         this.data = {};
-        this.initData(formData);
-        let inNode = this.props.children !== undefined || this.uiSchema && this.uiSchema.Templet !== undefined;
-        //this.formContext = new FormContext(this, inNode);
+        // this.initRender();
+    }
+    renderContent() {
+        this.initData(this.props.formData);
         let { children } = this.props;
-        //let content:JSX.Element; //, inNode:boolean;
-        //let formContext: FormContext;
         if (children !== undefined) {
-            //inNode = true;
-            this.content = React.createElement(React.Fragment, null, children);
             this.formContext = new FormContext(this, true);
+            return React.createElement(React.Fragment, null, children);
         }
-        else {
-            let Templet;
-            if (this.uiSchema !== undefined) {
-                Templet = this.uiSchema.Templet;
-            }
-            if (Templet !== undefined) {
-                // inNode = true;
-                this.content = typeof (Templet) === 'function' ? Templet(this.data) : Templet;
-                this.formContext = new FormContext(this, true);
-            }
-            else {
-                // inNode = false;
-                this.formContext = new FormContext(this, false);
-                this.content = React.createElement(React.Fragment, null, this.schema.map((v, index) => {
-                    return React.createElement(React.Fragment, { key: index }, factory(this.formContext, v, children));
-                }));
-            }
+        let Templet;
+        if (this.uiSchema !== undefined) {
+            Templet = this.uiSchema.Templet;
         }
+        if (Templet !== undefined) {
+            this.formContext = new FormContext(this, true);
+            return typeof (Templet) === 'function' ? Templet(this.data) : Templet;
+        }
+        this.formContext = new FormContext(this, false);
+        return React.createElement(React.Fragment, null, this.schema.map((v, index) => {
+            return React.createElement(React.Fragment, { key: index }, factory(this.formContext, v, children));
+        }));
     }
     initData(formData) {
         if (formData === undefined)
@@ -127,51 +113,60 @@ export class Form extends React.Component {
         let { name, type } = itemSchema;
         if (type === 'button')
             return;
-        if (type === 'arr') {
-            let arrItem = itemSchema;
-            let { arr: arrItems } = arrItem;
-            if (arrItems === undefined)
-                return;
-            let arrDict = arrItem.itemSchemas = {};
-            for (let item of arrItems) {
-                arrDict[item.name] = item;
-            }
-            let val = formData[name];
-            if (val === undefined)
-                val = [];
-            else if (Array.isArray(val) === false)
-                val = [val];
-            let arr = [];
-            for (let row of val) {
-                let { $isSelected, $isDeleted } = row;
-                let r = {
-                    $source: row,
-                    $isSelected: $isSelected,
-                    $isDeleted: $isDeleted,
-                };
-                for (let item of arrItems) {
-                    this.initDataItem(item, r, row);
-                    /*
-                    let {name:nm} = item;
-                    let v = row[nm];
-                    if (v === undefined) v = null;
-                    r[nm] = v;
-                    */
-                }
-                arr.push(r);
-            }
-            data[name] = observable(arr);
+        if (type !== 'arr') {
+            data[name] = formData[name];
             return;
         }
-        data[name] = formData[name];
+        let arrItem = itemSchema;
+        let { arr: arrItems } = arrItem;
+        if (arrItems === undefined)
+            return;
+        let arrDict = arrItem.itemSchemas = {};
+        for (let item of arrItems) {
+            arrDict[item.name] = item;
+        }
+        let val = formData[name];
+        if (val === undefined)
+            val = [];
+        else if (Array.isArray(val) === false)
+            val = [val];
+        let arr = [];
+        for (let row of val) {
+            let { $isSelected, $isDeleted } = row;
+            let r = {
+                $source: row,
+                $isSelected: $isSelected,
+                $isDeleted: $isDeleted,
+            };
+            for (let item of arrItems) {
+                this.initDataItem(item, r, row);
+                /*
+                let {name:nm} = item;
+                let v = row[nm];
+                if (v === undefined) v = null;
+                r[nm] = v;
+                */
+            }
+            arr.push(r);
+        }
+        //data[name] = observable(arr);
+        data[name] = arr;
+        return;
+    }
+    calcSelectOrDelete() {
+        for (let itemSchema of this.schema) {
+            this.arrItemOperated(itemSchema);
+        }
     }
     arrItemOperated(itemSchema) {
         let { name, type } = itemSchema;
         if (type !== 'arr')
             return;
-        //let arrVal = this.formData[name];
-        //if (arrVal === undefined) return;
+        if (this.data === undefined)
+            return;
         let formArrVal = this.data[name];
+        if (formArrVal === undefined)
+            return;
         let { arr: arrItems } = itemSchema;
         for (let row of formArrVal) {
             let { $source } = row;
@@ -192,15 +187,30 @@ export class Form extends React.Component {
             beforeShow(this.formContext);
     }
     componentWillUnmount() {
-        this.disposer();
+        if (this.disposer !== undefined)
+            this.disposer();
     }
     render() {
+        let content = this.renderContent();
         return React.createElement(ContextContainer.Provider, { value: this.formContext },
             React.createElement(this.formContext.renderErrors, null),
-            this.Container(this.content));
+            this.Container(content));
+    }
+    buttonClick(buttonName) {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.formContext.checkRules();
+            if (this.formContext.hasError === true)
+                return;
+            let { onButtonClick } = this.formContext.form.props;
+            if (onButtonClick === undefined) {
+                alert(`you should define form onButtonClick`);
+                return;
+            }
+            let ret = yield onButtonClick(buttonName, this.formContext);
+            if (ret === undefined)
+                return;
+            this.formContext.setError(buttonName, ret);
+        });
     }
 }
-__decorate([
-    observable
-], Form.prototype, "data", void 0);
 //# sourceMappingURL=form.js.map

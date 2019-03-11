@@ -11,7 +11,7 @@
         "moduleResolution": "node",
         "allowSyntheticDefaultImports": true,
         "preserveSymlinks": true,
-        "target": "es6",
+        "target": "es2016",
         "lib": ["es2016", "dom"],
         "sourceMap": true,
         "jsx": "react",

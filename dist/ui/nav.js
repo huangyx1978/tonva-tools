@@ -17,16 +17,16 @@ import { observable } from 'mobx';
 import { Page } from './page';
 import { netToken } from '../net/netToken';
 import FetchErrorView from './fetchErrorView';
-import { appUrl, setMeInFrame, logoutUqTokens } from '../net/appBridge';
+import { appUrl, setMeInFrame, getExHash, getExHashPos } from '../net/appBridge';
 import { LocalData } from '../local';
 import { guestApi, logoutApis, setCenterUrl, setCenterToken, WSChannel, meInFrame, isDevelopment, host } from '../net';
+import { wsBridge } from '../net/wsChannel';
+import { resOptions } from './res';
+import { Loading } from './loading';
 import 'font-awesome/css/font-awesome.min.css';
 import '../css/va-form.css';
 import '../css/va.css';
 import '../css/animation.css';
-import { wsBridge } from '../net/wsChannel';
-import { resOptions } from './res';
-import { Loading } from './loading';
 const regEx = new RegExp('Android|webOS|iPhone|iPad|' +
     'BlackBerry|Windows Phone|' +
     'Opera Mini|IEMobile|Mobile', 'i');
@@ -111,7 +111,7 @@ export class NavView extends React.Component {
         return __awaiter(this, void 0, void 0, function* () {
             let err = fetchError.error;
             if (err !== undefined && err.unauthorized === true) {
-                yield nav.showLogin();
+                yield nav.showLogin(undefined);
                 return;
             }
             this.setState({
@@ -195,7 +195,23 @@ export class NavView extends React.Component {
         //console.log('pop: %s pages', stack.length);
     }
     popTo(key) {
-        throw new Error('to be designed');
+        if (key === undefined)
+            return;
+        if (this.stack.find(v => v.key === key) === undefined)
+            return;
+        while (this.stack.length > 0) {
+            let len = this.stack.length;
+            let top = this.stack[len - 1];
+            if (top.key === key)
+                break;
+            this.pop();
+        }
+    }
+    topKey() {
+        let len = this.stack.length;
+        if (len === 0)
+            return undefined;
+        return this.stack[len - 1].key;
     }
     removeCeased() {
         for (;;) {
@@ -232,7 +248,7 @@ export class NavView extends React.Component {
         let len = this.stack.length;
         while (this.stack.length > 0)
             this.popAndDispose();
-        this.refresh();
+        //this.refresh();
         if (len > 1) {
             //window.removeEventListener('popstate', this.navBack);
             //window.history.back(len-1);
@@ -289,9 +305,10 @@ export class NavView extends React.Component {
                 break;
             case 2:
                 elWait = React.createElement("li", { className: "va-wait va-wait2" },
-                    React.createElement("i", { className: "fa fa-spinner fa-spin fa-3x fa-fw" }),
-                    React.createElement("span", { className: "sr-only" }, "Loading..."));
+                    React.createElement(Loading, null));
                 break;
+            //<i className="fa fa-spinner fa-spin fa-3x fa-fw"></i>
+            //<span className="sr-only">Loading...</span>
         }
         if (fetchError)
             elError = React.createElement(FetchErrorView, Object.assign({ clearError: this.clearError }, fetchError));
@@ -390,52 +407,62 @@ export class Nav {
     }
     start() {
         return __awaiter(this, void 0, void 0, function* () {
-            nav.clear();
-            nav.push(React.createElement(Page, { header: false },
-                React.createElement(Loading, null)));
-            yield host.start();
-            let { url, ws, resHost } = host;
-            this.centerHost = url;
-            this.resUrl = 'http://' + resHost + '/res/';
-            this.wsHost = ws;
-            setCenterUrl(url);
-            let unit = yield this.loadUnit();
-            meInFrame.unit = unit;
-            let guest = this.local.guest.get();
-            if (guest === undefined) {
-                guest = yield guestApi.guest();
-            }
-            nav.setGuest(guest);
-            let hash = document.location.hash;
-            // document.title = document.location.origin;
-            console.log("url=%s hash=%s", document.location.origin, hash);
-            this.isInFrame = hash !== undefined && hash !== '' && hash.startsWith('#tv');
-            if (this.isInFrame === true) {
-                let mif = setMeInFrame(hash);
-                if (mif !== undefined) {
-                    this.ws = wsBridge;
-                    console.log('this.ws = wsBridge in sub frame');
-                    //nav.user = {id:0} as User;
-                    if (self !== window.parent) {
-                        window.parent.postMessage({ type: 'sub-frame-started', hash: mif.hash }, '*');
+            try {
+                let hash = document.location.hash;
+                if (hash !== undefined && hash.length > 0) {
+                    let pos = getExHashPos();
+                    if (pos < 0)
+                        pos = undefined;
+                    this.hashParam = hash.substring(1, pos);
+                }
+                nav.clear();
+                this.startWait();
+                yield host.start();
+                let { url, ws, resHost } = host;
+                this.centerHost = url;
+                this.resUrl = 'http://' + resHost + '/res/';
+                this.wsHost = ws;
+                setCenterUrl(url);
+                let unit = yield this.loadUnit();
+                meInFrame.unit = unit;
+                let guest = this.local.guest.get();
+                if (guest === undefined) {
+                    guest = yield guestApi.guest();
+                }
+                nav.setGuest(guest);
+                let exHash = getExHash();
+                let mif = setMeInFrame(exHash);
+                if (exHash !== undefined && window !== window.parent) {
+                    if (mif !== undefined) {
+                        this.ws = wsBridge;
+                        console.log('this.ws = wsBridge in sub frame');
+                        //nav.user = {id:0} as User;
+                        if (self !== window.parent) {
+                            window.parent.postMessage({ type: 'sub-frame-started', hash: mif.hash }, '*');
+                        }
+                        // 下面这一句，已经移到 appBridge.ts 里面的 initSubWin，也就是响应从main frame获得user之后开始。
+                        //await this.showAppView();
+                        return;
                     }
-                    // 下面这一句，已经移到 appBridge.ts 里面的 initSubWin，也就是响应从main frame获得user之后开始。
-                    //await this.showAppView();
+                }
+                let user = this.local.user.get();
+                if (user === undefined) {
+                    let { notLogined } = this.nav.props;
+                    if (notLogined !== undefined) {
+                        yield notLogined();
+                    }
+                    else {
+                        yield nav.showLogin(undefined);
+                    }
                     return;
                 }
+                yield nav.logined(user);
             }
-            let user = this.local.user.get();
-            if (user === undefined) {
-                let { notLogined } = this.nav.props;
-                if (notLogined !== undefined) {
-                    yield notLogined();
-                }
-                else {
-                    yield nav.showLogin();
-                }
-                return;
+            catch (err) {
             }
-            yield nav.logined(user);
+            finally {
+                this.endWait();
+            }
         });
     }
     showAppView() {
@@ -457,46 +484,69 @@ export class Nav {
     saveLocalUser() {
         this.local.user.set(this.user);
     }
-    logined(user) {
+    logined(user, callback) {
         return __awaiter(this, void 0, void 0, function* () {
+            logoutApis();
             let ws = this.ws = new WSChannel(this.wsHost, user.token);
             ws.connect();
             console.log("logined: %s", JSON.stringify(user));
             this.user = user;
             this.saveLocalUser();
             netToken.set(user.id, user.token);
-            //this.user = new UserInNav(user);
-            yield this.showAppView();
+            if (callback !== undefined) //this.loginCallbacks.has)
+                callback(user);
+            //this.loginCallbacks.call(user);
+            else {
+                yield this.showAppView();
+            }
         });
     }
-    showLogin(withBack) {
+    showLogin(callback, top, withBack) {
         return __awaiter(this, void 0, void 0, function* () {
-            //if (this.loginView === undefined) {
             let lv = yield import('../entry/login');
-            //this.loginView = <lv.default logo={logo} />;
-            let loginView = React.createElement(lv.default, { withBack: withBack });
-            //}
+            let loginView = React.createElement(lv.default, { withBack: withBack, callback: callback, top: top });
             if (withBack !== true) {
                 this.nav.clear();
                 this.pop();
             }
-            //this.nav.show(loginView);
             this.nav.push(loginView);
         });
     }
-    logout(notShowLogin) {
+    showLogout(callback) {
+        return __awaiter(this, void 0, void 0, function* () {
+            nav.push(React.createElement(Page, { header: "\u5B89\u5168\u9000\u51FA", back: "close" },
+                React.createElement("div", { className: "m-5 border border-info bg-white rounded p-3 text-center" },
+                    React.createElement("div", null, "\u9000\u51FA\u5F53\u524D\u8D26\u53F7\u4E0D\u4F1A\u5220\u9664\u4EFB\u4F55\u5386\u53F2\u6570\u636E\uFF0C\u4E0B\u6B21\u767B\u5F55\u4F9D\u7136\u53EF\u4EE5\u4F7F\u7528\u672C\u8D26\u53F7"),
+                    React.createElement("div", { className: "mt-3" },
+                        React.createElement("button", { className: "btn btn-danger", onClick: () => this.logout(callback) }, "\u9000\u51FA")))));
+        });
+    }
+    logout(callback) {
         return __awaiter(this, void 0, void 0, function* () {
             this.local.logoutClear();
             this.user = undefined; //{} as User;
             logoutApis();
-            logoutUqTokens();
             let guest = this.local.guest.get();
             setCenterToken(0, guest && guest.token);
             this.ws = undefined;
-            if (notShowLogin === true)
-                return;
-            //await this.showLogin();
-            yield nav.start();
+            /*
+            if (this.loginCallbacks.has)
+                this.logoutCallbacks.call();
+            else {
+                if (notShowLogin === true) return;
+            }
+            await nav.start();
+            */
+            if (callback === undefined)
+                yield nav.start();
+            else
+                yield callback();
+        });
+    }
+    changePassword() {
+        return __awaiter(this, void 0, void 0, function* () {
+            let cp = yield import('../entry/changePassword');
+            nav.push(React.createElement(cp.ChangePasswordPage, null));
         });
     }
     get level() {
@@ -524,6 +574,12 @@ export class Nav {
     }
     pop(level = 1) {
         this.nav.pop(level);
+    }
+    topKey() {
+        return this.nav.topKey();
+    }
+    popTo(key) {
+        this.nav.popTo(key);
     }
     clear() {
         this.nav.clear();

@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import _ from 'lodash';
 import { nav } from '../ui';
 import { uid } from '../uid';
-import { uqTokenApi as uqTokenApi, callCenterapi, CenterAppApi, centerToken } from './uqApi';
+import { uqTokenApi as uqTokenApi, callCenterapi, centerToken, setCenterToken } from './uqApi';
 import { setSubAppWindow } from './wsChannel';
 import { host } from './host';
 const uqTokens = {};
@@ -95,7 +95,8 @@ function hideFrameBack(hash) {
 function initSubWin(message) {
     return __awaiter(this, void 0, void 0, function* () {
         console.log('initSubWin: set nav.user', message);
-        nav.user = message; // message.user;
+        let user = nav.user = message; // message.user;
+        setCenterToken(user.id, user.token);
         yield nav.showAppView();
     });
 }
@@ -130,16 +131,37 @@ function onAppApiReturn(message) {
     });
 }
 export function setMeInFrame(appHash) {
-    let parts = appHash.split('-');
-    let len = parts.length;
-    meInFrame.hash = parts[0].substr(3);
-    if (len > 0)
-        meInFrame.unit = Number(parts[1]);
-    if (len > 1)
-        meInFrame.page = parts[2];
-    if (len > 2)
-        meInFrame.param = parts.slice(3);
+    if (appHash) {
+        let parts = appHash.split('-');
+        let len = parts.length;
+        if (len > 0) {
+            let p = 1;
+            meInFrame.hash = parts[p++];
+            if (len > 0)
+                meInFrame.unit = Number(parts[p++]);
+            if (len > 1)
+                meInFrame.page = parts[p++];
+            if (len > 2)
+                meInFrame.param = parts.slice(p++);
+        }
+    }
     return meInFrame;
+}
+export function getExHashPos() {
+    let hash = document.location.hash;
+    if (hash !== undefined && hash.length > 0) {
+        let pos = hash.lastIndexOf('#tv-');
+        if (pos < 0)
+            pos = hash.lastIndexOf('#tvdebug-');
+        return pos;
+    }
+    return -1;
+}
+export function getExHash() {
+    let pos = getExHashPos();
+    if (pos < 0)
+        return undefined;
+    return document.location.hash.substring(pos);
 }
 export function appUrl(url, unitId, page, param) {
     let u;
@@ -151,7 +173,7 @@ export function appUrl(url, unitId, page, param) {
             break;
         }
     }
-    url += '#tv' + u + '-' + unitId;
+    url += '#tv-' + u + '-' + unitId;
     if (page !== undefined) {
         url += '-' + page;
         if (param !== undefined) {
@@ -161,18 +183,6 @@ export function appUrl(url, unitId, page, param) {
         }
     }
     return { url: url, hash: u };
-}
-export function loadAppUqs(appOwner, appName) {
-    return __awaiter(this, void 0, void 0, function* () {
-        let centerAppApi = new CenterAppApi('tv/', undefined);
-        let unit = meInFrame.unit;
-        let ret = yield centerAppApi.uqs(unit, appOwner, appName);
-        centerAppApi.checkUqs(unit, appOwner, appName).then(v => {
-            if (v === false)
-                nav.start();
-        });
-        return ret;
-    });
 }
 export function appUq(uq, uqOwner, uqName) {
     return __awaiter(this, void 0, void 0, function* () {

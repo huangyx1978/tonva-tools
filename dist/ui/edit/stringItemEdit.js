@@ -31,7 +31,8 @@ export class StringItemEdit extends ItemEdit {
     internalStart() {
         return __awaiter(this, void 0, void 0, function* () {
             return new Promise((resolve, reject) => {
-                nav.push(React.createElement(this.page, { resolve: resolve, reject: reject }), () => reject());
+                let element = React.createElement(this.page, { resolve: resolve, reject: reject });
+                nav.push(element, reject);
             });
         });
     }

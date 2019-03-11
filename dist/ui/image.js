@@ -1,12 +1,13 @@
 import * as React from 'react';
+import classNames from 'classnames';
 import { nav } from './nav';
-const defaultImage = 'http://101.200.46.56/imgs/Bear-icon.png';
 export function Image(props) {
     let { className, style, src } = props;
     if (!src) {
-        src = defaultImage;
+        return React.createElement("div", { className: classNames(className, 'image-none'), style: style },
+            React.createElement("i", { className: "fa fa-camera" }));
     }
-    else if (src.startsWith(':') === true) {
+    if (src.startsWith(':') === true) {
         src = nav.resUrl + src.substr(1);
     }
     return React.createElement("img", { src: src, className: className, style: style });

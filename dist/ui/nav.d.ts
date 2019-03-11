@@ -42,6 +42,7 @@ export declare class NavView extends React.Component<Props, State> {
     ceaseTop(level?: number): void;
     pop(level?: number): void;
     popTo(key: number): void;
+    topKey(): number;
     removeCeased(): void;
     private popAndDispose;
     private dispose;
@@ -72,15 +73,17 @@ export declare class Nav {
     onReceive(msg: any): Promise<void>;
     private getUnitName;
     private loadUnit;
-    private isInFrame;
+    hashParam: string;
     private centerHost;
     start(): Promise<void>;
     showAppView(): Promise<void>;
     setGuest(guest: Guest): void;
     saveLocalUser(): void;
-    logined(user: User): Promise<void>;
-    showLogin(withBack?: boolean): Promise<void>;
-    logout(notShowLogin?: boolean): Promise<void>;
+    logined(user: User, callback?: (user: User) => Promise<void>): Promise<void>;
+    showLogin(callback?: (user: User) => Promise<void>, top?: any, withBack?: boolean): Promise<void>;
+    showLogout(callback?: () => Promise<void>): Promise<void>;
+    logout(callback?: () => Promise<void>): Promise<void>;
+    changePassword(): Promise<void>;
     readonly level: number;
     startWait(): void;
     endWait(): void;
@@ -89,6 +92,8 @@ export declare class Nav {
     push(view: JSX.Element, disposer?: () => void): void;
     replace(view: JSX.Element, disposer?: () => void): void;
     pop(level?: number): void;
+    topKey(): number;
+    popTo(key: number): void;
     clear(): void;
     navBack(): void;
     ceaseTop(level?: number): void;

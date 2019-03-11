@@ -12,12 +12,19 @@ export class ResUploader extends React.Component {
     constructor() {
         super(...arguments);
         this.upload = () => __awaiter(this, void 0, void 0, function* () {
+            let { maxSize } = this.props;
+            if (maxSize === undefined || maxSize <= 0)
+                maxSize = 100000000000;
+            else
+                maxSize = maxSize * 1024;
             let resUrl = nav.resUrl + 'upload';
             var files = this.fileInput.files;
             var data = new FormData();
             let len = files.length;
             for (let i = 0; i < len; i++) {
                 let file = files[i];
+                if (file.size > maxSize)
+                    return null;
                 data.append('files[]', file, file.name);
             }
             try {

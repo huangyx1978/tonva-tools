@@ -72,17 +72,23 @@ export interface AppUq {
     id: number;
     uqOwner: string;
     uqName: string;
+    access: string;
+}
+export interface UqService {
+    id: number;
     url: string;
     urlDebug: string;
-    ws: string;
-    wsDebug: string;
-    access: string;
     token: string;
 }
 export declare class CenterAppApi extends CenterApi {
     private cachedUqs;
-    uqs(unit: number, appOwner: string, appName: string): Promise<App>;
+    uqs(appOwner: string, appName: string): Promise<App>;
     private uqsPure;
-    checkUqs(unit: number, appOwner: string, appName: string): Promise<boolean>;
-    unitxUq(unit: number): Promise<AppUq>;
+    checkUqs(appOwner: string, appName: string): Promise<boolean>;
+    unitxUq(unit: number): Promise<UqService>;
+    changePassword(param: {
+        orgPassword: string;
+        newPassword: string;
+    }): Promise<any>;
 }
+export declare function loadAppUqs(appOwner: string, appName: string): Promise<App>;

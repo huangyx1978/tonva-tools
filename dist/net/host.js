@@ -37,6 +37,13 @@ const hosts = {
 };
 function centerUrlFromHost(host) { return `http://${host}/`; }
 function centerWsFromHost(host) { return `ws://${host}/tv/`; }
+const fetchOptions = {
+    method: "GET",
+    mode: "no-cors",
+    headers: {
+        "Content-Type": "text/plain"
+    },
+};
 class Host {
     start() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -53,27 +60,37 @@ class Host {
     tryLocal() {
         return __awaiter(this, void 0, void 0, function* () {
             let promises = [];
+            let hostArr = [];
             for (let i in hosts) {
                 let hostValue = hosts[i];
                 let { value } = hostValue;
-                //let host = process.env[env] || value;
-                let fetchUrl = this.debugHostUrl(value);
-                let fetchOptions = {
-                    method: "GET",
-                    mode: "no-cors",
-                    headers: {
-                        "Content-Type": "text/plain"
-                    },
-                };
-                promises.push(localCheck(fetchUrl, fetchOptions));
+                if (hostArr.findIndex(v => v === value) < 0)
+                    hostArr.push(value);
+            }
+            for (let host of hostArr) {
+                let fetchUrl = this.debugHostUrl(host);
+                promises.push(localCheck(fetchUrl));
             }
             let results = yield Promise.all(promises);
+            let len = hostArr.length;
+            for (let i = 0; i < len; i++) {
+                let local = results[i];
+                let host = hostArr[i];
+                for (let j in hosts) {
+                    let hostValue = hosts[j];
+                    if (hostValue.value === host) {
+                        hostValue.local = local;
+                    }
+                }
+            }
+            /*
             let p = 0;
             for (let i in hosts) {
                 let hostValue = hosts[i];
                 hostValue.local = results[p];
                 ++p;
             }
+            */
         });
     }
     getCenterHost() {
@@ -83,8 +100,8 @@ class Host {
             return value;
         }
         if (isDevelopment === true) {
-            //if (local === true) 
-            return value;
+            if (local === true)
+                return value;
         }
         return centerHost;
     }
@@ -95,8 +112,8 @@ class Host {
             return value;
         }
         if (isDevelopment === true) {
-            //if (local === true) 
-            return value;
+            if (local === true)
+                return value;
         }
         return resHost;
     }
@@ -119,6 +136,11 @@ class Host {
         }
         return url;
     }
+    localCheck(urlDebug) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield localCheck(urlDebug);
+        });
+    }
 }
 export const host = new Host();
 // 因为测试的都是局域网服务器，甚至本机服务器，所以一秒足够了
@@ -126,10 +148,10 @@ export const host = new Host();
 // 尽管timeout了，fetch仍然继续，没有cancel
 // 实际上，一秒钟不够。web服务器会自动停。重启的时候，可能会比较长时间。也许两秒甚至更多。
 //const timeout = 2000;
-const timeout = 100;
-function fetchLocalCheck(url, options) {
+const timeout = 200;
+function fetchLocalCheck(url) {
     return new Promise((resolve, reject) => {
-        fetch(url, options)
+        fetch(url, fetchOptions)
             .then(v => {
             v.text().then(resolve).catch(reject);
         })
@@ -138,13 +160,13 @@ function fetchLocalCheck(url, options) {
         setTimeout(reject, timeout, e);
     });
 }
-function localCheck(url, options) {
+function localCheck(url) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            yield fetchLocalCheck(url, options);
+            yield fetchLocalCheck(url);
             return true;
         }
-        catch (_a) {
+        catch (err) {
             return false;
         }
     });
