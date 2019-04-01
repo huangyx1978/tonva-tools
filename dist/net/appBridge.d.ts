@@ -10,10 +10,11 @@ export interface AppInFrame {
     unit: number;
     page?: string;
     param?: string[];
+    predefinedUnit?: number;
 }
-export declare let meInFrame: AppInFrame;
+export declare let appInFrame: AppInFrame;
 export declare function isBridged(): boolean;
-export declare function setMeInFrame(appHash: string): AppInFrame;
+export declare function setAppInFrame(appHash: string): AppInFrame;
 export declare function getExHashPos(): number;
 export declare function getExHash(): string;
 export declare function appUrl(url: string, unitId: number, page?: string, param?: any[]): {

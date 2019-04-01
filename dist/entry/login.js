@@ -70,14 +70,11 @@ export default class Login extends React.Component {
         if (this.props.withBack === true) {
             header = '登录';
         }
-        let { top } = this.props;
-        if (top === undefined)
-            top = tonvaTop;
         return React.createElement(Page, { header: header, footer: footer },
             React.createElement("div", { className: "d-flex h-100 flex-column justify-content-center align-items-center" },
                 React.createElement("div", { className: "flex-fill" }),
                 React.createElement("div", { className: "w-20c" },
-                    top,
+                    tonvaTop(),
                     React.createElement("div", { className: "h-2c" }),
                     React.createElement(Form, { schema: schema, uiSchema: this.uiSchema, onButtonClick: this.onSubmit, onEnter: this.onEnter, requiredFlag: false }),
                     React.createElement("button", { className: "btn btn-link btn-block", onClick: () => this.clickForget() }, "\u5FD8\u8BB0\u5BC6\u7801")),

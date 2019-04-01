@@ -9,8 +9,7 @@ export interface TitleBarState {
     hasBack: boolean;
 }
 export declare class TitleBar extends React.Component<TitleBarProps, TitleBarState> {
-    private navChangeHandler;
-    constructor(props: any);
+    constructor(props: TitleBarProps);
     navChange(): void;
     componentWillMount(): void;
     componentWillUnmount(): void;

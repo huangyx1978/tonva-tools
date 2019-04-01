@@ -22,7 +22,7 @@ class AppInFrameClass {
     get unit() { return this._unit; } // unit id
     set unit(val) { this._unit = val; }
 }
-export let meInFrame = new AppInFrameClass();
+export let appInFrame = new AppInFrameClass();
 /* {
     hash: undefined,
     get unit():number {return } undefined, //debugUnitId,
@@ -105,9 +105,9 @@ function onReceiveAppApiMessage(hash, apiName) {
         let appInFrame = appsInFrame[hash];
         if (appInFrame === undefined)
             return { name: apiName, url: undefined, urlDebug: undefined, token: undefined };
-        let { unit } = appInFrame;
+        let { unit, predefinedUnit } = appInFrame;
         let parts = apiName.split('/');
-        let ret = yield uqTokenApi.uq({ unit: unit, uqOwner: parts[0], uqName: parts[1] });
+        let ret = yield uqTokenApi.uq({ unit: unit || predefinedUnit, uqOwner: parts[0], uqName: parts[1] });
         if (ret === undefined) {
             console.log('apiTokenApi.api return undefined. api=%s, unit=%s', apiName, unit);
             throw 'api not found';
@@ -130,22 +130,22 @@ function onAppApiReturn(message) {
         action.resolve(action);
     });
 }
-export function setMeInFrame(appHash) {
+export function setAppInFrame(appHash) {
     if (appHash) {
         let parts = appHash.split('-');
         let len = parts.length;
         if (len > 0) {
             let p = 1;
-            meInFrame.hash = parts[p++];
+            appInFrame.hash = parts[p++];
             if (len > 0)
-                meInFrame.unit = Number(parts[p++]);
+                appInFrame.unit = Number(parts[p++]);
             if (len > 1)
-                meInFrame.page = parts[p++];
+                appInFrame.page = parts[p++];
             if (len > 2)
-                meInFrame.param = parts.slice(p++);
+                appInFrame.param = parts.slice(p++);
         }
     }
-    return meInFrame;
+    return appInFrame;
 }
 export function getExHashPos() {
     let hash = document.location.hash;
@@ -190,7 +190,8 @@ export function appUq(uq, uqOwner, uqName) {
         if (uqToken !== undefined)
             return uqToken;
         if (!isBridged()) {
-            uqToken = yield uqTokenApi.uq({ unit: meInFrame.unit, uqOwner: uqOwner, uqName: uqName });
+            let { unit, predefinedUnit } = appInFrame;
+            uqToken = yield uqTokenApi.uq({ unit: unit || predefinedUnit, uqOwner: uqOwner, uqName: uqName });
             if (uqToken === undefined) {
                 let err = 'unauthorized call: uqTokenApi center return undefined!';
                 throw err;
@@ -204,7 +205,7 @@ export function appUq(uq, uqOwner, uqName) {
             uqTokens[uq] = uqToken;
             return uqToken;
         }
-        console.log("appApi parent send: %s", meInFrame.hash);
+        console.log("appApi parent send: %s", appInFrame.hash);
         uqToken = {
             name: uq,
             url: undefined,
@@ -227,7 +228,7 @@ export function appUq(uq, uqOwner, uqName) {
             (window.opener || window.parent).postMessage({
                 type: 'app-api',
                 apiName: uq,
-                hash: meInFrame.hash,
+                hash: appInFrame.hash,
             }, "*");
         });
     });

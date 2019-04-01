@@ -56,11 +56,15 @@ export declare class NavView extends React.Component<Props, State> {
     render(): JSX.Element;
     private refresh;
 }
+export interface NavSettings {
+    loginTop?: JSX.Element;
+}
 export declare class Nav {
     private nav;
     private ws;
     private wsHost;
     private local;
+    private navSettings;
     user: User;
     language: string;
     culture: string;
@@ -71,8 +75,9 @@ export declare class Nav {
     registerReceiveHandler(handler: (message: any) => Promise<void>): number;
     unregisterReceiveHandler(handlerId: number): void;
     onReceive(msg: any): Promise<void>;
-    private getUnitName;
-    private loadUnit;
+    private getPredefinedUnitName;
+    private loadPredefinedUnit;
+    setSettings(settings?: NavSettings): void;
     hashParam: string;
     private centerHost;
     start(): Promise<void>;
@@ -80,7 +85,8 @@ export declare class Nav {
     setGuest(guest: Guest): void;
     saveLocalUser(): void;
     logined(user: User, callback?: (user: User) => Promise<void>): Promise<void>;
-    showLogin(callback?: (user: User) => Promise<void>, top?: any, withBack?: boolean): Promise<void>;
+    loginTop(defaultTop: JSX.Element): JSX.Element;
+    showLogin(callback?: (user: User) => Promise<void>, withBack?: boolean): Promise<void>;
     showLogout(callback?: () => Promise<void>): Promise<void>;
     logout(callback?: () => Promise<void>): Promise<void>;
     changePassword(): Promise<void>;

@@ -1,5 +1,5 @@
 /// <reference types="react" />
-export declare const tonvaTop: JSX.Element;
+export declare function tonvaTop(): JSX.Element;
 interface Sender {
     type: string;
     caption: string;

@@ -5,7 +5,7 @@ export function Image(props) {
     let { className, style, src } = props;
     if (!src) {
         return React.createElement("div", { className: classNames(className, 'image-none'), style: style },
-            React.createElement("i", { className: "fa fa-camera" }));
+            React.createElement("i", { className: "fa fa-file-o" }));
     }
     if (src.startsWith(':') === true) {
         src = nav.resUrl + src.substr(1);

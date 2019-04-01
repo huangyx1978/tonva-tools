@@ -17,9 +17,9 @@ import { observable } from 'mobx';
 import { Page } from './page';
 import { netToken } from '../net/netToken';
 import FetchErrorView from './fetchErrorView';
-import { appUrl, setMeInFrame, getExHash, getExHashPos } from '../net/appBridge';
+import { appUrl, setAppInFrame, getExHash, getExHashPos } from '../net/appBridge';
 import { LocalData } from '../local';
-import { guestApi, logoutApis, setCenterUrl, setCenterToken, WSChannel, meInFrame, isDevelopment, host } from '../net';
+import { guestApi, logoutApis, setCenterUrl, setCenterToken, WSChannel, appInFrame, isDevelopment, host } from '../net';
 import { wsBridge } from '../net/wsChannel';
 import { resOptions } from './res';
 import { Loading } from './loading';
@@ -366,7 +366,7 @@ export class Nav {
             yield this.ws.receive(msg);
         });
     }
-    getUnitName() {
+    getPredefinedUnitName() {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 let unitRes = yield fetch('unit.json', {});
@@ -380,21 +380,21 @@ export class Nav {
             }
         });
     }
-    loadUnit() {
+    loadPredefinedUnit() {
         return __awaiter(this, void 0, void 0, function* () {
             let unitName;
             let unit = this.local.unit.get();
             if (unit !== undefined) {
                 if (isDevelopment !== true)
                     return unit.id;
-                unitName = yield this.getUnitName();
+                unitName = yield this.getPredefinedUnitName();
                 if (unitName === undefined)
                     return;
                 if (unit.name === unitName)
                     return unit.id;
             }
             else {
-                unitName = yield this.getUnitName();
+                unitName = yield this.getPredefinedUnitName();
                 if (unitName === undefined)
                     return;
             }
@@ -404,6 +404,9 @@ export class Nav {
             }
             return unitId;
         });
+    }
+    setSettings(settings) {
+        this.navSettings = settings;
     }
     start() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -423,28 +426,29 @@ export class Nav {
                 this.resUrl = 'http://' + resHost + '/res/';
                 this.wsHost = ws;
                 setCenterUrl(url);
-                let unit = yield this.loadUnit();
-                meInFrame.unit = unit;
                 let guest = this.local.guest.get();
                 if (guest === undefined) {
                     guest = yield guestApi.guest();
                 }
                 nav.setGuest(guest);
                 let exHash = getExHash();
-                let mif = setMeInFrame(exHash);
+                let appInFrame = setAppInFrame(exHash);
                 if (exHash !== undefined && window !== window.parent) {
-                    if (mif !== undefined) {
+                    // is in frame
+                    if (appInFrame !== undefined) {
                         this.ws = wsBridge;
                         console.log('this.ws = wsBridge in sub frame');
                         //nav.user = {id:0} as User;
                         if (self !== window.parent) {
-                            window.parent.postMessage({ type: 'sub-frame-started', hash: mif.hash }, '*');
+                            window.parent.postMessage({ type: 'sub-frame-started', hash: appInFrame.hash }, '*');
                         }
                         // 下面这一句，已经移到 appBridge.ts 里面的 initSubWin，也就是响应从main frame获得user之后开始。
                         //await this.showAppView();
                         return;
                     }
                 }
+                let predefinedUnit = yield this.loadPredefinedUnit();
+                appInFrame.predefinedUnit = predefinedUnit;
                 let user = this.local.user.get();
                 if (user === undefined) {
                     let { notLogined } = this.nav.props;
@@ -501,10 +505,13 @@ export class Nav {
             }
         });
     }
-    showLogin(callback, top, withBack) {
+    loginTop(defaultTop) {
+        return (this.navSettings && this.navSettings.loginTop) || defaultTop;
+    }
+    showLogin(callback, withBack) {
         return __awaiter(this, void 0, void 0, function* () {
             let lv = yield import('../entry/login');
-            let loginView = React.createElement(lv.default, { withBack: withBack, callback: callback, top: top });
+            let loginView = React.createElement(lv.default, { withBack: withBack, callback: callback });
             if (withBack !== true) {
                 this.nav.clear();
                 this.pop();
@@ -523,6 +530,7 @@ export class Nav {
     }
     logout(callback) {
         return __awaiter(this, void 0, void 0, function* () {
+            appInFrame.unit = undefined;
             this.local.logoutClear();
             this.user = undefined; //{} as User;
             logoutApis();

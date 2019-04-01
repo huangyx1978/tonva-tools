@@ -8,9 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import * as React from 'react';
 import { nav, Page, Form, resLang, Controller, VPage } from '../ui';
-//import LoginView from './login';
 import userApi from './userApi';
-//import RegSuccess from './regSuccess';
 import '../css/va-form.css';
 import { registerRes } from './res';
 import { tonvaTop, getSender } from './tools';
@@ -186,7 +184,7 @@ class AccountPage extends VPage {
         this.page = () => {
             return React.createElement(Page, { header: this.controller.accountPageCaption },
                 React.createElement("div", { className: "w-max-20c my-5 py-5", style: { marginLeft: 'auto', marginRight: 'auto' } },
-                    tonvaTop,
+                    tonvaTop(),
                     React.createElement("div", { className: "h-3c" }),
                     React.createElement(Form, { schema: this.schema, uiSchema: this.uiSchema, onButtonClick: this.onSubmit, onEnter: this.onEnter, requiredFlag: false })));
         };
