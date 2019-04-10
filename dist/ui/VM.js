@@ -163,6 +163,11 @@ export class View {
             yield this.controller.event(type, value);
         });
     }
+    vCall(vp, param) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.controller.vCall(vp, param);
+        });
+    }
     returnCall(value) {
         this.controller.returnCall(value);
     }

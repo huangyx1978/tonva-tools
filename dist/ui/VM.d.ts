@@ -27,7 +27,7 @@ export declare abstract class Controller {
     start(param?: any): Promise<void>;
     readonly isCalling: boolean;
     private _resolve_$;
-    call(param?: any): Promise<any>;
+    call<T>(param?: any): Promise<T>;
     vCall<C extends Controller>(vp: new (controller: C) => VPage<C>, param?: any): Promise<any>;
     returnCall(value: any): void;
     openPage(page: JSX.Element): void;
@@ -48,6 +48,7 @@ export declare abstract class View<C extends Controller> {
     protected renderVm(vm: new (controller: C) => View<C>, param?: any): JSX.Element;
     protected openVPage(vp: new (controller: C) => VPage<C>, param?: any): Promise<void>;
     protected event(type: string, value?: any): Promise<void>;
+    vCall<C extends Controller>(vp: new (controller: C) => VPage<C>, param?: any): Promise<any>;
     protected returnCall(value: any): void;
     protected openPage(view: React.StatelessComponent<any>, param?: any): void;
     protected replacePage(view: React.StatelessComponent<any>, param?: any): void;
