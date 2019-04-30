@@ -270,6 +270,11 @@ export class UqApi extends ApiBase {
             return yield this.get('sheet/' + name + '/statecount');
         });
     }
+    mySheets(name, data) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.post('sheet/' + name + '/my-sheets', data);
+        });
+    }
     getSheet(name, id) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield this.get('sheet/' + name + '/get/' + id);

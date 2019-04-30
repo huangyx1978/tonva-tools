@@ -29,6 +29,7 @@ export declare class UqApi extends ApiBase {
     sheetAction(name: string, data: object): Promise<any>;
     stateSheets(name: string, data: object): Promise<any>;
     stateSheetCount(name: string): Promise<any>;
+    mySheets(name: string, data: object): Promise<any>;
     getSheet(name: string, id: number): Promise<any>;
     sheetArchives(name: string, data: object): Promise<any>;
     sheetArchive(name: string, id: number): Promise<any>;

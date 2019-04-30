@@ -112,7 +112,7 @@ export const ArrComponent = observer(({ parentContext, arrSchema, children }) =>
             (content) => React.createElement("fieldset", { disabled: isDeleted },
                 React.createElement("div", { className: classNames('d-flex', { 'deleted': isDeleted, 'row-selected': row.$isSelected }) },
                     selectCheck,
-                    React.createElement("div", { className: "flex-grow-1" }, content),
+                    React.createElement("div", { className: selectable === true && deletable === true ? "form-row-content" : "form-row-content-1" }, content),
                     deleteIcon))
             :
                 (content) => content;
