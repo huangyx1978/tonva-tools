@@ -45,7 +45,7 @@ export class TextWidget extends Widget {
     onFocus(evt) {
         this.clearError();
         this.context.removeErrorWidget(this);
-        this.context.removeErrors();
+        this.context.clearErrors();
     }
     onChange(evt) {
     }

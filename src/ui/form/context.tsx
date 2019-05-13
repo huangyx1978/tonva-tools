@@ -117,7 +117,7 @@ export abstract class Context {
             let arrRowContexts = this.subContexts[i];
             for (let j in arrRowContexts) {
                 let rowContext = arrRowContexts[j];
-                rowContext.removeErrors();
+                rowContext.clearErrors();
                 rowContext.checkContextRules();
             }
         }
@@ -131,10 +131,15 @@ export abstract class Context {
     }
 
     clearContextErrors() {
-        for (let i in this.widgets) this.widgets[i].clearContextError();
+        for (let i in this.widgets) {
+            let widget = this.widgets[i];
+            if (widget === undefined) continue;
+            widget.clearContextError();
+        }
     }
 
     checkRules() {
+        this.clearErrors();
         this.checkFieldRules();
         this.checkContextRules();
     }
@@ -165,14 +170,10 @@ export abstract class Context {
         return this.checkHasError();
     };
 
-    removeErrors() {
+    clearErrors() {
         this.errors.splice(0);
         this.errorWidgets.splice(0);
-        for (let i in this.widgets) {
-            let widget = this.widgets[i];
-            if (widget === undefined) continue;
-            widget.clearContextError();
-        }
+        this.clearContextErrors();
     }
 
     renderErrors = observer((): JSX.Element => {
@@ -216,9 +217,9 @@ export class RowContext extends Context {
     }
     get arrName():string {return this.arrSchema.name}
     //get data() {return this.row.data;}
-    removeErrors() {
-        super.removeErrors();
-        this.parentContext.removeErrors();
+    clearErrors() {
+        super.clearErrors();
+        this.parentContext.clearErrors();
     }
 
     get parentData():any {return this.parentContext.data;}

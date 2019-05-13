@@ -83,7 +83,7 @@ export const ArrComponent = observer(({ parentContext, arrSchema, children }) =>
                 let { $source } = row;
                 if ($source !== undefined)
                     $source.$isSelected = checked;
-                rowContext.removeErrors();
+                rowContext.clearErrors();
             };
             selectCheck = React.createElement("div", { className: "form-row-checkbox" },
                 React.createElement("input", { type: "checkbox", onClick: onClick, defaultChecked: row.$isSelected }));
@@ -103,7 +103,7 @@ export const ArrComponent = observer(({ parentContext, arrSchema, children }) =>
                     if (p >= 0)
                         data.splice(p, 1);
                 }
-                rowContext.removeErrors();
+                rowContext.clearErrors();
             };
             deleteIcon = React.createElement("div", { className: "form-row-edit text-info", onClick: onDelClick },
                 React.createElement("i", { className: classNames('fa', icon, 'fa-fw') }));

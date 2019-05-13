@@ -21,9 +21,11 @@ let Edit = class Edit extends React.Component {
     constructor(props) {
         super(props);
         this.defaultSepClassName = "border-top edit-sep-light-gray";
-        this.defaultRowContainerClassName = "d-flex px-3 py-2 cursor-pointer bg-white align-items-center";
+        this.defaultRowContainerClassName = "d-flex px-3 py-2 bg-white align-items-center";
         this.rowClick = (itemSchema, uiItem, label, value) => __awaiter(this, void 0, void 0, function* () {
-            let { onItemChanged, onItemClick } = this.props;
+            let { onItemChanged, onItemClick, stopEdit } = this.props;
+            if (stopEdit === true)
+                return;
             let changeValue;
             if (onItemClick !== undefined) {
                 yield onItemClick(itemSchema, uiItem, value);
@@ -46,10 +48,12 @@ let Edit = class Edit extends React.Component {
                 console.log('no value changed');
             }
         });
-        let { topBorderClassName, bottomBorderClassName, sepClassName, rowContainerClassName, uiSchema } = props;
+        let { topBorderClassName, bottomBorderClassName, sepClassName, rowContainerClassName, uiSchema, stopEdit } = props;
         this.topBorder = React.createElement("div", { className: topBorderClassName || this.defaultSepClassName });
         this.bottomBorder = React.createElement("div", { className: bottomBorderClassName || this.defaultSepClassName });
         this.rowContainerClassName = rowContainerClassName || this.defaultRowContainerClassName;
+        if (stopEdit !== true)
+            this.rowContainerClassName += ' cursor-pointer';
         this.sep = React.createElement("div", { className: sepClassName || this.defaultSepClassName });
         this.uiSchema = (uiSchema && uiSchema.items) || {};
     }
@@ -83,7 +87,7 @@ let Edit = class Edit extends React.Component {
         return React.createElement("div", { className: this.rowContainerClassName, onClick: () => __awaiter(this, void 0, void 0, function* () { return yield this.rowClick(itemSchema, uiItem, label, value); }) },
             React.createElement("div", { className: "w-6c" }, label),
             React.createElement("div", { className: "flex-fill d-flex justify-content-end" }, divValue),
-            React.createElement("div", { className: "w-2c text-right" },
+            this.props.stopEdit !== true && React.createElement("div", { className: "w-2c text-right" },
                 React.createElement("i", { className: "fa fa-chevron-right" })));
     }
 };

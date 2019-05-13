@@ -42,7 +42,7 @@ export declare abstract class Context {
     removeErrorWidget(widget: Widget): void;
     protected checkHasError(): boolean;
     readonly hasError: boolean;
-    removeErrors(): void;
+    clearErrors(): void;
     renderErrors: () => JSX.Element;
 }
 export declare class RowContext extends Context {
@@ -55,7 +55,7 @@ export declare class RowContext extends Context {
     getItemSchema(itemName: string): ItemSchema;
     getUiItem(itemName: string): UiItem;
     readonly arrName: string;
-    removeErrors(): void;
+    clearErrors(): void;
     readonly parentData: any;
 }
 export declare class FormContext extends Context {

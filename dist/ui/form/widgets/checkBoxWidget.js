@@ -8,7 +8,7 @@ export class CheckBoxWidget extends Widget {
             this.setDataValue(evt.target.checked === true ? this.trueValue : this.falseValue);
         };
         this.onClick = () => {
-            this.context.removeErrors();
+            this.context.clearErrors();
         };
     }
     init() {

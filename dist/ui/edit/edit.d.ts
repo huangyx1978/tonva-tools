@@ -6,6 +6,7 @@ export interface EditProps {
     data: any;
     onItemClick?: (itemSchema: ItemSchema, uiItem: UiItem, value: any) => Promise<void>;
     onItemChanged?: (itemSchema: ItemSchema, newValue: any, preValue: any) => Promise<void>;
+    stopEdit?: boolean;
     uiSchema?: UiSchema;
     sepClassName?: string;
     topBorderClassName?: string;

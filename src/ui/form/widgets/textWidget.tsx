@@ -40,7 +40,7 @@ export class TextWidget extends Widget {
     protected onFocus(evt: React.FocusEvent<any>) {
         this.clearError();
         this.context.removeErrorWidget(this);
-        this.context.removeErrors();
+        this.context.clearErrors();
     }
     protected onChange(evt: React.ChangeEvent<any>) {
     }

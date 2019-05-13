@@ -28,7 +28,7 @@ export class Form extends React.Component {
             this.calcSelectOrDelete();
         };
         this.DefaultContainer = (content) => {
-            return React.createElement("form", { className: classNames(this.props.className) }, content);
+            return React.createElement("form", { className: classNames(this.props.className), onSubmit: e => e.preventDefault() }, content);
         };
         this.DefaultFieldContainer = (label, content) => {
             let { fieldLabelSize } = this.props;
@@ -58,7 +58,6 @@ export class Form extends React.Component {
                 content);
         };
         this.RowContainer = (content) => {
-            //return <div className="row">{content}</div>;
             let cn = classNames({
                 'py-3': true
             });

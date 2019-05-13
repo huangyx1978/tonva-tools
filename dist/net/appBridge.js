@@ -105,13 +105,9 @@ function onReceiveAppApiMessage(hash, apiName) {
         let appInFrame = appsInFrame[hash];
         if (appInFrame === undefined)
             return { name: apiName, url: undefined, urlDebug: undefined, token: undefined };
-        let { unit, predefinedUnit } = appInFrame;
+        let unit = getUnit();
         let parts = apiName.split('/');
-        let ret = yield uqTokenApi.uq({ unit: unit || predefinedUnit, uqOwner: parts[0], uqName: parts[1] });
-        if (ret === undefined) {
-            console.log('apiTokenApi.api return undefined. api=%s, unit=%s', apiName, unit);
-            throw 'api not found';
-        }
+        let ret = yield uqTokenApi.uq({ unit: unit, uqOwner: parts[0], uqName: parts[1] });
         return { name: apiName, url: ret.url, urlDebug: ret.urlDebug, token: ret.token };
     });
 }
@@ -184,18 +180,22 @@ export function appUrl(url, unitId, page, param) {
     }
     return { url: url, hash: u };
 }
+function getUnit() {
+    let { unit, predefinedUnit } = appInFrame;
+    let realUnit = unit || predefinedUnit;
+    if (realUnit === undefined) {
+        throw 'no unit defined in unit.json or not logined in';
+    }
+    return realUnit;
+}
 export function appUq(uq, uqOwner, uqName) {
     return __awaiter(this, void 0, void 0, function* () {
         let uqToken = uqTokens[uq];
         if (uqToken !== undefined)
             return uqToken;
         if (!isBridged()) {
-            let { unit, predefinedUnit } = appInFrame;
-            uqToken = yield uqTokenApi.uq({ unit: unit || predefinedUnit, uqOwner: uqOwner, uqName: uqName });
-            if (uqToken === undefined) {
-                let err = 'unauthorized call: uqTokenApi center return undefined!';
-                throw err;
-            }
+            let unit = getUnit();
+            uqToken = yield uqTokenApi.uq({ unit: unit, uqOwner: uqOwner, uqName: uqName });
             if (uqToken.token === undefined)
                 uqToken.token = centerToken;
             let { url, urlDebug } = uqToken;
