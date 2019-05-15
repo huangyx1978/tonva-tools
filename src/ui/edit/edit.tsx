@@ -59,7 +59,7 @@ export class Edit extends React.Component<EditProps> {
     }
 
     private renderRow(itemSchema: ItemSchema):JSX.Element {
-        let {name, type} = itemSchema;
+        let {name, type, required} = itemSchema;
         let divValue:any;
         let uiItem = this.uiSchema[name];
         let label:string = (uiItem && uiItem.label) || name;
@@ -72,8 +72,9 @@ export class Edit extends React.Component<EditProps> {
                 divValue = <Image className="w-4c h-4c" src={value} />;
                 break;
         }
+        let requireFlag = required===true && <span className="text-danger">*</span>;
         return <div className={this.rowContainerClassName} onClick={async ()=>await this.rowClick(itemSchema, uiItem, label, value)}>
-            <div className="w-6c">{label}</div>
+            <div className="w-6c">{label} {requireFlag}</div>
             <div className="flex-fill d-flex justify-content-end">{divValue}</div>
             {this.props.stopEdit!==true && <div className="w-2c text-right"><i className="fa fa-chevron-right" /></div>}
         </div>;

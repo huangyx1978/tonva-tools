@@ -33,10 +33,12 @@ export declare abstract class Context {
     setReadOnly(itemName: string, value: boolean): void;
     getVisible(itemName: string): boolean;
     setVisible(itemName: string, value: boolean): void;
+    submit(buttonName: string): Promise<void>;
     checkFieldRules(): void;
     checkContextRules(): void;
     setError(itemName: string, error: string): void;
     clearContextErrors(): void;
+    clearWidgetsErrors(): void;
     checkRules(): void;
     addErrorWidget(widget: Widget): void;
     removeErrorWidget(widget: Widget): void;

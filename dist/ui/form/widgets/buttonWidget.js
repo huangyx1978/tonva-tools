@@ -18,20 +18,18 @@ export class ButtonWidget extends Widget {
             this.clearContextError();
             let { name, type } = this.itemSchema;
             if (type === 'submit') {
-                this.context.checkRules();
-                if (this.context.hasError === true) {
-                    return;
-                }
+                yield this.context.submit(name);
             }
-            let { onButtonClick } = this.context.form.props;
+            /*
+            let {onButtonClick} = this.context.form.props;
             if (onButtonClick === undefined) {
                 alert(`button ${name} clicked. you should define form onButtonClick`);
                 return;
             }
-            let ret = yield onButtonClick(name, this.context);
-            if (ret === undefined)
-                return;
+            let ret = await onButtonClick(name, this.context);
+            if (ret === undefined) return;
             this.context.setError(name, ret);
+            */
         });
         this.observerRender = observer(() => {
             let { name, type } = this.itemSchema;

@@ -21,8 +21,9 @@ export class TextWidget extends Widget {
             if (onEnter === undefined)
                 return;
             this.changeValue(evt.currentTarget.value, true);
-            this.checkRules();
-            this.context.checkContextRules();
+            //this.checkRules();
+            //this.context.checkContextRules();
+            this.input.blur();
             let ret = yield onEnter(this.name, this.context);
             if (ret !== undefined) {
                 this.context.setError(this.name, ret);

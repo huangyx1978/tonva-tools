@@ -71,7 +71,7 @@ let Edit = class Edit extends React.Component {
         return React.createElement("div", null, elItems.map((v, index) => React.createElement(React.Fragment, { key: index }, v)));
     }
     renderRow(itemSchema) {
-        let { name, type } = itemSchema;
+        let { name, type, required } = itemSchema;
         let divValue;
         let uiItem = this.uiSchema[name];
         let label = (uiItem && uiItem.label) || name;
@@ -84,8 +84,12 @@ let Edit = class Edit extends React.Component {
                 divValue = React.createElement(Image, { className: "w-4c h-4c", src: value });
                 break;
         }
+        let requireFlag = required === true && React.createElement("span", { className: "text-danger" }, "*");
         return React.createElement("div", { className: this.rowContainerClassName, onClick: () => __awaiter(this, void 0, void 0, function* () { return yield this.rowClick(itemSchema, uiItem, label, value); }) },
-            React.createElement("div", { className: "w-6c" }, label),
+            React.createElement("div", { className: "w-6c" },
+                label,
+                " ",
+                requireFlag),
             React.createElement("div", { className: "flex-fill d-flex justify-content-end" }, divValue),
             this.props.stopEdit !== true && React.createElement("div", { className: "w-2c text-right" },
                 React.createElement("i", { className: "fa fa-chevron-right" })));

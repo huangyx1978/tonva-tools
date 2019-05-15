@@ -398,7 +398,7 @@
         "signature": "253589d1d8157543c2c6a4e50922b553b39afba246c33ecf4aff45262934c6f5"
       },
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/textwidget.tsx": {
-        "version": "9531a2c152b15f39f11a0dc7e49fac84131ff4df6f1588c7cd5ffd684f5bc10c",
+        "version": "63e288240b326ad665edcaaa8f3d744be4cd7941d41902cfb489d3820cff0b40",
         "signature": "d05caecc99ee9a78dcaea4138f732f952c37b3cc23312bb242777ff9c7d80e78"
       },
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/textareawidget.tsx": {
@@ -446,7 +446,7 @@
         "signature": "75045acb08552805d735f41403d6c192c4b71130955cb8a4485ddc60f959579e"
       },
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/buttonwidget.tsx": {
-        "version": "7b46342bbb93da3219c2f4a2640b2a93148b6e7c8a67be07162c8df72e1ef8e5",
+        "version": "77a8ea7182d90c550cfa5fa0f790f75019dd1da43f265422784054bc4d8c2950",
         "signature": "2ef874a4c61c3125d231f6e6178aed0a1014ea7cf5c100cf073cb75565bde963"
       },
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/arrcomponent.tsx": {
@@ -486,8 +486,8 @@
         "signature": "3d75053d45888e64091ef3f1e2307d220aabedc3ec04fa1b8ae9671529eafafd"
       },
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/context.tsx": {
-        "version": "1dea0133893c6812bf65a143daeb800701873f97aa7e3156d5d73b7e07c3600e",
-        "signature": "970e4f41dcff8323ebc9cb43a439c96a017f4fc593e9c8ae09706444d844a9bb"
+        "version": "5ab29a546a5988e90e80471674aace384e5dbc04b598425deda703185dddf3ac",
+        "signature": "6f4ca923a9b975358e0b2910324761dc6fd97cdc4eb77d4f6d9c7091e681710e"
       },
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/schema/uischema.ts": {
         "version": "177023f82753602595e14ac3fcf3e960869e9b36115a6079998dda5dcb5182db",
@@ -506,7 +506,7 @@
         "signature": "0e2bfc77df9c857ee549bde8d5b3b67df1f9f14ff9df4b16b49942e279cc822e"
       },
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/edit/edit.tsx": {
-        "version": "c040d8185f6471fecfcfce7a4a203738be5cc272275529fa739bf1d2e0ef3d90",
+        "version": "d353ee99471b507eb899ee45d081b9611812edf3e124584073022e04568244f4",
         "signature": "e8dd5f12b1ad92f90cc25fd5e0bbc5810afd526b29e5f50187aad05c4ad438b1"
       },
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/edit/index.tsx": {
@@ -569,14 +569,6 @@
         "version": "04f2029d9379db6b15376297b6f1a2a6740e70aa243328230f90d279871ee02d",
         "signature": "08acbbf1f82c0650d9f02f718f41fa4a875a2a271c1938cf135c211f4529f0f7"
       },
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/debughost.ts": {
-        "version": "a4ac02264a9e1381c55546d1e4b3145b2fd54dbbb7b4825e8df59253bc568caf",
-        "signature": "1aaccccb1f4aabb54f51fb5723ad00695b7800c08a1e665b1aed7e9c3e14642f"
-      },
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/fetchlocalcheck.ts": {
-        "version": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-        "signature": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-      },
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/serializejson.ts": {
         "version": "74e175c23684d6223241d05b758536c7e359704afa08cdc94ca401993b62b3f7",
         "signature": "2eab7ad785b4f87ae903fb9799f0b92d153a28e296972a7b1a462a0033e2b072"
@@ -588,6 +580,10 @@
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/callbacks.ts": {
         "version": "9c665e2cef450870f0a6310cac576b845edd53b18ba658d4fd5efad6bdd3166f",
         "signature": "ef24fca175c4b0939af14adbb62815dc7928914a2155c00666edde0a0fe63b3b"
+      },
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/arrrow.tsx": {
+        "version": "a40dc952c1d4d4c17468ce558968fb7007a89fb98a4d5bb4b8c773bf81804d06",
+        "signature": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/schema.ts": {
         "version": "fc0f41099bc61e73746fee245149c5e361be4f432278c2a66ee53587dfdfa40d",
@@ -1258,6 +1254,88 @@
       "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/utils/utils.d.ts": [
         "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/internal.d.ts"
       ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/core/atom.d.ts": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/internal.d.ts"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/api/observabledecorator.d.ts": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/internal.d.ts"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/api/observable.d.ts": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/internal.d.ts"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/api/computed.d.ts": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/internal.d.ts"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/types/observablevalue.d.ts": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/internal.d.ts"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/core/computedvalue.d.ts": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/internal.d.ts"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/core/derivation.d.ts": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/internal.d.ts"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/core/globalstate.d.ts": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/internal.d.ts"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/core/observable.d.ts": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/internal.d.ts"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/core/reaction.d.ts": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/internal.d.ts"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/core/spy.d.ts": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/internal.d.ts"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/api/actiondecorator.d.ts": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/internal.d.ts"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/api/action.d.ts": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/internal.d.ts"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/api/autorun.d.ts": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/internal.d.ts"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/api/become-observed.d.ts": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/internal.d.ts"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/api/extendobservable.d.ts": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/internal.d.ts",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/api/observabledecorator.d.ts"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/api/intercept-read.d.ts": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/internal.d.ts"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/api/intercept.d.ts": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/internal.d.ts"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/api/object-api.d.ts": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/internal.d.ts"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/api/observe.d.ts": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/internal.d.ts"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/api/when.d.ts": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/internal.d.ts"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/types/intercept-utils.d.ts": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/internal.d.ts"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/types/listen-utils.d.ts": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/internal.d.ts"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/types/observablearray.d.ts": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/internal.d.ts"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/types/observablemap.d.ts": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/internal.d.ts"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/types/observableobject.d.ts": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/internal.d.ts"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/types/type-utils.d.ts": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/internal.d.ts"
+      ],
       "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/internal.d.ts": [
         "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/utils/utils.d.ts",
         "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/core/atom.d.ts",
@@ -1304,6 +1382,243 @@
         "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/utils/eq.d.ts",
         "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/utils/iterable.d.ts"
       ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/mobx.d.ts": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/internal.d.ts"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react/index.d.ts": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/csstype/index.d.ts",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/prop-types/index.d.ts",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react/global.d.ts"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx-react/index.d.ts": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react/index.d.ts"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/titlebar.tsx": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react/index.d.ts"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/page.tsx": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/mobx.d.ts",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react/index.d.ts"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/httpchannelui.ts": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/fetcherror.ts"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/apibase.ts": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/httpchannel.ts"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/uqapi.ts": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/httpchannel.ts",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/apibase.ts"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/guestapi.ts": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/uqapi.ts"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/index.ts": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/wschannel.ts",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/apibase.ts",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/guestapi.ts",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/uqapi.ts",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/appbridge.ts",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/host.ts",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/httpchannel.ts"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/fetcherrorview.tsx": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/fetcherror.ts",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react/index.d.ts"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/local.ts": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/user.ts"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/entry/userapi.ts": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/index.ts"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/entry/res/login.ts": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/index.ts"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/entry/res/register.ts": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/index.ts"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/entry/res/index.ts": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/entry/res/login.ts",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/entry/res/register.ts"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/entry/register.tsx": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/index.ts"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/entry/login.tsx": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/user.ts",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react/index.d.ts"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/entry/changepassword.tsx": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react/index.d.ts"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/nav.tsx": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/fetcherror.ts",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react/index.d.ts",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/user.ts"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/vm.tsx": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/user.ts",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react/index.d.ts"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/field.tsx": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/context.tsx",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react/index.d.ts"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/formres.ts": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/res.ts"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/rules/index.ts": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/context.tsx",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/formres.ts"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/widget.tsx": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/context.tsx",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/field.tsx",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react/index.d.ts",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/schema/index.ts",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/rules/index.ts"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/textwidget.tsx": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/schema/index.ts",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react/index.d.ts",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/widget.tsx"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/textareawidget.tsx": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/schema/index.ts",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react/index.d.ts",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/widget.tsx"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/passwordwidget.tsx": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/textwidget.tsx"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/numberwidget.tsx": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/schema/index.ts",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/textwidget.tsx"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/updownwidget.tsx": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react/index.d.ts",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/numberwidget.tsx"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/datewidget.tsx": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/textwidget.tsx"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/checkboxwidget.tsx": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/schema/index.ts",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react/index.d.ts",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/widget.tsx"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/selectwidget.tsx": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/schema/index.ts",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react/index.d.ts",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/widget.tsx"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/radiowidget.tsx": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/schema/index.ts",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/widget.tsx"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/rangewidget.tsx": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/schema/index.ts",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/widget.tsx"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/idwidget.tsx": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/schema/index.ts",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/widget.tsx"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/unknown.tsx": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/schema/index.ts"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/buttonwidget.tsx": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/schema/index.ts",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/widget.tsx"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/arrcomponent.tsx": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/context.tsx",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/schema/index.ts",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react/index.d.ts"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/image.tsx": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react/index.d.ts"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/resuploader.tsx": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react/index.d.ts"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/edit/itemedit.tsx": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/schema/index.ts"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/edit/imageitemedit.tsx": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/schema/index.ts",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/edit/itemedit.tsx"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/imagewidget.tsx": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/schema/index.ts",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/widget.tsx"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/factory.tsx": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/context.tsx",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/schema/index.ts",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react/index.d.ts",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/field.tsx"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/index.ts": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/factory.tsx",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/widget.tsx",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/textwidget.tsx",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/textareawidget.tsx",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/passwordwidget.tsx",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/updownwidget.tsx",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/numberwidget.tsx",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/datewidget.tsx",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/checkboxwidget.tsx",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/imagewidget.tsx",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/context.tsx",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/selectwidget.tsx",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/radiowidget.tsx",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/rangewidget.tsx",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/idwidget.tsx",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/buttonwidget.tsx",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/unknown.tsx"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/form.tsx": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/context.tsx",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/schema/index.ts",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/formres.ts",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react/index.d.ts"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/context.tsx": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/form.tsx",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/schema/index.ts",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/widget.tsx",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/rules/index.ts",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react/index.d.ts"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/schema/uischema.ts": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/context.tsx",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/schema/schema.ts",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/field.tsx",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/index.ts",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/rules/index.ts"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/schema/index.ts": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/schema/schema.ts",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/schema/uischema.ts"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/index.ts": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/form.tsx",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/field.tsx",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/context.tsx"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/edit/stringitemedit.tsx": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/schema/index.ts",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/edit/itemedit.tsx"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/edit/edit.tsx": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/schema/index.ts",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react/index.d.ts"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/edit/index.tsx": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/edit/edit.tsx"
+      ],
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/tabs/tabs.tsx": [
         "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/internal.d.ts",
         "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react/index.d.ts"
@@ -1325,11 +1640,20 @@
         "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/image.tsx",
         "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/resuploader.tsx"
       ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/entry/regsuccess.tsx": [
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/httpchannel.ts": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/httpchannelui.ts"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/fetcherror.ts": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/httpchannel.ts"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/pageitems.ts": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/mobx.d.ts"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/entry/meinfo.tsx": [
         "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react/index.d.ts"
       ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/entry/forget.tsx": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react/index.d.ts"
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/entry/index.ts": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/entry/meinfo.tsx"
       ],
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/index.ts": [
         "c:/users/henry/tonva/tonva-ui/tonva-tools/src/left0.ts",
@@ -1341,60 +1665,11 @@
         "c:/users/henry/tonva/tonva-ui/tonva-tools/src/cacheids.ts",
         "c:/users/henry/tonva/tonva-ui/tonva-tools/src/entry/index.ts"
       ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/entry/meinfo.tsx": [
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/entry/forget.tsx": [
         "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react/index.d.ts"
       ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/entry/index.ts": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/entry/meinfo.tsx"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/httpchannel.ts": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/httpchannelui.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/fetcherror.ts": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/httpchannel.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/nav.tsx": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/fetcherror.ts",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react/index.d.ts",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/user.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/edit/stringitemedit.tsx": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/schema/index.ts",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/edit/itemedit.tsx"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/edit/edit.tsx": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/schema/index.ts",
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/entry/regsuccess.tsx": [
         "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react/index.d.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/edit/index.tsx": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/edit/edit.tsx"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/edit/imageitemedit.tsx": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/schema/index.ts",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/edit/itemedit.tsx"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/imagewidget.tsx": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/schema/index.ts",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/widget.tsx"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/index.ts": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/factory.tsx",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/widget.tsx",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/textwidget.tsx",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/textareawidget.tsx",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/passwordwidget.tsx",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/updownwidget.tsx",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/numberwidget.tsx",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/datewidget.tsx",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/checkboxwidget.tsx",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/imagewidget.tsx",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/context.tsx",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/selectwidget.tsx",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/radiowidget.tsx",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/rangewidget.tsx",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/idwidget.tsx",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/buttonwidget.tsx",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/unknown.tsx"
       ],
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/uischema.ts": [
         "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/context.tsx",
@@ -1402,288 +1677,6 @@
         "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/field.tsx",
         "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/index.ts",
         "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/rules/index.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/schema/uischema.ts": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/context.tsx",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/schema/schema.ts",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/field.tsx",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/index.ts",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/rules/index.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/schema/index.ts": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/schema/schema.ts",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/schema/uischema.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/context.tsx": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/form.tsx",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/schema/index.ts",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/widget.tsx",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/rules/index.ts",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react/index.d.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/index.ts": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/form.tsx",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/field.tsx",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/context.tsx"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/form.tsx": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/context.tsx",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/schema/index.ts",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/formres.ts",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react/index.d.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/factory.tsx": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/context.tsx",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/schema/index.ts",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react/index.d.ts",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/field.tsx"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/arrcomponent.tsx": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/context.tsx",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/schema/index.ts",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react/index.d.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/radiowidget.tsx": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/schema/index.ts",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/widget.tsx"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/widget.tsx": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/context.tsx",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/field.tsx",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react/index.d.ts",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/schema/index.ts",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/rules/index.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/buttonwidget.tsx": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/schema/index.ts",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/widget.tsx"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/idwidget.tsx": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/schema/index.ts",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/widget.tsx"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/rangewidget.tsx": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/schema/index.ts",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/widget.tsx"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/selectwidget.tsx": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/schema/index.ts",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react/index.d.ts",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/widget.tsx"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/checkboxwidget.tsx": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/schema/index.ts",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react/index.d.ts",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/widget.tsx"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/textareawidget.tsx": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/schema/index.ts",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react/index.d.ts",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/widget.tsx"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/textwidget.tsx": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/schema/index.ts",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react/index.d.ts",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/widget.tsx"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/datewidget.tsx": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/textwidget.tsx"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/numberwidget.tsx": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/schema/index.ts",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/textwidget.tsx"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/updownwidget.tsx": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react/index.d.ts",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/numberwidget.tsx"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/passwordwidget.tsx": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/textwidget.tsx"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/rules/index.ts": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/context.tsx",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/formres.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/field.tsx": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/context.tsx",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react/index.d.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/edit/itemedit.tsx": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/schema/index.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/unknown.tsx": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/schema/index.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/resuploader.tsx": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react/index.d.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/image.tsx": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react/index.d.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/vm.tsx": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/user.ts",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react/index.d.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/httpchannelui.ts": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/fetcherror.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/uqapi.ts": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/httpchannel.ts",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/apibase.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/index.ts": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/wschannel.ts",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/apibase.ts",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/guestapi.ts",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/uqapi.ts",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/appbridge.ts",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/host.ts",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/httpchannel.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/entry/changepassword.tsx": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react/index.d.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/entry/userapi.ts": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/index.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/entry/login.tsx": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/user.ts",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react/index.d.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/entry/register.tsx": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/index.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/fetcherrorview.tsx": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/fetcherror.ts",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react/index.d.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/guestapi.ts": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/uqapi.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/titlebar.tsx": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react/index.d.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/page.tsx": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/mobx.d.ts",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react/index.d.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/apibase.ts": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/httpchannel.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/entry/res/register.ts": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/index.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/entry/res/index.ts": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/entry/res/login.ts",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/entry/res/register.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/entry/res/login.ts": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/index.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/mobx.d.ts": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/internal.d.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/pageitems.ts": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/mobx.d.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/types/type-utils.d.ts": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/internal.d.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/types/observableobject.d.ts": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/internal.d.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/types/observablemap.d.ts": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/internal.d.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/types/observablearray.d.ts": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/internal.d.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/types/listen-utils.d.ts": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/internal.d.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/types/intercept-utils.d.ts": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/internal.d.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/api/when.d.ts": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/internal.d.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/api/observe.d.ts": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/internal.d.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/api/object-api.d.ts": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/internal.d.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/api/intercept.d.ts": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/internal.d.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/api/intercept-read.d.ts": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/internal.d.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/api/extendobservable.d.ts": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/internal.d.ts",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/api/observabledecorator.d.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/api/become-observed.d.ts": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/internal.d.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/api/autorun.d.ts": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/internal.d.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/api/action.d.ts": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/internal.d.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/api/actiondecorator.d.ts": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/internal.d.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/core/spy.d.ts": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/internal.d.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/core/reaction.d.ts": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/internal.d.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/core/observable.d.ts": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/internal.d.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/core/globalstate.d.ts": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/internal.d.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/core/derivation.d.ts": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/internal.d.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/core/computedvalue.d.ts": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/internal.d.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/types/observablevalue.d.ts": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/internal.d.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/api/computed.d.ts": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/internal.d.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/api/observable.d.ts": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/internal.d.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/api/observabledecorator.d.ts": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/internal.d.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/core/atom.d.ts": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/internal.d.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react/index.d.ts": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/csstype/index.d.ts",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/prop-types/index.d.ts",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react/global.d.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react-dom/index.d.ts": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react/index.d.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx-react/index.d.ts": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react/index.d.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/local.ts": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/user.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/formres.ts": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/res.ts"
       ],
       "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/node/inspector.d.ts": [
         "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/node/index.d.ts"
@@ -1694,6 +1687,9 @@
       ],
       "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/node-fetch/index.d.ts": [
         "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/node/index.d.ts"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react-dom/index.d.ts": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react/index.d.ts"
       ]
     },
     "semanticDiagnosticsPerFile": [
@@ -1772,7 +1768,6 @@
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/httpchannelui.ts",
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/apibase.ts",
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/host.ts",
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/uqapi.ts",
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/wschannel.ts",
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/nettoken.ts",
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/guestapi.ts",
@@ -1782,6 +1777,29 @@
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/res.ts",
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/loading.tsx",
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/entry/userapi.ts",
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/nav.tsx",
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/vm.tsx",
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/schema/schema.ts",
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/formres.ts",
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/image.tsx",
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/resuploader.tsx",
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/tabs/tabs.tsx",
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/tabs/index.tsx",
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/uid.ts",
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/httpchannel.ts",
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/fetcherror.ts",
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/left0.ts",
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/pageitems.ts",
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/entry/index.ts",
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/serializejson.ts",
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/res/index.ts",
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/callbacks.ts",
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/schema.ts",
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/node/inspector.d.ts",
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/node/index.d.ts",
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/node-fetch/index.d.ts",
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react-dom/index.d.ts",
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/uqapi.ts",
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/entry/res/login.ts",
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/entry/res/register.ts",
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/entry/res/index.ts",
@@ -1789,11 +1807,7 @@
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/entry/register.tsx",
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/entry/login.tsx",
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/entry/changepassword.tsx",
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/nav.tsx",
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/vm.tsx",
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/schema/schema.ts",
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/field.tsx",
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/formres.ts",
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/rules/index.ts",
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/widget.tsx",
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/textwidget.tsx",
@@ -1810,8 +1824,6 @@
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/unknown.tsx",
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/buttonwidget.tsx",
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/arrcomponent.tsx",
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/image.tsx",
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/resuploader.tsx",
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/edit/itemedit.tsx",
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/edit/imageitemedit.tsx",
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/imagewidget.tsx",
@@ -1825,31 +1837,14 @@
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/edit/stringitemedit.tsx",
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/edit/edit.tsx",
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/edit/index.tsx",
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/tabs/tabs.tsx",
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/tabs/index.tsx",
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/index.ts",
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/uid.ts",
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/appbridge.ts",
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/httpchannel.ts",
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/fetcherror.ts",
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/left0.ts",
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/pageitems.ts",
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/entry/meinfo.tsx",
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/entry/index.ts",
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/index.ts",
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/entry/forget.tsx",
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/entry/regsuccess.tsx",
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/debughost.ts",
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/fetchlocalcheck.ts",
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/serializejson.ts",
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/res/index.ts",
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/callbacks.ts",
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/schema.ts",
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/uischema.ts",
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/node/inspector.d.ts",
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/node/index.d.ts",
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/node-fetch/index.d.ts",
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react-dom/index.d.ts"
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/arrrow.tsx",
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/uischema.ts"
     ]
   },
   "version": "3.4.5"

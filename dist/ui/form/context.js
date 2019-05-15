@@ -4,6 +4,14 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 import * as React from 'react';
 //import { ArrRow } from './arrRow';
 import { observable, computed } from 'mobx';
@@ -87,6 +95,22 @@ export class Context {
         if (widget !== undefined)
             widget.setVisible(value);
     }
+    submit(buttonName) {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.checkRules();
+            if (this.hasError === true)
+                return;
+            let { onButtonClick } = this.form.props;
+            if (onButtonClick === undefined) {
+                alert(`button ${buttonName} clicked. you should define form onButtonClick`);
+                return;
+            }
+            let ret = yield onButtonClick(buttonName, this);
+            if (ret === undefined)
+                return;
+            this.setError(buttonName, ret);
+        });
+    }
     checkFieldRules() {
         for (let i in this.widgets) {
             this.widgets[i].checkRules();
@@ -101,9 +125,9 @@ export class Context {
         }
     }
     checkContextRules() {
+        this.clearErrors();
         if (this.rules === undefined)
             return;
-        this.clearContextErrors();
         for (let rule of this.rules) {
             let ret = rule(this);
             if (ret === undefined)
@@ -145,9 +169,20 @@ export class Context {
             widget.clearContextError();
         }
     }
+    clearWidgetsErrors() {
+        for (let i in this.widgets) {
+            let widget = this.widgets[i];
+            if (widget === undefined)
+                continue;
+            widget.clearError();
+        }
+    }
     checkRules() {
         this.clearErrors();
+        this.clearWidgetsErrors();
         this.checkFieldRules();
+        if (this.hasError === true)
+            return;
         this.checkContextRules();
     }
     addErrorWidget(widget) {
@@ -220,7 +255,6 @@ export class RowContext extends Context {
         return items[itemName];
     }
     get arrName() { return this.arrSchema.name; }
-    //get data() {return this.row.data;}
     clearErrors() {
         super.clearErrors();
         this.parentContext.clearErrors();
