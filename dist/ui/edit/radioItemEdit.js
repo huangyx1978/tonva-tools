@@ -11,32 +11,36 @@ import { nav } from '../nav';
 import { Page } from '../page';
 import { observer } from 'mobx-react';
 import { ItemEdit } from './itemEdit';
-export class StringItemEdit extends ItemEdit {
+export class RadioItemEdit extends ItemEdit {
     constructor() {
         super(...arguments);
-        this.onChange = (evt) => {
-            this.newValue = evt.target.value;
+        this.onChange = (value) => {
+            this.newValue = value;
             let preValue = this.value;
             this.isChanged = (this.newValue != preValue);
         };
-        this.onBlur = (evt) => {
-            this.verifyValue();
-        };
-        this.onFocus = () => {
-            this.error = undefined;
-        };
         this.page = observer((props) => {
             let { resolve, reject } = props;
+            let { name } = this.itemSchema;
+            let { list, defaultValue } = this.uiItem;
             let right = React.createElement("button", { className: "btn btn-sm btn-success", disabled: !this.isChanged, onClick: () => {
                     this.verifyValue();
                     if (this.error === undefined)
                         resolve(this.newValue);
                 } }, "\u4FDD\u5B58");
+            let content = list ?
+                list.map((v, index) => {
+                    let { title, value } = v;
+                    return React.createElement("label", { key: index, className: "px-3 py-2 cursor-pointer" },
+                        React.createElement("input", { name: name, type: "radio", value: value, onClick: () => this.onChange(value), defaultChecked: value === defaultValue }),
+                        " ",
+                        title || value,
+                        " \u00A0");
+                })
+                :
+                    React.createElement(React.Fragment, null, "no list defined");
             return React.createElement(Page, { header: '更改' + this.label, right: right },
-                React.createElement("div", { className: "m-3" },
-                    React.createElement("input", { type: "text", onChange: this.onChange, onBlur: this.onBlur, onFocus: this.onFocus, className: "form-control", defaultValue: this.value }),
-                    this.uiItem && React.createElement("div", { className: "small muted m-2" }, this.uiItem.placeholder),
-                    this.error && React.createElement("div", { className: "text-danger" }, this.error)));
+                React.createElement("div", { className: "m-3" }, content));
         });
     }
     internalStart() {
@@ -48,4 +52,4 @@ export class StringItemEdit extends ItemEdit {
         });
     }
 }
-//# sourceMappingURL=stringItemEdit.js.map
+//# sourceMappingURL=radioItemEdit.js.map

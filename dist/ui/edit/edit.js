@@ -17,6 +17,8 @@ import { observer } from 'mobx-react';
 import { StringItemEdit } from './stringItemEdit';
 import { ImageItemEdit } from './imageItemEdit';
 import { Image } from '../image';
+import { RadioItemEdit } from './radioItemEdit';
+import { SelectItemEdit } from './selectItemEdit';
 let Edit = class Edit extends React.Component {
     constructor(props) {
         super(props);
@@ -32,6 +34,10 @@ let Edit = class Edit extends React.Component {
                 return;
             }
             let itemEdit = createItemEdit(itemSchema, uiItem, label, value);
+            if (itemEdit === undefined) {
+                alert('undefined: let itemEdit:ItemEdit = createItemEdit(itemSchema, uiItem, label, value);');
+                return;
+            }
             try {
                 changeValue = yield itemEdit.start();
                 if (changeValue != value) {
@@ -45,6 +51,7 @@ let Edit = class Edit extends React.Component {
                 yield itemEdit.end();
             }
             catch (err) {
+                // 如果直接back，会触发reject，就到这里了
                 console.log('no value changed');
             }
         });
@@ -103,15 +110,22 @@ function createItemEdit(itemSchema, uiItem, label, value) {
     let itemEdit;
     if (uiItem !== undefined) {
         switch (uiItem.widget) {
+            default: break;
             case 'text':
                 itemEdit = StringItemEdit;
                 break;
             case 'image':
                 itemEdit = ImageItemEdit;
                 break;
+            case 'radio':
+                itemEdit = RadioItemEdit;
+                break;
+            case 'select':
+                itemEdit = SelectItemEdit;
+                break;
         }
     }
-    else {
+    if (itemEdit === undefined) {
         switch (itemSchema.type) {
             case 'string':
                 itemEdit = StringItemEdit;
