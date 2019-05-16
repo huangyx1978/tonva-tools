@@ -5,6 +5,8 @@ import { ItemEdit } from './itemEdit';
 import { StringItemEdit } from './stringItemEdit';
 import { ImageItemEdit } from './imageItemEdit';
 import { Image } from '../image';
+import { RadioItemEdit } from './radioItemEdit';
+import { SelectItemEdit } from './selectItemEdit';
 
 export interface EditProps {
     className?: string;
@@ -89,6 +91,10 @@ export class Edit extends React.Component<EditProps> {
             return;
         }
         let itemEdit:ItemEdit = createItemEdit(itemSchema, uiItem, label, value);
+        if (itemEdit === undefined) {
+            alert('undefined: let itemEdit:ItemEdit = createItemEdit(itemSchema, uiItem, label, value);');
+            return;
+        }
         try {
             changeValue = await itemEdit.start();
             if (changeValue != value) {
@@ -102,6 +108,7 @@ export class Edit extends React.Component<EditProps> {
             await itemEdit.end();
         }
         catch (err) {
+            // 如果直接back，会触发reject，就到这里了
             console.log('no value changed');
         }
     }
@@ -111,11 +118,14 @@ function createItemEdit(itemSchema: ItemSchema, uiItem:UiItem, label:string, val
     let itemEdit: new (itemSchema: ItemSchema, uiItem:UiItem, label:string, value: any) => ItemEdit;
     if (uiItem !== undefined) {
         switch (uiItem.widget) {
+            default: break;
             case 'text': itemEdit = StringItemEdit; break;
             case 'image': itemEdit = ImageItemEdit; break;
+            case 'radio': itemEdit = RadioItemEdit; break;
+            case 'select': itemEdit = SelectItemEdit; break;
         }
     }
-    else {
+    if (itemEdit === undefined) {
         switch (itemSchema.type) {
             case 'string': itemEdit = StringItemEdit; break;
             case 'image': itemEdit = ImageItemEdit; break;
