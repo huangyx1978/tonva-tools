@@ -522,8 +522,8 @@
         "signature": "91caec36419dc8ff1cf7a9b1027ec512eade71f1b07a0a6e9e69e3da5c888e35"
       },
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/edit/edit.tsx": {
-        "version": "aaa13afef8c679afe114b8125f8d15ae381de25d7182ac5dc429a6170a246571",
-        "signature": "638b21c4a65bd02b8c6b446a459f02881878f6c0944725fe0e1542de086b3663"
+        "version": "11900b95e0a4d0cd5f14613c47f998e57f21220cb3a6d75d2a073a4b295c4b2b",
+        "signature": "e8dd5f12b1ad92f90cc25fd5e0bbc5810afd526b29e5f50187aad05c4ad438b1"
       },
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/edit/index.tsx": {
         "version": "20f5cb15aeb4d68e4d0ba9bb660f9ae40e292356d7d7e50d3ee2e5737e53daec",
@@ -1192,8 +1192,7 @@
         "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/image.tsx",
         "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/edit/radioitemedit.tsx",
         "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/edit/selectitemedit.tsx",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/uischema.ts",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/mobx.d.ts"
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/uischema.ts"
       ],
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/edit/index.tsx": [
         "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/edit/edit.tsx"
@@ -1858,6 +1857,7 @@
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/index.ts",
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/edit/stringitemedit.tsx",
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/edit/radioitemedit.tsx",
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/edit/selectitemedit.tsx",
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/schema.ts",
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/uischema.ts",
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/tabs/tabs.tsx",
@@ -1885,7 +1885,6 @@
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/entry/register.tsx",
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/entry/login.tsx",
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/entry/changepassword.tsx",
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/edit/selectitemedit.tsx",
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/edit/edit.tsx",
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/edit/index.tsx",
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/index.ts",

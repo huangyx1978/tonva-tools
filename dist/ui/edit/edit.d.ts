@@ -21,7 +21,6 @@ export declare class Edit extends React.Component<EditProps> {
     private rowContainerClassName?;
     private sep;
     private uiSchema;
-    private data;
     constructor(props: EditProps);
     render(): JSX.Element;
     private renderRow;

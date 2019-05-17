@@ -9,7 +9,6 @@ import { Image } from '../image';
 import { RadioItemEdit } from './radioItemEdit';
 import { SelectItemEdit } from './selectItemEdit';
 import { UiSelectBase } from '../form/uiSchema';
-import { observable } from 'mobx';
 
 export interface EditProps {
     className?: string;
@@ -34,7 +33,6 @@ export class Edit extends React.Component<EditProps> {
     private rowContainerClassName?: string;
     private sep:JSX.Element;
     private uiSchema: {[name:string]: UiItem};
-    @observable private data:any = {};
 
     constructor(props: EditProps) {
         super(props);
@@ -45,7 +43,6 @@ export class Edit extends React.Component<EditProps> {
         if (stopEdit !== true) this.rowContainerClassName += ' cursor-pointer';
         this.sep = <div className={sepClassName || this.defaultSepClassName} />;
         this.uiSchema = (uiSchema && uiSchema.items) || {};
-        _.mergeWith(this.data, this.props.data);
     }
 
     render() {
@@ -55,8 +52,10 @@ export class Edit extends React.Component<EditProps> {
 
         elItems.push(this.topBorder);
         for (let i=0; i<len; i++) {
+            let itemSchema = schema[i];
             if (i>0) elItems.push(this.sep);
-            elItems.push(this.renderRow(schema[i]));
+            let value = this.props.data[itemSchema.name];
+            elItems.push(this.renderRow(itemSchema, value));
         }
         elItems.push(this.bottomBorder);
 
@@ -65,12 +64,12 @@ export class Edit extends React.Component<EditProps> {
         </div>;
     }
 
-    private renderRow(itemSchema: ItemSchema):JSX.Element {
+    private renderRow = (itemSchema: ItemSchema, value:any):JSX.Element => {
         let {name, type, required} = itemSchema;
         let divValue:any;
         let uiItem = this.uiSchema[name];
         let label:string = (uiItem && uiItem.label) || name;
-        let value:any = this.data[name];
+        //let value:any = this.props.data[name];
         if (uiItem !== undefined && value) {
             switch (uiItem.widget) {
                 case 'radio':
@@ -96,7 +95,7 @@ export class Edit extends React.Component<EditProps> {
             <div className="flex-fill d-flex justify-content-end">{divValue}</div>
             {this.props.stopEdit!==true && <div className="w-2c text-right"><i className="fa fa-chevron-right" /></div>}
         </div>;
-    }
+    };
 
     private rowClick = async (itemSchema: ItemSchema, uiItem: UiItem, label:string, value: any) => {
         let {onItemChanged, onItemClick, stopEdit} = this.props;
@@ -114,9 +113,9 @@ export class Edit extends React.Component<EditProps> {
         try {
             changeValue = await itemEdit.start();
             if (changeValue != value) {
-                this.data[itemSchema.name] = value;
                 if (onItemChanged === undefined) {
                     alert(`${itemSchema.name} value changed, new: ${changeValue}, pre: ${value}`);
+                    this.props.data[itemSchema.name] = changeValue;
                 }
                 else {
                     await onItemChanged(itemSchema, changeValue, value);
