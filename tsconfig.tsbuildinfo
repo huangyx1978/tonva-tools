@@ -510,12 +510,20 @@
         "signature": "f6e628a2f0735a356b0c2d8117bc27866369005bd93aa8b17a3ce113a9be9a65"
       },
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/edit/selectitemedit.tsx": {
-        "version": "ff80fb8bee79712a3fa400f690a60be363065021c777c563157c5319facf1a89",
+        "version": "308b509e664a6da2b667de07164e063aacb9020bae92c618253a570ca58175b0",
         "signature": "f88232900a9df30d12ebb62760d836971c8f231131b80a9dd04c8eea010874af"
       },
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/schema.ts": {
+        "version": "fc0f41099bc61e73746fee245149c5e361be4f432278c2a66ee53587dfdfa40d",
+        "signature": "56c48c246022bdcfee9618a19e60cdaa4151e675649b3bf4662e16e4c5560b01"
+      },
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/uischema.ts": {
+        "version": "12608b3175cc96f3714530492e549413568615e91a8aba8df7e149184546984f",
+        "signature": "91caec36419dc8ff1cf7a9b1027ec512eade71f1b07a0a6e9e69e3da5c888e35"
+      },
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/edit/edit.tsx": {
-        "version": "34e5d18719830b49438e3616afe0e4ef5294e43965930be9f7c62d8ce700fc94",
-        "signature": "e8dd5f12b1ad92f90cc25fd5e0bbc5810afd526b29e5f50187aad05c4ad438b1"
+        "version": "aaa13afef8c679afe114b8125f8d15ae381de25d7182ac5dc429a6170a246571",
+        "signature": "638b21c4a65bd02b8c6b446a459f02881878f6c0944725fe0e1542de086b3663"
       },
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/edit/index.tsx": {
         "version": "20f5cb15aeb4d68e4d0ba9bb660f9ae40e292356d7d7e50d3ee2e5737e53daec",
@@ -596,14 +604,6 @@
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/arrrow.tsx": {
         "version": "a40dc952c1d4d4c17468ce558968fb7007a89fb98a4d5bb4b8c773bf81804d06",
         "signature": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-      },
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/schema.ts": {
-        "version": "fc0f41099bc61e73746fee245149c5e361be4f432278c2a66ee53587dfdfa40d",
-        "signature": "56c48c246022bdcfee9618a19e60cdaa4151e675649b3bf4662e16e4c5560b01"
-      },
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/uischema.ts": {
-        "version": "12608b3175cc96f3714530492e549413568615e91a8aba8df7e149184546984f",
-        "signature": "91caec36419dc8ff1cf7a9b1027ec512eade71f1b07a0a6e9e69e3da5c888e35"
       },
       "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/node/inspector.d.ts": {
         "version": "a330a33374a30cb51770f772cf606e8ae1f2910d852bbb0003c0471a9bd34804",
@@ -1173,8 +1173,17 @@
         "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/mobx.d.ts",
         "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/edit/itemedit.tsx"
       ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/uischema.ts": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react/index.d.ts",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/context.tsx",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/rules/index.ts",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/schema.ts",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/field.tsx",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/index.ts"
+      ],
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/edit/edit.tsx": [
         "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react/index.d.ts",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/lodash/index.d.ts",
         "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/schema/index.ts",
         "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx-react/index.d.ts",
         "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/edit/itemedit.tsx",
@@ -1182,7 +1191,9 @@
         "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/edit/imageitemedit.tsx",
         "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/image.tsx",
         "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/edit/radioitemedit.tsx",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/edit/selectitemedit.tsx"
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/edit/selectitemedit.tsx",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/uischema.ts",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/mobx/lib/mobx.d.ts"
       ],
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/edit/index.tsx": [
         "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/edit/edit.tsx"
@@ -1261,14 +1272,6 @@
         "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react/index.d.ts",
         "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/index.ts",
         "c:/users/henry/tonva/tonva-ui/tonva-tools/src/entry/userapi.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/uischema.ts": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react/index.d.ts",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/context.tsx",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/rules/index.ts",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/schema.ts",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/field.tsx",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/index.ts"
       ],
       "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/node/inspector.d.ts": [
         "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/node/index.d.ts"
@@ -1646,6 +1649,21 @@
         "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/schema/index.ts",
         "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/edit/itemedit.tsx"
       ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/edit/radioitemedit.tsx": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/schema/index.ts",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/edit/itemedit.tsx"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/edit/selectitemedit.tsx": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/schema/index.ts",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/edit/itemedit.tsx"
+      ],
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/uischema.ts": [
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/context.tsx",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/schema.ts",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/field.tsx",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/index.ts",
+        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/rules/index.ts"
+      ],
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/edit/edit.tsx": [
         "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/schema/index.ts",
         "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react/index.d.ts"
@@ -1706,13 +1724,6 @@
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/entry/regsuccess.tsx": [
         "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react/index.d.ts"
       ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/uischema.ts": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/context.tsx",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/schema.ts",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/field.tsx",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/index.ts",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/rules/index.ts"
-      ],
       "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/node/inspector.d.ts": [
         "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/node/index.d.ts"
       ],
@@ -1725,14 +1736,6 @@
       ],
       "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react-dom/index.d.ts": [
         "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react/index.d.ts"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/edit/selectitemedit.tsx": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/schema/index.ts",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/edit/itemedit.tsx"
-      ],
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/edit/radioitemedit.tsx": [
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/schema/index.ts",
-        "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/edit/itemedit.tsx"
       ]
     },
     "semanticDiagnosticsPerFile": [
@@ -1812,44 +1815,19 @@
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/apibase.ts",
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/host.ts",
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/wschannel.ts",
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/local.ts",
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/res.ts",
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/loading.tsx",
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/schema/schema.ts",
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/formres.ts",
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/image.tsx",
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/resuploader.tsx",
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/tabs/tabs.tsx",
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/tabs/index.tsx",
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/uid.ts",
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/fetcherror.ts",
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/left0.ts",
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/pageitems.ts",
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/serializejson.ts",
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/res/index.ts",
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/callbacks.ts",
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/arrrow.tsx",
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/schema.ts",
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/node/inspector.d.ts",
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/node/index.d.ts",
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/node-fetch/index.d.ts",
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react-dom/index.d.ts",
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/uqapi.ts",
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/nettoken.ts",
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/guestapi.ts",
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/index.ts",
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/fetcherrorview.tsx",
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/local.ts",
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/res.ts",
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/loading.tsx",
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/entry/userapi.ts",
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/entry/res/login.ts",
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/entry/res/register.ts",
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/entry/res/index.ts",
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/entry/tools.tsx",
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/entry/register.tsx",
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/entry/login.tsx",
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/entry/changepassword.tsx",
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/nav.tsx",
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/vm.tsx",
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/schema/schema.ts",
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/field.tsx",
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/formres.ts",
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/rules/index.ts",
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/widget.tsx",
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/textwidget.tsx",
@@ -1866,6 +1844,8 @@
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/unknown.tsx",
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/buttonwidget.tsx",
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/arrcomponent.tsx",
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/image.tsx",
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/resuploader.tsx",
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/edit/itemedit.tsx",
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/edit/imageitemedit.tsx",
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/widgets/imagewidget.tsx",
@@ -1878,19 +1858,42 @@
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/index.ts",
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/edit/stringitemedit.tsx",
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/edit/radioitemedit.tsx",
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/schema.ts",
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/uischema.ts",
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/tabs/tabs.tsx",
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/tabs/index.tsx",
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/rules/index.ts",
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/uid.ts",
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/httpchannel.ts",
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/fetcherror.ts",
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/left0.ts",
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/pageitems.ts",
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/entry/index.ts",
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/serializejson.ts",
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/res/index.ts",
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/callbacks.ts",
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/arrrow.tsx",
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/node/inspector.d.ts",
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/node/index.d.ts",
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/node-fetch/index.d.ts",
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/node_modules/@types/react-dom/index.d.ts",
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/uqapi.ts",
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/entry/res/login.ts",
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/entry/res/register.ts",
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/entry/res/index.ts",
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/entry/tools.tsx",
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/entry/register.tsx",
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/entry/login.tsx",
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/entry/changepassword.tsx",
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/edit/selectitemedit.tsx",
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/edit/edit.tsx",
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/edit/index.tsx",
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/rules/index.ts",
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/index.ts",
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/appbridge.ts",
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/net/httpchannel.ts",
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/entry/meinfo.tsx",
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/entry/index.ts",
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/index.ts",
       "c:/users/henry/tonva/tonva-ui/tonva-tools/src/entry/forget.tsx",
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/entry/regsuccess.tsx",
-      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/ui/form/uischema.ts"
+      "c:/users/henry/tonva/tonva-ui/tonva-tools/src/entry/regsuccess.tsx"
     ]
   },
   "version": "3.4.5"

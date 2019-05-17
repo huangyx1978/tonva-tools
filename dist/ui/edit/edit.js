@@ -13,17 +13,20 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import * as React from 'react';
+import _ from 'lodash';
 import { observer } from 'mobx-react';
 import { StringItemEdit } from './stringItemEdit';
 import { ImageItemEdit } from './imageItemEdit';
 import { Image } from '../image';
 import { RadioItemEdit } from './radioItemEdit';
 import { SelectItemEdit } from './selectItemEdit';
+import { observable } from 'mobx';
 let Edit = class Edit extends React.Component {
     constructor(props) {
         super(props);
         this.defaultSepClassName = "border-top edit-sep-light-gray";
         this.defaultRowContainerClassName = "d-flex px-3 py-2 bg-white align-items-center";
+        this.data = {};
         this.rowClick = (itemSchema, uiItem, label, value) => __awaiter(this, void 0, void 0, function* () {
             let { onItemChanged, onItemClick, stopEdit } = this.props;
             if (stopEdit === true)
@@ -41,6 +44,7 @@ let Edit = class Edit extends React.Component {
             try {
                 changeValue = yield itemEdit.start();
                 if (changeValue != value) {
+                    this.data[itemSchema.name] = value;
                     if (onItemChanged === undefined) {
                         alert(`${itemSchema.name} value changed, new: ${changeValue}, pre: ${value}`);
                     }
@@ -63,6 +67,7 @@ let Edit = class Edit extends React.Component {
             this.rowContainerClassName += ' cursor-pointer';
         this.sep = React.createElement("div", { className: sepClassName || this.defaultSepClassName });
         this.uiSchema = (uiSchema && uiSchema.items) || {};
+        _.mergeWith(this.data, this.props.data);
     }
     render() {
         let elItems = [];
@@ -82,14 +87,25 @@ let Edit = class Edit extends React.Component {
         let divValue;
         let uiItem = this.uiSchema[name];
         let label = (uiItem && uiItem.label) || name;
-        let value = this.props.data[name];
-        switch (type) {
-            default:
-                divValue = value ? React.createElement("b", null, value) : React.createElement("small", { className: "text-muted" }, "(\u65E0)");
-                break;
-            case 'image':
-                divValue = React.createElement(Image, { className: "w-4c h-4c", src: value });
-                break;
+        let value = this.data[name];
+        if (uiItem !== undefined && value) {
+            switch (uiItem.widget) {
+                case 'radio':
+                case 'select':
+                    let { list } = uiItem;
+                    divValue = React.createElement("b", null, list.find(v => v.value === value).title);
+                    break;
+            }
+        }
+        if (divValue === undefined) {
+            switch (type) {
+                default:
+                    divValue = value ? React.createElement("b", null, value) : React.createElement("small", { className: "text-muted" }, "(\u65E0)");
+                    break;
+                case 'image':
+                    divValue = React.createElement(Image, { className: "w-4c h-4c", src: value });
+                    break;
+            }
         }
         let requireFlag = required === true && React.createElement("span", { className: "text-danger" }, "*");
         return React.createElement("div", { className: this.rowContainerClassName, onClick: () => __awaiter(this, void 0, void 0, function* () { return yield this.rowClick(itemSchema, uiItem, label, value); }) },
@@ -102,6 +118,9 @@ let Edit = class Edit extends React.Component {
                 React.createElement("i", { className: "fa fa-chevron-right" })));
     }
 };
+__decorate([
+    observable
+], Edit.prototype, "data", void 0);
 Edit = __decorate([
     observer
 ], Edit);
