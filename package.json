@@ -1,8 +1,9 @@
 {
-  "name": "tonva-tools",
-  "version": "1.0.0",
+  "name": "@henryti/tonva-tools",
+  "version": "1.0.1",
   "description": "tonva tools",
-  "private": true,
+  "repository": "henryti/tonva-tools",
+  "private": false,
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {

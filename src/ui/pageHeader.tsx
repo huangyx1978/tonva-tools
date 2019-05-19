@@ -2,17 +2,18 @@ import * as React from 'react';
 import _ from 'lodash';
 import {nav, mobileHeaderStyle} from './nav';
 
-export interface TitleBarProps {
+export interface PageHeaderProps {
     back?: 'back' | 'close' | 'none';
     center: string | JSX.Element;
     right?: JSX.Element;
     logout?: boolean | (()=>Promise<void>);
+    className?: string;
 }
-export interface TitleBarState {
+export interface PageHeaderState {
     hasBack: boolean;
 }
-export class TitleBar extends React.Component<TitleBarProps, TitleBarState> {
-    constructor(props: TitleBarProps) {
+export class PageHeader extends React.Component<PageHeaderProps, PageHeaderState> {
+    constructor(props: PageHeaderProps) {
         super(props);
         this.navChange = this.navChange.bind(this);
         this.state = {
@@ -59,7 +60,7 @@ export class TitleBar extends React.Component<TitleBarProps, TitleBarState> {
     }
     render() {
         let b = this.state.hasBack || self != top;
-        let {right, center, logout} = this.props;
+        let {right, center, logout, className} = this.props;
         let back, pop, debugLogout;
         if (logout !== undefined && self === top) {
             if (typeof logout === 'boolean' && logout === true
@@ -93,13 +94,11 @@ export class TitleBar extends React.Component<TitleBarProps, TitleBarState> {
         }
         let rightView;
         if (right || debugLogout) rightView = <aside>{right} {debugLogout}</aside>;
-        return (
-        <header style={mobileHeaderStyle}>
+        return <header className={className} style={mobileHeaderStyle}>
             {pop}
             {back}
             <div>{center}</div>
             {rightView}
-        </header>
-        );
+        </header>;
     }
 }

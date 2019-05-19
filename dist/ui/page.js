@@ -16,7 +16,7 @@ import * as React from 'react';
 import { observer } from 'mobx-react';
 import classNames from 'classnames';
 import _ from 'lodash';
-import { TitleBar } from './titleBar';
+import { PageHeader } from './pageHeader';
 const scrollTimeGap = 100;
 class ScrollView extends React.Component {
     constructor() {
@@ -136,7 +136,7 @@ let Page = class Page extends React.Component {
     onTouchStart(evt) {
     }
     renderTabs(footer) {
-        const { header, back, right, keepHeader } = this.props;
+        const { header, back, right, keepHeader, headerClassName } = this.props;
         let cur = this.state.cur;
         let tabs = React.createElement("div", null, this.state.tabs.map((tab, index) => {
             const { icon, isSelected, title, redDot } = tab;
@@ -160,12 +160,10 @@ let Page = class Page extends React.Component {
                     title,
                     redDotView));
         }));
-        let titleBar;
-        if (header !== false) {
-            titleBar = React.createElement(TitleBar, { back: back, center: keepHeader === true ? header : (cur && (cur.header || cur.title)), right: right });
-        }
+        let pageHeader = header !== false &&
+            React.createElement(PageHeader, { back: back, center: keepHeader === true ? header : (cur && (cur.header || cur.title)), right: right, className: headerClassName });
         return React.createElement("article", { className: 'page-container' },
-            titleBar,
+            pageHeader,
             React.createElement("section", { className: "position-relative" },
                 this.props.sideBar,
                 this.state.tabs.map((tab, index) => {
@@ -179,12 +177,10 @@ let Page = class Page extends React.Component {
             footer);
     }
     renderSingle(footer) {
-        const { back, header, right, onScroll, onScrollTop, onScrollBottom, children } = this.props;
-        let titleBar;
-        if (header !== false)
-            titleBar = React.createElement(TitleBar, { back: back, center: header, right: right, logout: this.props.logout });
+        const { back, header, right, onScroll, onScrollTop, onScrollBottom, children, headerClassName } = this.props;
+        let pageHeader = header !== false && React.createElement(PageHeader, { back: back, center: header, right: right, logout: this.props.logout, className: headerClassName });
         return (React.createElement("article", { className: 'page-container', onTouchStart: this.onTouchStart },
-            titleBar,
+            pageHeader,
             React.createElement("section", { className: "position-relative" },
                 this.props.sideBar,
                 React.createElement(ScrollView, { onScroll: onScroll, onScrollTop: onScrollTop, onScrollBottom: onScrollBottom }, children)),
@@ -192,9 +188,7 @@ let Page = class Page extends React.Component {
     }
     render() {
         const { footer } = this.props;
-        let elFooter;
-        if (footer !== undefined)
-            elFooter = React.createElement("footer", null, footer);
+        let elFooter = footer !== undefined && React.createElement("footer", null, footer);
         if (this.tabs !== undefined)
             return this.renderTabs(elFooter);
         else

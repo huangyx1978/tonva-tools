@@ -21,5 +21,6 @@ export declare function appUrl(url: string, unitId: number, page?: string, param
     url: string;
     hash: string;
 };
-export declare function appUq(uq: string, uqOwner: string, uqName: string): Promise<UqToken>;
+export declare function buildAppUq(uq: string, uqOwner: string, uqName: string): Promise<void>;
+export declare function appUq(uq: string): UqToken;
 export declare function bridgeCenterApi(url: string, method: string, body: any): Promise<any>;

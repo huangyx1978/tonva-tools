@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import _ from 'lodash';
 import { HttpChannel } from './httpChannel';
 import { HttpChannelNavUI } from './httpChannelUI';
-import { appUq, logoutUqTokens } from './appBridge';
+import { appUq, logoutUqTokens, buildAppUq } from './appBridge';
 import { ApiBase } from './apiBase';
 import { host } from './host';
 import { nav } from '../ui';
@@ -82,6 +82,8 @@ class CacheUqLocals {
     }
     checkAccess(uqApi) {
         return __awaiter(this, void 0, void 0, function* () {
+            if (this.local === undefined)
+                return false;
             let { uqOwner, uqName } = uqApi;
             let un = uqOwner + '/' + uqName;
             let uq = this.local.uqs[un];
@@ -113,6 +115,11 @@ export class UqApi extends ApiBase {
         this.access = access;
         this.showWaiting = showWaiting;
     }
+    init() {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield buildAppUq(this.uq, this.uqOwner, this.uqName);
+        });
+    }
     getHttpChannel() {
         return __awaiter(this, void 0, void 0, function* () {
             let channels;
@@ -127,7 +134,7 @@ export class UqApi extends ApiBase {
             let channel = channels[this.uq];
             if (channel !== undefined)
                 return channel;
-            let uqToken = yield appUq(this.uq, this.uqOwner, this.uqName);
+            let uqToken = appUq(this.uq); //, this.uqOwner, this.uqName);
             this.token = uqToken.token;
             channel = new HttpChannel(false, uqToken.url, uqToken.token, channelUI);
             return channels[this.uq] = channel;
